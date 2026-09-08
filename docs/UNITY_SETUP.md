@@ -21,7 +21,7 @@ Code, sprites, scenes, CI — sab kuch repo me ready hai. Unity ko kahi "install
 6. **Play button** (▶) dabao → Main Menu aayega → **PLAY** → game chalu!
 
 **Build kaise ho (apne PC pe):** `File → Build Profiles → WebGL → Build`.
-**Ya bina Unity ke (cloud me):** GitHub Actions use karo → [CI_GUIDE.md](CI_GUIDE.md) dekho. Sirf 2 secrets add karne hain (Unity email + password) aur Actions tab se workflow run karo — build artifact download karke browser me khel sakte ho.
+**Ya cloud me (GitHub Actions):** Unity Hub me license activate karo (**Preferences → Licenses → Add → Get a free personal license**) → `Unity_lic.ulf` file ban jayegi → uski **puri file ka content** GitHub repo ke **Settings → Secrets → Actions** me `UNITY_LICENSE` naam se daalo, sath me `UNITY_EMAIL` aur `UNITY_PASSWORD` bhi → phir **Actions tab → Build WebGL → Run workflow** dabao. ~10 min me build ready → artifact download karke browser me khelo. Detail: [CI_GUIDE.md](CI_GUIDE.md)
 
 **Kya kaha dala (file map):**
 - `Assets/_Scenes/` → game ke 2 scenes (00_MainMenu, 01_Game)

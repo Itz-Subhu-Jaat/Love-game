@@ -14,7 +14,7 @@
 | **Game** | 2D arcade romance: 10 waves, combo scoring (up to x4), 3–5 lives, rose heal + slow-mo crystal power-ups, procedural music & SFX (zero audio files), hand-drawn procedural sprites |
 | **Engine** | Unity **6000.0.83f1** (Unity 6 LTS), built-in render pipeline, legacy Input, uGUI — no external packages beyond `com.unity.ugui` |
 | **Architecture** | Self-bootstrapping scenes: each scene contains a camera + one `Boot` object; all UI/gameplay is constructed in code (nothing can corrupt in scene files) |
-| **CI/CD** | GameCI workflow: license → WebGL build → compressed artifact (7-day retention, ~10–20 MB) → optional GitHub Pages deploy |
+| **CI/CD** | GameCI workflow: license-activated WebGL build → compressed artifact (7-day retention, ~10–20 MB) → optional GitHub Pages deploy |
 | **Assets** | ~300 KB of procedurally generated PNG sprites, all committed to git (no LFS needed) |
 
 ## Quick start — play locally
@@ -26,17 +26,18 @@
 
 > Full walkthrough with troubleshooting: **[docs/UNITY_SETUP.md](docs/UNITY_SETUP.md)** (includes a Hinglish quick-start).
 
-## Quick start — build in the cloud (no Unity install needed)
+## Quick start — build in the cloud (GitHub Actions + GameCI)
 
-1. Create a free **Unity account** at unity.com (Personal license, no cost).
-2. In this repo: **Settings → Secrets and variables → Actions → New repository secret**, add:
+1. Install **[Unity Hub](https://unity.com/download)** and create a free Unity account.
+2. Unity Hub → **Preferences → Licenses → Add → Get a free personal license** — this writes a `Unity_lic.ulf` file to your disk (Windows: `C:\ProgramData\Unity\`, macOS: `/Library/Application Support/Unity/`, Linux: `~/.local/share/unity3d/Unity/`).
+3. In this repo: **Settings → Secrets and variables → Actions → New repository secret**:
+   - `UNITY_LICENSE` — paste the **entire contents** of the `.ulf` file
    - `UNITY_EMAIL` — your Unity account email
    - `UNITY_PASSWORD` — your Unity account password
-   - `UNITY_TOTP` — *only if* you enabled 2FA (the TOTP secret)
-3. Go to **Actions → Build WebGL → Run workflow**.
-4. Download the `LoveQuest-WebGL` artifact, extract the tar.gz, open `index.html` — or enable the Pages deploy for a browser link.
+4. Go to **Actions → Build WebGL → Run workflow**.
+5. Download the `LoveQuest-WebGL` artifact, extract the tar.gz, open `index.html` — or enable the Pages deploy (public repo) for a browser link.
 
-> Full guide with license fallbacks: **[docs/CI_GUIDE.md](docs/CI_GUIDE.md)**.
+> Full guide with license troubleshooting: **[docs/CI_GUIDE.md](docs/CI_GUIDE.md)**.
 
 ## Controls
 
