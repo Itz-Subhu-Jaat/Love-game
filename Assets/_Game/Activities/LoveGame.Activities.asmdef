@@ -1,0 +1,21 @@
+{
+    "name": "LoveGame.Activities",
+    "rootNamespace": "LoveGame.Activities",
+    "references": [
+        "LoveGame.Core",
+        "LoveGame.Player",
+        "LoveGame.Inventory",
+        "LoveGame.Interaction",
+        "LoveGame.World",
+        "LoveGame.Audio"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

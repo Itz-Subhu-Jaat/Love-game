@@ -1,0 +1,16 @@
+{
+    "name": "LoveGame.Inventory",
+    "rootNamespace": "LoveGame.Inventory",
+    "references": [
+        "LoveGame.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

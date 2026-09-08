@@ -1,0 +1,20 @@
+{
+    "name": "LoveGame.Home",
+    "rootNamespace": "LoveGame.Home",
+    "references": [
+        "LoveGame.Core",
+        "LoveGame.Player",
+        "LoveGame.Inventory",
+        "LoveGame.Interaction",
+        "LoveGame.World"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

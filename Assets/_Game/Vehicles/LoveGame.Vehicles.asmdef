@@ -1,0 +1,19 @@
+{
+    "name": "LoveGame.Vehicles",
+    "rootNamespace": "LoveGame.Vehicles",
+    "references": [
+        "LoveGame.Core",
+        "LoveGame.Player",
+        "LoveGame.World",
+        "LoveGame.Audio"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
