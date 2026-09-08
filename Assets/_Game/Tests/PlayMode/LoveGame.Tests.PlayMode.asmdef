@@ -1,0 +1,28 @@
+{
+    "name": "LoveGame.Tests.PlayMode",
+    "rootNamespace": "LoveGame.Tests.PlayMode",
+    "references": [
+        "LoveGame.Core",
+        "LoveGame.World",
+        "LoveGame.Player",
+        "LoveGame.Interaction",
+        "LoveGame.Inventory",
+        "LoveGame.Vehicles",
+        "LoveGame.Activities",
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "UNITY_INCLUDE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
