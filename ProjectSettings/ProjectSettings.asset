@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!129 &1
+PlayerSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 26
+  productGUID: 562f2f04ad9e57a985ade18b4bcd9097
+  companyName: LoveGame Studio
+  productName: Love Quest
+  defaultScreenWidth: 1280
+  defaultScreenHeight: 720
+  defaultScreenWidthWeb: 960
+  defaultScreenHeightWeb: 600
+  runInBackground: 1
+  resizableWindow: 1
+  fullscreenMode: 3
+  usePlayerLog: 1
+  activeInputHandler: 0
+  forceSIMD: 0
+  gpuSkinning: 1
+  xboxPixelTextureFormatOverride: 7

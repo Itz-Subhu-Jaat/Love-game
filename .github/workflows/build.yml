@@ -1,0 +1,110 @@
+name: Build WebGL
+
+on:
+  workflow_dispatch:
+    inputs:
+      deployPages:
+        description: 'Publish build to GitHub Pages (repo must be public or on a paid plan)'
+        type: boolean
+        default: false
+  push:
+    branches: [ main ]
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Unity WebGL build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: false
+
+      - name: Check Unity license secrets
+        id: secrets
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          if [ -n "$UNITY_EMAIL" ] && [ -n "$UNITY_PASSWORD" ]; then
+            echo "has=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Unity license not configured::Add UNITY_EMAIL and UNITY_PASSWORD repository secrets (see docs/CI_GUIDE.md) to enable builds."
+          fi
+
+      # Personal license acquisition (GameCI v3 licensing - works with Unity 6).
+      # Format: "email password [totp-secret-if-2fa-enabled]" on one line.
+      - name: Acquire Unity Personal license
+        id: license
+        if: steps.secrets.outputs.has == 'true'
+        uses: game-ci/unity-license@v3
+        with:
+          credentials: |
+            ${{ secrets.UNITY_EMAIL }} ${{ secrets.UNITY_PASSWORD }} ${{ secrets.UNITY_TOTP }}
+
+      - name: Build project (WebGL)
+        id: build
+        if: steps.secrets.outputs.has == 'true'
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ steps.license.outputs.license }}
+        with:
+          targetPlatform: WebGL
+          buildName: LoveQuest
+          allowDirtyBuild: true
+
+      - name: Locate WebGL build
+        id: locate
+        if: steps.secrets.outputs.has == 'true'
+        run: |
+          set -eu
+          index="$(find build -type f -name index.html | head -n 1)"
+          if [ -z "$index" ]; then
+            echo "::error::index.html not found in build output"
+            exit 1
+          fi
+          echo "dir=$(dirname "$index")" >> "$GITHUB_OUTPUT"
+
+      - name: Create compressed archive
+        if: steps.secrets.outputs.has == 'true'
+        run: tar -czf LoveQuest-WebGL.tar.gz -C "${{ steps.locate.outputs.dir }}" .
+
+      # Artifact auto-deletes after 7 days to stay far below the
+      # 500 MB Actions storage quota (this build is roughly 10-20 MB).
+      - name: Upload build artifact
+        if: steps.secrets.outputs.has == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: LoveQuest-WebGL
+          path: LoveQuest-WebGL.tar.gz
+          retention-days: 7
+          if-no-files-found: error
+
+      # ---------------------------------------------------------------- Pages --
+      # GitHub Pages hosting is free and does NOT count against Actions
+      # storage. NOTE: Pages for PRIVATE repos needs a paid GitHub plan.
+      # Make the repo public (or upgrade) and re-run the workflow with
+      # deployPages=true to get a playable link.
+      - name: Configure GitHub Pages
+        if: ${{ steps.secrets.outputs.has == 'true' && github.event_name == 'workflow_dispatch' && inputs.deployPages }}
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        if: ${{ steps.secrets.outputs.has == 'true' && github.event_name == 'workflow_dispatch' && inputs.deployPages }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ${{ steps.locate.outputs.dir }}
+
+      - name: Deploy to GitHub Pages
+        if: ${{ steps.secrets.outputs.has == 'true' && github.event_name == 'workflow_dispatch' && inputs.deployPages }}
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,43 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]serSettings/
+MemoryCaptures/
+Recordings/
+
+# Unity generated files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+*.sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# Crashlytics generated file
+crashlytics-build.properties
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.csproj
+*.sln
+*.user
+*.userprefs
+*.booproj
+*.svgid
+*.orig
+*.tmp
+Uni[/]
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# GameCI local output
+build/
