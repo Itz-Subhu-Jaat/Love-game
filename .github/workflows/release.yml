@@ -1,0 +1,57 @@
+name: Release Build (AAB)
+
+on:
+  workflow_dispatch:
+    inputs:
+      versionName:
+        description: 'Version name (e.g. 0.3.0)'
+        required: false
+        default: '0.3.0'
+
+# Play Store AAB pipeline. Prepared for the future release flow - requires the
+# Unity license secrets plus (later) an Android keystore for signing.
+
+jobs:
+  build:
+    name: Unity Android AAB (IL2CPP / ARM64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Check Unity license secret
+        id: license-check
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          if [ -n "$UNITY_LICENSE" ]; then
+            echo "has=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Unity license not configured::Add UNITY_LICENSE / UNITY_EMAIL / UNITY_PASSWORD secrets, then re-run. Guide: Documentation/BUILD_GUIDE.md"
+          fi
+
+      - name: Build AAB
+        if: steps.license-check.outputs.has == 'true'
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Android
+          unityVersion: auto
+          buildName: LoveGame-${{ github.event.inputs.versionName }}
+          customBuildMethod: LoveGame.EditorTools.CI.CiBuilder.BuildAndroidAab
+          allowDirtyBuild: true
+
+      - name: Upload AAB artifact
+        if: steps.license-check.outputs.has == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: LoveGame-AAB
+          path: build/LoveGame.aab
+          retention-days: 5

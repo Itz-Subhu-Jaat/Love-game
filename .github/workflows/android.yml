@@ -1,0 +1,67 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    tags: [ 'v*' ]
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+# Manual dispatch only for regular pushes - respects the free-tier Actions quota.
+# The lint job (Tools/validation) runs on every push instead; expensive Unity
+# builds happen on tag pushes or manual runs.
+
+jobs:
+  build:
+    name: Unity Android build (IL2CPP / ARM64)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Check Unity license secret
+        id: license-check
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          if [ -n "$UNITY_LICENSE" ]; then
+            echo "has=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Unity license not configured::Activate a free Personal license in Unity Hub, copy the .ulf file contents into the UNITY_LICENSE secret (+ UNITY_EMAIL / UNITY_PASSWORD), then re-run this workflow. Guide: Documentation/BUILD_GUIDE.md"
+          fi
+
+      - name: Build APK
+        if: steps.license-check.outputs.has == 'true'
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: Android
+          unityVersion: auto
+          buildName: LoveGame
+          customBuildMethod: LoveGame.EditorTools.CI.CiBuilder.BuildAndroid
+          allowDirtyBuild: true
+
+      - name: Upload APK artifact
+        if: steps.license-check.outputs.has == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: LoveGame-APK
+          path: build/LoveGame.apk
+          retention-days: 5
+          compression-level: 6
+
+      - name: Build summary
+        if: always()
+        run: |
+          echo "## Android build summary" >> $GITHUB_STEP_SUMMARY
+          echo "- License present: ${{ steps.license-check.outputs.has }}" >> $GITHUB_STEP_SUMMARY
+          echo "- APK artifact (if built): LoveGame-APK (5-day retention to respect the 0.5 GB free-tier storage quota)" >> $GITHUB_STEP_SUMMARY

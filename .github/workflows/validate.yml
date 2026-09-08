@@ -1,0 +1,81 @@
+name: Validate Project
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Static validation (no Unity license needed)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Run project validator
+        run: python3 Tools/validation/validate_project.py --project-root .
+
+        # Checks: meta/GUID pairing, scene references, asmdef graph, C# + shader
+        # brace balance, JSON catalogs (24 regions, 40+ items), Unity version pin,
+        # secret scan. Zero Unity minutes - safe for the free plan.
+
+      - name: Region data summary
+        run: python3 Tools/validation/validate_project.py --project-root . --summary
+
+  unity-tests:
+    name: Unity editmode + playmode tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Check Unity license secret
+        id: license-check
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          if [ -n "$UNITY_LICENSE" ]; then
+            echo "has=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Unity license not configured::One-time setup: activate a free Personal license in Unity Hub on your PC, then copy the .ulf file contents into the UNITY_LICENSE secret (plus UNITY_EMAIL / UNITY_PASSWORD). Full guide: Documentation/BUILD_GUIDE.md"
+          fi
+
+      - name: Run Unity tests
+        if: steps.license-check.outputs.has == 'true'
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          testMode: All
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload test results
+        if: steps.license-check.outputs.has == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results
+          retention-days: 3

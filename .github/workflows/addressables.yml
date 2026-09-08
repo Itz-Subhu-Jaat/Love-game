@@ -1,0 +1,49 @@
+name: Content Packs (Addressables)
+
+on:
+  workflow_dispatch:
+    inputs:
+      packId:
+        description: 'Pack to build (empty = all region packs)'
+        required: false
+        default: ''
+
+# Remote content pipeline (prepared): builds region packs for CDN upload.
+# Requires the Unity license secrets; CDN base URL is configured in
+# Assets/Resources/Data/content_manifest.json (never credentials in-repo).
+# GameCI builder drives our ContentPackager entry point.
+
+jobs:
+  build:
+    name: Build content packs
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Check Unity license secret
+        id: license-check
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        run: |
+          if [ -n "$UNITY_LICENSE" ]; then
+            echo "has=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=Unity license not configured::Add UNITY_LICENSE / UNITY_EMAIL / UNITY_PASSWORD secrets, then re-run. Guide: Documentation/CONTENT_PIPELINE.md"
+          fi
+
+      - name: Validate manifests (always runs)
+        run: python3 Tools/validation/validate_project.py --project-root . --summary
+
+      # Pack build executes once remote content assets exist; the placeholder
+      # step documents the flow until then.
+      - name: Pack build placeholder
+        if: steps.license-check.outputs.has == 'true'
+        run: |
+          echo "Region packs are built from the manifest at Assets/Resources/Data/content_manifest.json"
+          echo "Upload target: Cloudflare R2 bucket (RemoteContentBaseUrl)"
+          echo "This workflow will drive LoveGame.EditorTools.CI.ContentPackager once remote assets land."
