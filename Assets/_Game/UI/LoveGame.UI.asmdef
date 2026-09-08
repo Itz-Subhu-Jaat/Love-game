@@ -1,0 +1,25 @@
+{
+    "name": "LoveGame.UI",
+    "rootNamespace": "LoveGame.UI",
+    "references": [
+        "LoveGame.Core",
+        "LoveGame.World",
+        "LoveGame.Player",
+        "LoveGame.Interaction",
+        "LoveGame.Vehicles",
+        "LoveGame.Activities",
+        "LoveGame.Home",
+        "LoveGame.Inventory",
+        "LoveGame.Audio",
+        "LoveGame.Content"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
