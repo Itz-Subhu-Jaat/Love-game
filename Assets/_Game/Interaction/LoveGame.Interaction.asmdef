@@ -1,0 +1,18 @@
+{
+    "name": "LoveGame.Interaction",
+    "rootNamespace": "LoveGame.Interaction",
+    "references": [
+        "LoveGame.Core",
+        "LoveGame.Player",
+        "LoveGame.Inventory"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
