@@ -1,0 +1,29 @@
+{
+    "name": "LoveGame.EditorTools",
+    "rootNamespace": "LoveGame.EditorTools",
+    "references": [
+        "LoveGame.Core",
+        "LoveGame.World",
+        "LoveGame.Player",
+        "LoveGame.Interaction",
+        "LoveGame.Vehicles",
+        "LoveGame.Activities",
+        "LoveGame.Home",
+        "LoveGame.Inventory",
+        "LoveGame.Audio",
+        "LoveGame.UI",
+        "LoveGame.Content",
+        "LoveGame.Game"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
