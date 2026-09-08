@@ -4,14 +4,14 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 26
-  productGUID: 562f2f04ad9e57a985ade18b4bcd9097
+  productGUID: 7ce13681e60c5c15893f274806d54d48
   companyName: LoveGame Studio
-  productName: Love Quest
-  defaultScreenWidth: 1280
-  defaultScreenHeight: 720
+  productName: Love Game
+  defaultScreenWidth: 1920
+  defaultScreenHeight: 1080
   defaultScreenWidthWeb: 960
   defaultScreenHeightWeb: 600
-  runInBackground: 1
+  runInBackground: 0
   resizableWindow: 1
   fullscreenMode: 3
   usePlayerLog: 1

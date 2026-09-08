@@ -3,39 +3,45 @@
 --- !u!92 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Player
+  - Interactable
+  - Vehicle
+  - NPC
+  - Wildlife
+  - POI
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
-  - 
-  - 
-  - 
-  - 
+  -
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  -
+  -
+  - Player
+  - Interactable
+  - Vehicle
+  - Prop
+  - NPC
+  - Wildlife
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
+  -
   m_SortingLayers:
   - name: Default
     uniqueID: 0

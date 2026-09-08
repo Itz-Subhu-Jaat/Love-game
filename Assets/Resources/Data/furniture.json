@@ -1,0 +1,172 @@
+{
+  "furniture": [
+    {
+      "id": "bed_queen",
+      "name": "Queen Bed",
+      "category": "Bed",
+      "color": "#E8E0F0",
+      "footprint": 1.0
+    },
+    {
+      "id": "bed_double_pine",
+      "name": "Pine Double Bed",
+      "category": "Bed",
+      "color": "#D8C8A8",
+      "footprint": 1.0
+    },
+    {
+      "id": "sofa_corner",
+      "name": "Corner Sofa",
+      "category": "Sofa",
+      "color": "#B85878",
+      "footprint": 1.0
+    },
+    {
+      "id": "sofa_cream",
+      "name": "Cream Sofa",
+      "category": "Sofa",
+      "color": "#F0E8D8",
+      "footprint": 1.0
+    },
+    {
+      "id": "table_coffee",
+      "name": "Coffee Table",
+      "category": "Table",
+      "color": "#A87848",
+      "footprint": 1.0
+    },
+    {
+      "id": "table_dining",
+      "name": "Dining Table",
+      "category": "Table",
+      "color": "#8A6838",
+      "footprint": 1.0
+    },
+    {
+      "id": "chair_wood",
+      "name": "Wooden Chair",
+      "category": "Chair",
+      "color": "#B08858",
+      "footprint": 1.0
+    },
+    {
+      "id": "chair_pouf",
+      "name": "Cozy Pouf",
+      "category": "Chair",
+      "color": "#C87888",
+      "footprint": 1.0
+    },
+    {
+      "id": "lamp_floor",
+      "name": "Floor Lamp",
+      "category": "Lamp",
+      "color": "#F8E8B8",
+      "footprint": 1.0
+    },
+    {
+      "id": "lamp_string",
+      "name": "String Lights",
+      "category": "Lamp",
+      "color": "#F8D878",
+      "footprint": 1.0
+    },
+    {
+      "id": "plant_monstera",
+      "name": "Monstera",
+      "category": "Plant",
+      "color": "#4A8A5A",
+      "footprint": 1.0
+    },
+    {
+      "id": "plant_succulent",
+      "name": "Succulent",
+      "category": "Plant",
+      "color": "#7AB87A",
+      "footprint": 1.0
+    },
+    {
+      "id": "painting_sunset",
+      "name": "Sunset Painting",
+      "category": "Painting",
+      "color": "#F8A868",
+      "footprint": 1.0
+    },
+    {
+      "id": "painting_ocean",
+      "name": "Ocean Print",
+      "category": "Painting",
+      "color": "#88B8E8",
+      "footprint": 1.0
+    },
+    {
+      "id": "shelf_book",
+      "name": "Bookshelf",
+      "category": "Shelf",
+      "color": "#A88158",
+      "footprint": 1.0
+    },
+    {
+      "id": "shelf_display",
+      "name": "Display Shelf",
+      "category": "Shelf",
+      "color": "#C8B088",
+      "footprint": 1.0
+    },
+    {
+      "id": "electronics_tv",
+      "name": "Smart TV",
+      "category": "Electronics",
+      "color": "#585868",
+      "footprint": 1.0
+    },
+    {
+      "id": "electronics_music",
+      "name": "Music Station",
+      "category": "Electronics",
+      "color": "#8878A8",
+      "footprint": 1.0
+    },
+    {
+      "id": "rug_round",
+      "name": "Round Rug",
+      "category": "Rug",
+      "color": "#E8C8B8",
+      "footprint": 1.0
+    },
+    {
+      "id": "rug_star",
+      "name": "Star Pattern Rug",
+      "category": "Rug",
+      "color": "#B8C8E8",
+      "footprint": 1.0
+    },
+    {
+      "id": "deco_vase",
+      "name": "Ceramic Vase",
+      "category": "Decoration",
+      "color": "#E8D8C8",
+      "footprint": 1.0
+    },
+    {
+      "id": "deco_clock",
+      "name": "Wall Clock",
+      "category": "Decoration",
+      "color": "#C8C8C8",
+      "footprint": 1.0
+    },
+    {
+      "id": "outdoor_hammock",
+      "name": "Hammock",
+      "category": "Outdoor",
+      "color": "#D8B888",
+      "footprint": 1.0
+    },
+    {
+      "id": "outdoor_firebowl",
+      "name": "Fire Bowl",
+      "category": "Outdoor",
+      "color": "#8A5838",
+      "footprint": 1.0
+    }
+  ]
+}

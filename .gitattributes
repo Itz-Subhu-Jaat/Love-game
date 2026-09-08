@@ -1,13 +1,17 @@
 * text=auto
 *.cs diff=csharp text
+*.shader text
 *.meta text
 *.unity text
 *.asset text
 *.prefab text
+*.asmdef text
 *.json text
 *.md text
 *.yaml text
 *.yml text
+*.py text
+*.sh text
 *.png binary
 *.jpg binary
 *.jpeg binary
@@ -17,3 +21,4 @@
 *.ttf binary
 *.zip binary
 *.tar.gz binary
+*.apk binary

@@ -18,11 +18,9 @@ Recordings/
 *.aab
 *.unitypackage
 *.app
+*.pack
 
-# Crashlytics generated file
-crashlytics-build.properties
-
-# Visual Studio / Rider
+# IDE
 .vs/
 .idea/
 *.csproj
@@ -30,14 +28,12 @@ crashlytics-build.properties
 *.user
 *.userprefs
 *.booproj
-*.svgid
 *.orig
 *.tmp
-Uni[/]
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# GameCI local output
-build/
+# CI build output (GameCI writes here)
+/build/

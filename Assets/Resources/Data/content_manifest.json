@@ -1,0 +1,294 @@
+{
+  "schemaVersion": 1,
+  "remoteContentBaseUrl": "",
+  "packs": [
+    {
+      "id": "core",
+      "name": "Core Game",
+      "description": "Bootstrap, systems and the Azure Haven starter region.",
+      "version": "1.0.0",
+      "sizeBytes": 15000000,
+      "regionIds": [
+        "azure_haven"
+      ],
+      "required": true,
+      "remoteUrl": ""
+    },
+    {
+      "id": "region_sunset_bay",
+      "name": "Region: Sunset Bay",
+      "description": "Romantic coastal region with a lighthouse, boardwalk, bonfire beach and the best",
+      "version": "1.0.0",
+      "sizeBytes": 11000000,
+      "regionIds": [
+        "sunset_bay"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_sunset_bay.pack"
+    },
+    {
+      "id": "region_dreamfall_isles",
+      "name": "Region: Dreamfall Isles",
+      "description": "Fantasy floating islands: giant trees, glowing vegetation and waterfalls falling",
+      "version": "1.0.0",
+      "sizeBytes": 12500000,
+      "regionIds": [
+        "dreamfall_isles"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_dreamfall_isles.pack"
+    },
+    {
+      "id": "region_neon_abyss",
+      "name": "Region: Neon Abyss City",
+      "description": "Vertical cyberpunk megacity: neon streets, elevated roads, rooftops and an under",
+      "version": "1.0.0",
+      "sizeBytes": 14000000,
+      "regionIds": [
+        "neon_abyss"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_neon_abyss.pack"
+    },
+    {
+      "id": "region_nova_coast",
+      "name": "Region: Nova Coast",
+      "description": "Futuristic tropical resort: glass villas, landing pads and an observation tower ",
+      "version": "1.0.0",
+      "sizeBytes": 8000000,
+      "regionIds": [
+        "nova_coast"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_nova_coast.pack"
+    },
+    {
+      "id": "region_wildheart",
+      "name": "Region: Wildheart Highlands",
+      "description": "Mountainous wilderness: deep valleys, rivers, dense forests and high-altitude tr",
+      "version": "1.0.0",
+      "sizeBytes": 9500000,
+      "regionIds": [
+        "wildheart"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_wildheart.pack"
+    },
+    {
+      "id": "region_moonlight_forest",
+      "name": "Region: Moonlight Forest",
+      "description": "Magical night forest: glowing plants, fireflies, a moonlit clearing and a hidden",
+      "version": "1.0.0",
+      "sizeBytes": 11000000,
+      "regionIds": [
+        "moonlight_forest"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_moonlight_forest.pack"
+    },
+    {
+      "id": "region_crystal_caverns",
+      "name": "Region: Crystal Caverns",
+      "description": "Underground crystal network: glowing formations, underground lakes and puzzle ch",
+      "version": "1.0.0",
+      "sizeBytes": 12500000,
+      "regionIds": [
+        "crystal_caverns"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_crystal_caverns.pack"
+    },
+    {
+      "id": "region_skyline_metropolis",
+      "name": "Region: Skyline Metropolis",
+      "description": "Modern premium city: shopping streets, rooftop restaurants, parks and a waterfro",
+      "version": "1.0.0",
+      "sizeBytes": 14000000,
+      "regionIds": [
+        "skyline_metropolis"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_skyline_metropolis.pack"
+    },
+    {
+      "id": "region_coral_archipelago",
+      "name": "Region: Coral Reef Archipelago",
+      "description": "Island-hopping ocean region: coral reefs, a shipwreck and underwater treasure.",
+      "version": "1.0.0",
+      "sizeBytes": 8000000,
+      "regionIds": [
+        "coral_archipelago"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_coral_archipelago.pack"
+    },
+    {
+      "id": "region_frostpeak",
+      "name": "Region: Frostpeak",
+      "description": "Snow mountain region: frozen lake, cozy cabins, ski slopes and northern lights n",
+      "version": "1.0.0",
+      "sizeBytes": 9500000,
+      "regionIds": [
+        "frostpeak"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_frostpeak.pack"
+    },
+    {
+      "id": "region_golden_desert",
+      "name": "Region: Golden Desert",
+      "description": "Large desert biome: rolling dunes, an oasis village, ancient ruins and a buried ",
+      "version": "1.0.0",
+      "sizeBytes": 11000000,
+      "regionIds": [
+        "golden_desert"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_golden_desert.pack"
+    },
+    {
+      "id": "region_verdant_valley",
+      "name": "Region: Verdant Valley",
+      "description": "Peaceful countryside: farms, rivers, windmills and a sleepy village.",
+      "version": "1.0.0",
+      "sizeBytes": 12500000,
+      "regionIds": [
+        "verdant_valley"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_verdant_valley.pack"
+    },
+    {
+      "id": "region_starlight_island",
+      "name": "Region: Starlight Island",
+      "description": "Private luxury island: grand villa, infinity pool, yacht dock and starlit garden",
+      "version": "1.0.0",
+      "sizeBytes": 14000000,
+      "regionIds": [
+        "starlight_island"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_starlight_island.pack"
+    },
+    {
+      "id": "region_sunken_city",
+      "name": "Region: Sunken City",
+      "description": "Submerged exploration: drowned streets, underwater tunnels and hidden treasure r",
+      "version": "1.0.0",
+      "sizeBytes": 8000000,
+      "regionIds": [
+        "sunken_city"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_sunken_city.pack"
+    },
+    {
+      "id": "region_technova",
+      "name": "Region: Technova District",
+      "description": "Advanced technology zone: laboratories, robotics bays and elevated transport pla",
+      "version": "1.0.0",
+      "sizeBytes": 9500000,
+      "regionIds": [
+        "technova"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_technova.pack"
+    },
+    {
+      "id": "region_rainbow_meadows",
+      "name": "Region: Rainbow Meadows",
+      "description": "Dreamy colorful landscape: flower fields, pastel streams and giant friendly tree",
+      "version": "1.0.0",
+      "sizeBytes": 11000000,
+      "regionIds": [
+        "rainbow_meadows"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_rainbow_meadows.pack"
+    },
+    {
+      "id": "region_lost_kingdom",
+      "name": "Region: Lost Kingdom",
+      "description": "Adventure fantasy region: an ancient castle, broken bridges and underground cham",
+      "version": "1.0.0",
+      "sizeBytes": 12500000,
+      "regionIds": [
+        "lost_kingdom"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_lost_kingdom.pack"
+    },
+    {
+      "id": "region_ocean_drive",
+      "name": "Region: Ocean Drive",
+      "description": "Coastal highway system: scenic roads, tunnels, bridges and service stations.",
+      "version": "1.0.0",
+      "sizeBytes": 14000000,
+      "regionIds": [
+        "ocean_drive"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_ocean_drive.pack"
+    },
+    {
+      "id": "region_lumen_city",
+      "name": "Region: Lumen City",
+      "description": "Bright futuristic city: garden towers, water features and a grand central plaza.",
+      "version": "1.0.0",
+      "sizeBytes": 8000000,
+      "regionIds": [
+        "lumen_city"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_lumen_city.pack"
+    },
+    {
+      "id": "region_willow_lake",
+      "name": "Region: Willow Lake",
+      "description": "Peaceful lake region: wooden docks, lazy boats, hidden island and camping shores",
+      "version": "1.0.0",
+      "sizeBytes": 9500000,
+      "regionIds": [
+        "willow_lake"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_willow_lake.pack"
+    },
+    {
+      "id": "region_volcanic_isle",
+      "name": "Region: Volcanic Isle",
+      "description": "Volcanic adventure: black-sand beaches, lava caves, hot springs and an abandoned",
+      "version": "1.0.0",
+      "sizeBytes": 11000000,
+      "regionIds": [
+        "volcanic_isle"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_volcanic_isle.pack"
+    },
+    {
+      "id": "region_cloud_gardens",
+      "name": "Region: Cloud Gardens",
+      "description": "High-altitude fantasy: floating garden platforms, temples above the clouds and s",
+      "version": "1.0.0",
+      "sizeBytes": 12500000,
+      "regionIds": [
+        "cloud_gardens"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_cloud_gardens.pack"
+    },
+    {
+      "id": "region_old_harbor",
+      "name": "Region: Old Harbor",
+      "description": "Historic coastal town: cobbled streets, fish markets, warehouses and a proud old",
+      "version": "1.0.0",
+      "sizeBytes": 14000000,
+      "regionIds": [
+        "old_harbor"
+      ],
+      "required": false,
+      "remoteUrl": "packs/region_old_harbor.pack"
+    }
+  ]
+}
