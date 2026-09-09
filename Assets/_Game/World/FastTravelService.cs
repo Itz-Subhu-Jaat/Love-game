@@ -15,11 +15,14 @@ namespace LoveGame.World
 
         WorldStreamer _streamer;
         RegionCatalogService _catalog;
+        Player.ThirdPersonController _player;
         readonly List<string> _discovered = new List<string>();
         float _checkTimer;
         bool _travelling;
 
         public event System.Action<float> TravelFade; // UI listens: 0..1 out, then 1..0 in
+
+        public void Bind(Player.ThirdPersonController player) => _player = player;
 
         public void Initialize()
         {
@@ -96,8 +99,13 @@ namespace LoveGame.World
 
             var destination = new Vector3(point.x, 0f, point.z);
             _streamer.TeleportTo(region.Id, destination);
+            // the streamer only tracks a logical position - the actual player body has
+            // to come along, or WorldSystems.Update() drags the streamer right back
+            _player?.Teleport(region.WorldCenter + destination);
             // let the streamer build the region
             while (_streamer.IsStreaming) yield return null;
+            yield return new WaitForFixedUpdate();
+            _player?.SnapToGround();
             yield return new WaitForSeconds(0.2f);
 
             // fade in

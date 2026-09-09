@@ -21,8 +21,8 @@ namespace LoveGame.UI
             UiFactory.Label(panel, "DEBUG (dev builds only)", 44, font, new Color(0.6f, 0.9f, 1f), new Vector2(0f, 430f)).sizeDelta = new Vector2(900f, 70f);
             UiFactory.TextButton(panel, "CLOSE", 30, font, new Vector2(380f, 430f), new Vector2(180f, 70f), () => Service.Pop(), new Color(0.4f, 0.45f, 0.6f, 0.9f));
 
-            _stats = UiFactory.Label(panel, "...", 24, font, new Color(0.8f, 0.85f, 0.95f), new Vector2(0f, 320f));
-            _stats.sizeDelta = new Vector2(1000f, 220f);
+            _stats = UiFactory.Label(panel, "...", 24, font, new Color(0.8f, 0.85f, 0.95f), new Vector2(0f, 320f)).GetComponent<Text>();
+            _stats.rectTransform.sizeDelta = new Vector2(1000f, 220f);
 
             int y = 130;
             // time control
@@ -61,7 +61,12 @@ namespace LoveGame.UI
                     UiFactory.TextButton(panel, region.DisplayName, 20, font, new Vector2(-360f + (col % 2) * 360f, y - (col / 2) * 70f), new Vector2(350f, 62f), () =>
                     {
                         var streamer = Services.Get<World.WorldStreamer>();
+                        var pos = r.WorldCenter + new Vector3(r.SpawnPoint.x, 0f, r.SpawnPoint.y);
+                        var player = Object.FindFirstObjectByType<Player.ThirdPersonController>();
+                        player?.Teleport(new Vector3(pos.x, 150f, pos.z));
                         streamer?.TeleportTo(r.Id, new Vector3(r.SpawnPoint.x, 0f, r.SpawnPoint.y));
+                        if (player != null && streamer != null)
+                            Services.Host.Run(SnapRoutine(streamer, player));
                         Service.Pop();
                     });
                     col++;
@@ -83,7 +88,7 @@ namespace LoveGame.UI
                 if (vehicles != null && streamer != null)
                     vehicles.Spawn(Vehicles.VehicleKind.Boat, streamer.PlayerPosition + streamer.PlayerForward * 8f, streamer.RegionIdAt(streamer.PlayerPosition));
             });
-            UiFactory.TextButton(panel, "SAVE NOW", 24, font, new Vector2(360f, y), new Vector2(350f, 70f), SaveSystem.Save);
+            UiFactory.TextButton(panel, "SAVE NOW", 24, font, new Vector2(360f, y), new Vector2(350f, 70f), () => SaveSystem.Save());
         }
 
         public override void OnTick(float delta)
@@ -178,6 +183,13 @@ namespace LoveGame.UI
                 Service.Pop();
                 WorldSystemsBridge.EnterPhotoMode?.Invoke(null);
             }, new Color(0.55f, 0.4f, 0.75f, 0.95f));
+        }
+
+        static System.Collections.IEnumerator SnapRoutine(World.WorldStreamer streamer, Player.ThirdPersonController player)
+        {
+            while (streamer.IsStreaming) yield return null;
+            yield return new WaitForFixedUpdate();
+            player.SnapToGround();
         }
     }
 }

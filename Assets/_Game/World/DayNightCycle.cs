@@ -61,7 +61,7 @@ namespace LoveGame.World
             _sun = sunGo.AddComponent<Light>();
             _sun.type = LightType.Directional;
             _sun.shadows = LightShadows.Soft;
-            _sun.shadowDistance = 180f;
+            QualitySettings.shadowDistance = 180f;
 
             _skyboxInstance = new Material(MaterialLibrary.Skybox);
             RenderSettings.skybox = _skyboxInstance;

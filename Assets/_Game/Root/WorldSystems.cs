@@ -46,7 +46,7 @@ namespace LoveGame.Game
             Register(new World.WaterSystem());
             Register(new World.NpcManager());
             Register(new World.WildlifeManager());
-            Register(new World.FastTravelService());
+            var fastTravel = Register(new World.FastTravelService());
             var input = Register(new InputService());
             Register(new Inventory.InventoryService());
             Register(new Inventory.CollectibleService());
@@ -74,6 +74,7 @@ namespace LoveGame.Game
             couple.Bind(_playerVisual, _partner, _cameraRig, _player);
             Services.Get<Interaction.EmoteService>()?.Bind(_playerVisual, _partner);
             _vehicles.Bind(_player, _cameraRig, input);
+            fastTravel.Bind(_player);
             Services.Get<Home.FurnitureService>()?.Bind(_player);
 
             // 6) HUD + photo mode
@@ -82,15 +83,33 @@ namespace LoveGame.Game
             // 7) restore player position + enter world
             var save = SaveSystem.Current;
             var region = catalog.GetById(save.player.currentRegion) ?? catalog.Regions[0];
-            var spawn = new Vector3(save.player.positionX, 0f, save.player.positionZ);
-            if (spawn.sqrMagnitude < 0.5f) spawn = new Vector3(region.SpawnPoint.x, 0f, region.SpawnPoint.y);
-            _streamer.TeleportTo(region.Id, spawn);
+            var saved = new Vector3(save.player.positionX, 0f, save.player.positionZ);
+            Vector3 world;
+            if (saved.sqrMagnitude < 0.5f)
+                world = region.WorldCenter + new Vector3(region.SpawnPoint.x, 0f, region.SpawnPoint.y);
+            else
+                world = saved; // saves store absolute world coordinates
+
+            // Temporarily disable controller and place at spawn target so player doesn't free-fall during generation
+            _player.enabled = false;
+            _player.Teleport(new Vector3(world.x, 150f, world.z));
+            _streamer.PlayerPosition = world;
+
+            _streamer.TeleportToWorld(region.Id, world);
             yield return null;
             while (_streamer.IsStreaming) yield return null;
+
+            // Allow physics mesh colliders to initialize
+            yield return new WaitForFixedUpdate();
+            yield return null;
+
+            _player.enabled = true;
             _player.SnapToGround();
+            _cameraRig.SetTarget(_player.transform, true); // snap camera onto the grounded player
             _dayNight.Hour = save.world.worldTimeHour;
             if (System.Enum.TryParse(save.world.weather, out World.WeatherType savedWeather)) _weather.Force(savedWeather);
-            _partner.Teleport(_player.transform.position - _player.transform.forward * 2f + _player.transform.right * 1.2f);
+            _partner.Teleport(_player.transform.position - _player.transform.forward * 1.5f + _player.transform.right * 1.0f);
+            yield return new WaitForFixedUpdate();
             _partnerController.SnapToGround();
 
             // 8) world POI routing: home entry
@@ -122,6 +141,7 @@ namespace LoveGame.Game
             var partnerGo = new GameObject("Partner");
             partnerGo.layer = GameLayers.Player;
             var partnerController = partnerGo.AddComponent<ThirdPersonController>();
+            partnerController.Bind(new Input.VirtualControllerInput(), _streamer);
             var partnerChar = partnerGo.AddComponent<PlayerCharacter>();
             partnerChar.isPartner = true;
             partnerChar.characterName = GameConfig.Settings.partnerName;
@@ -132,13 +152,15 @@ namespace LoveGame.Game
             _partner = companion;
             _partnerController = partnerController;
 
-            var cameraGo = new GameObject("MainCamera");
-            var cam = cameraGo.AddComponent<Camera>();
+            var cameraGo = Camera.main != null ? Camera.main.gameObject : new GameObject("MainCamera");
+            cameraGo.tag = "MainCamera";
+            var cam = cameraGo.GetComponent<Camera>() ?? cameraGo.AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.Skybox;
             cam.nearClipPlane = 0.3f;
             cam.farClipPlane = 3000f;
-            cameraGo.AddComponent<AudioListener>();
-            var rig = cameraGo.AddComponent<ThirdPersonCamera>();
+            cam.depth = 10f;
+            if (cameraGo.GetComponent<AudioListener>() == null) cameraGo.AddComponent<AudioListener>();
+            var rig = cameraGo.GetComponent<ThirdPersonCamera>() ?? cameraGo.AddComponent<ThirdPersonCamera>();
             rig.Bind(input.Active);
             rig.SetTarget(playerGo.transform, true);
             _cameraRig = rig;
@@ -289,10 +311,14 @@ namespace LoveGame.Game
             {
                 uiService.Push(new UI.PauseScreen());
             }
-            if (Input.GetKeyDown(KeyCode.F3) && Debug.isDebugBuild)
+            if ((Input.GetKeyDown(KeyCode.F1) || Input.GetKeyDown(KeyCode.F3) || Input.GetKeyDown(KeyCode.BackQuote)) && Debug.isDebugBuild)
             {
                 var ui = Services.Get<UI.UiService>();
-                if (ui != null && (ui.Top == null || !(ui.Top is UI.DebugScreen))) ui.Push(new UI.DebugScreen());
+                if (ui != null)
+                {
+                    if (ui.Top is UI.DebugScreen) ui.Pop();
+                    else ui.Push(new UI.DebugScreen());
+                }
             }
 
             // underwater camera + swim mode

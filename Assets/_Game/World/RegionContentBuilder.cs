@@ -17,7 +17,7 @@ namespace LoveGame.World
         const float CellSizeFactor = 1f / 96f;
         const float RoadHalfWidth = 4.5f;
 
-        public IEnumerator Build(RegionInstance inst, RegionData d, QualityLevel quality)
+        public IEnumerator Build(RegionInstance inst, RegionData d, Core.QualityLevel quality)
         {
             var rng = new Rng(d.Seed);
             var noise = new Noise(d.Seed);
@@ -104,7 +104,7 @@ namespace LoveGame.World
             inst.PropRoot = new GameObject("Props").transform;
             inst.PropRoot.SetParent(inst.Root.transform, false);
             var palette = PropLibrary.Palette(d.Biome);
-            int baseCount = quality switch { QualityLevel.Low => 60, QualityLevel.Medium => 110, _ => 160 };
+            int baseCount = quality switch { Core.QualityLevel.Low => 60, Core.QualityLevel.Medium => 110, _ => 160 };
             int propCount = Mathf.RoundToInt(baseCount * d.PropDensity);
             var cells = new Dictionary<Vector2Int, Transform>();
 
@@ -295,8 +295,10 @@ namespace LoveGame.World
                 for (int x = 0; x <= seg; x++)
                 {
                     int i = z * (seg + 1) + x;
-                    verts[i] = new Vector3(-0.5f + x / (float)seg, 0f, -0.5f + z / (float)seg);
-                    uv[i] = new Vector2(x / (float)seg * 6f, z / (float)seg * 6f);
+                    // vertices span the full region so islands sit in a real ocean,
+                    // not on a 1-meter puddle with void below the shoreline
+                    verts[i] = new Vector3((-0.5f + x / (float)seg) * size, 0f, (-0.5f + z / (float)seg) * size);
+                    uv[i] = new Vector2(x / (float)seg * size * 0.1f, z / (float)seg * size * 0.1f);
                 }
             for (int z = 0; z < seg; z++)
                 for (int x = 0; x < seg; x++)

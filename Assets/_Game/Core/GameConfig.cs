@@ -11,7 +11,7 @@ namespace LoveGame.Core
     public class GameSettings
     {
         public int qualityLevel = 1;                // QualityLevel
-        public int fpsTarget = 30;                  // 30 or 60
+        public int fpsTarget = 60;                  // 30 or 60
         public float masterVolume = 1f;
         public float musicVolume = 0.8f;
         public float ambienceVolume = 0.9f;

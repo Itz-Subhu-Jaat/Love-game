@@ -8,7 +8,7 @@ namespace LoveGame.Core
     public sealed class Rng
     {
         ulong _state;
-        public Rng(int seed) { _state = (ulong)(seed ^ 0x9E3779B97F4A7C15) + 0x2545F4914F6CDD1DUL; if (_state == 0) _state = 0x853C49E6748FEA9BUL; NextULong(); }
+        public Rng(int seed) { _state = ((ulong)seed ^ 0x9E3779B97F4A7C15UL) + 0x2545F4914F6CDD1DUL; if (_state == 0) _state = 0x853C49E6748FEA9BUL; NextULong(); }
 
         public int NextInt() => (int)(NextULong() & 0x7FFFFFFF);
         public int Range(int minInclusive, int maxExclusive) => minInclusive + (int)(NextULong() % (ulong)Mathf.Max(1, maxExclusive - minInclusive));
@@ -51,13 +51,14 @@ namespace LoveGame.Core
             int i1 = x0 > y0 ? 1 : 0, j1 = x0 > y0 ? 0 : 1;
             float x1 = x0 - i1 + G2, y1 = y0 - j1 + G2;
             float x2 = x0 - 1f + 2f * G2, y2 = y0 - 1f + 2f * G2;
+            int ii = i & 255, jj = j & 255;
             float n = 0f;
             float t0 = 0.5f - x0 * x0 - y0 * y0;
-            if (t0 > 0) { int g = _perm[i + _perm[j]] & 7; t0 *= t0; n += t0 * t0 * (Grad2[g][0] * x0 + Grad2[g][1] * y0); }
+            if (t0 > 0) { int g = _perm[ii + _perm[jj]] & 7; t0 *= t0; n += t0 * t0 * (Grad2[g][0] * x0 + Grad2[g][1] * y0); }
             float t1 = 0.5f - x1 * x1 - y1 * y1;
-            if (t1 > 0) { int g = _perm[i + i1 + _perm[j + j1]] & 7; t1 *= t1; n += t1 * t1 * (Grad2[g][0] * x1 + Grad2[g][1] * y1); }
+            if (t1 > 0) { int g = _perm[ii + i1 + _perm[(jj + j1) & 255]] & 7; t1 *= t1; n += t1 * t1 * (Grad2[g][0] * x1 + Grad2[g][1] * y1); }
             float t2 = 0.5f - x2 * x2 - y2 * y2;
-            if (t2 > 0) { int g = _perm[i + 1 + _perm[j + 1]] & 7; t2 *= t2; n += t2 * t2 * (Grad2[g][0] * x2 + Grad2[g][1] * y2); }
+            if (t2 > 0) { int g = _perm[ii + 1 + _perm[(jj + 1) & 255]] & 7; t2 *= t2; n += t2 * t2 * (Grad2[g][0] * x2 + Grad2[g][1] * y2); }
             return 70f * n;
         }
 

@@ -33,8 +33,12 @@ namespace LoveGame.Game
             ui.PopAll();
             ui.Push(new UI.MainMenuScreen());
             var camera = Camera.main;
-            if (camera != null) camera.backgroundColor = new Color(0.09f, 0.04f, 0.14f);
-            camera?.clearFlags = CameraClearFlags.SolidColor;
+            if (camera != null)
+            {
+                camera.backgroundColor = new Color(0.09f, 0.04f, 0.14f);
+                camera.clearFlags = CameraClearFlags.SolidColor;
+                if (camera.GetComponent<AudioListener>() == null) camera.gameObject.AddComponent<AudioListener>();
+            }
         }
     }
 }

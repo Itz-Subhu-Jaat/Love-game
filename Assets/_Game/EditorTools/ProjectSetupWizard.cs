@@ -123,7 +123,7 @@ namespace LoveGame.EditorTools
 
         static UniversalRendererData LoadOrCreateRenderer()
         {
-            const string path = $"{SettingsFolder}/URP_Renderer.asset";
+            const string path = SettingsFolder + "/URP_Renderer.asset";
             var renderer = AssetDatabase.LoadAssetAtPath<UniversalRendererData>(path);
             if (renderer != null) return renderer;
             renderer = ScriptableObject.CreateInstance<UniversalRendererData>();
@@ -218,7 +218,7 @@ namespace LoveGame.EditorTools
             PlayerSettings.productName = "Love Game";
             PlayerSettings.SetApplicationIdentifier(BuildTargetGroup.Android, "com.lovegamestudio.lovegame");
             PlayerSettings.SetScriptingBackend(BuildTargetGroup.Android, ScriptingImplementation.IL2CPP);
-            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.Arm64;
+            PlayerSettings.Android.targetArchitectures = AndroidArchitecture.ARM64;
             PlayerSettings.Android.minSdkVersion = AndroidSdkVersions.AndroidApiLevel24;
             PlayerSettings.Android.forceInternetPermission = true;
             PlayerSettings.defaultInterfaceOrientation = UIOrientation.LandscapeLeft;
@@ -237,9 +237,9 @@ namespace LoveGame.EditorTools
         {
             EditorBuildSettings.scenes = new[]
             {
-                new EditorBuildSettingsScene("Assets/_Scenes/00_Bootstrap.unity", true),
-                new EditorBuildSettingsScene("Assets/_Scenes/01_MainMenu.unity", true),
-                new EditorBuildSettingsScene("Assets/_Scenes/02_World.unity", true),
+                new EditorBuildSettingsScene("Assets/_Game/_Scenes/00_Bootstrap.unity", true),
+                new EditorBuildSettingsScene("Assets/_Game/_Scenes/01_MainMenu.unity", true),
+                new EditorBuildSettingsScene("Assets/_Game/_Scenes/02_World.unity", true),
             };
         }
     }

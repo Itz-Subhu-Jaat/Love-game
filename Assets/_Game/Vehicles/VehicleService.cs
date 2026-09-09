@@ -133,74 +133,138 @@ namespace LoveGame.Vehicles
             passenger.localPosition = new Vector3(0.4f, 0.4f, 0f);
 
             var paint = MaterialLibrary.Tinted(MaterialLibrary.Lit,
-                kind == VehicleKind.Boat ? new Color(0.95f, 0.92f, 0.88f) :
-                kind == VehicleKind.Motorcycle ? new Color(0.9f, 0.25f, 0.2f) :
-                kind == VehicleKind.Hover ? new Color(0.3f, 0.85f, 0.9f) : new Color(0.25f, 0.45f, 0.85f), "veh" + kind);
-            var dark = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.12f, 0.13f, 0.15f), "vehdark");
-            var glass = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.5f, 0.7f, 0.85f), "vehglass");
+                kind == VehicleKind.Boat ? new Color(0.96f, 0.94f, 0.90f) :
+                kind == VehicleKind.Motorcycle ? new Color(0.92f, 0.22f, 0.24f) :
+                kind == VehicleKind.Hover ? new Color(0.25f, 0.82f, 0.95f) : new Color(0.18f, 0.42f, 0.85f), "veh" + kind);
+            var dark = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.12f, 0.13f, 0.16f), "vehdark");
+            var interior = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.82f, 0.46f, 0.26f), "vehleather");
+            var glass = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.45f, 0.65f, 0.82f, 0.65f), "vehglass");
+            var headlight = MaterialLibrary.Emissive(new Color(1f, 1f, 0.92f), 3.0f);
+            var taillight = MaterialLibrary.Emissive(new Color(1f, 0.15f, 0.15f), 2.5f);
+            var chrome = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.85f, 0.88f, 0.92f), "vehchrome");
+            var woodDeck = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.68f, 0.48f, 0.32f), "vehwood");
 
             switch (kind)
             {
                 case VehicleKind.Car:
-                    Part(root.transform, "chassis", new Vector3(0f, 0.55f, 0f), new Vector3(1.9f, 0.6f, 4.2f), paint);
-                    Part(root.transform, "cabin", new Vector3(0f, 1.15f, -0.4f), new Vector3(1.7f, 0.7f, 2.2f), glass);
-                    AddWheel(root.transform, new Vector3(-0.95f, 0.35f, 1.4f));
-                    AddWheel(root.transform, new Vector3(0.95f, 0.35f, 1.4f));
-                    AddWheel(root.transform, new Vector3(-0.95f, 0.35f, -1.4f));
-                    AddWheel(root.transform, new Vector3(0.95f, 0.35f, -1.4f));
+                    // Sleek Island Convertible Sports Car
+                    Part(root.transform, "chassis", new Vector3(0f, 0.35f, 0f), new Vector3(1.95f, 0.30f, 4.3f), dark);
+                    Part(root.transform, "body", new Vector3(0f, 0.62f, -0.1f), new Vector3(1.90f, 0.40f, 4.2f), paint);
+                    Part(root.transform, "hood", new Vector3(0f, 0.70f, 1.1f), new Vector3(1.75f, 0.20f, 1.8f), paint, new Vector3(4f, 0f, 0f));
+                    Part(root.transform, "grille", new Vector3(0f, 0.52f, 2.02f), new Vector3(1.3f, 0.20f, 0.08f), dark);
+                    // Dual LED Headlights
+                    Part(root.transform, "headlightL", new Vector3(-0.68f, 0.66f, 1.98f), new Vector3(0.34f, 0.14f, 0.10f), headlight);
+                    Part(root.transform, "headlightR", new Vector3(0.68f, 0.66f, 1.98f), new Vector3(0.34f, 0.14f, 0.10f), headlight);
+                    // Dual Red Taillights
+                    Part(root.transform, "taillightL", new Vector3(-0.70f, 0.68f, -2.12f), new Vector3(0.36f, 0.12f, 0.08f), taillight);
+                    Part(root.transform, "taillightR", new Vector3(0.70f, 0.68f, -2.12f), new Vector3(0.36f, 0.12f, 0.08f), taillight);
+                    // Dual Chrome Exhaust Tips
+                    Part(root.transform, "exhaustL", new Vector3(-0.52f, 0.32f, -2.16f), new Vector3(0.14f, 0.14f, 0.22f), chrome);
+                    Part(root.transform, "exhaustR", new Vector3(0.52f, 0.32f, -2.16f), new Vector3(0.14f, 0.14f, 0.22f), chrome);
+                    // Tinted Windshield
+                    Part(root.transform, "windshield", new Vector3(0f, 1.02f, 0.42f), new Vector3(1.68f, 0.52f, 0.08f), glass, new Vector3(32f, 0f, 0f));
+                    // Side Mirrors
+                    Part(root.transform, "mirrorL", new Vector3(-1.02f, 0.88f, 0.38f), new Vector3(0.18f, 0.10f, 0.12f), dark);
+                    Part(root.transform, "mirrorR", new Vector3(1.02f, 0.88f, 0.38f), new Vector3(0.18f, 0.10f, 0.12f), dark);
+                    // Saddle Brown Leather Bucket Seats
+                    Part(root.transform, "seatDriver", new Vector3(-0.42f, 0.68f, -0.25f), new Vector3(0.55f, 0.50f, 0.55f), interior);
+                    Part(root.transform, "headrestDriver", new Vector3(-0.42f, 1.08f, -0.48f), new Vector3(0.32f, 0.22f, 0.14f), interior);
+                    Part(root.transform, "seatPassenger", new Vector3(0.42f, 0.68f, -0.25f), new Vector3(0.55f, 0.50f, 0.55f), interior);
+                    Part(root.transform, "headrestPassenger", new Vector3(0.42f, 1.08f, -0.48f), new Vector3(0.32f, 0.22f, 0.14f), interior);
+                    // Steering Wheel
+                    Part(root.transform, "steering", new Vector3(-0.42f, 0.88f, 0.20f), new Vector3(0.30f, 0.30f, 0.05f), dark, new Vector3(-25f, 0f, 0f));
+                    // 4 Sports Alloy Wheels
+                    AddWheel(root.transform, new Vector3(-0.96f, 0.35f, 1.35f), chrome);
+                    AddWheel(root.transform, new Vector3(0.96f, 0.35f, 1.35f), chrome);
+                    AddWheel(root.transform, new Vector3(-0.96f, 0.35f, -1.35f), chrome);
+                    AddWheel(root.transform, new Vector3(0.96f, 0.35f, -1.35f), chrome);
                     break;
+
                 case VehicleKind.Motorcycle:
-                    Part(root.transform, "frame", new Vector3(0f, 0.7f, 0f), new Vector3(0.5f, 0.5f, 2f), paint);
-                    Part(root.transform, "tank", new Vector3(0f, 1.0f, 0.2f), new Vector3(0.45f, 0.35f, 0.8f), dark);
-                    AddWheel(root.transform, new Vector3(0f, 0.35f, 0.9f));
-                    AddWheel(root.transform, new Vector3(0f, 0.35f, -0.9f));
+                    // Anime Sportbike
+                    Part(root.transform, "frame", new Vector3(0f, 0.65f, 0f), new Vector3(0.42f, 0.45f, 1.9f), paint);
+                    Part(root.transform, "tank", new Vector3(0f, 0.95f, 0.25f), new Vector3(0.48f, 0.36f, 0.75f), paint);
+                    Part(root.transform, "seatTandem", new Vector3(0f, 0.88f, -0.40f), new Vector3(0.38f, 0.22f, 0.75f), dark);
+                    Part(root.transform, "fairing", new Vector3(0f, 0.95f, 0.85f), new Vector3(0.44f, 0.45f, 0.45f), paint, new Vector3(-20f, 0f, 0f));
+                    Part(root.transform, "headlight", new Vector3(0f, 0.90f, 1.08f), new Vector3(0.28f, 0.16f, 0.10f), headlight);
+                    Part(root.transform, "windscreen", new Vector3(0f, 1.18f, 0.75f), new Vector3(0.36f, 0.28f, 0.06f), glass, new Vector3(40f, 0f, 0f));
+                    Part(root.transform, "handlebars", new Vector3(0f, 1.08f, 0.55f), new Vector3(0.78f, 0.08f, 0.08f), chrome);
+                    Part(root.transform, "exhaust", new Vector3(0.26f, 0.42f, -0.45f), new Vector3(0.12f, 0.12f, 0.95f), chrome, new Vector3(10f, 0f, 0f));
+                    Part(root.transform, "taillight", new Vector3(0f, 0.95f, -0.92f), new Vector3(0.20f, 0.10f, 0.08f), taillight);
+                    AddWheel(root.transform, new Vector3(0f, 0.38f, 0.95f), chrome);
+                    AddWheel(root.transform, new Vector3(0f, 0.38f, -0.95f), chrome);
                     break;
+
                 case VehicleKind.Boat:
-                    Part(root.transform, "hull", new Vector3(0f, 0.3f, 0f), new Vector3(2.2f, 0.6f, 5.2f), paint);
-                    Part(root.transform, "deck", new Vector3(0f, 0.65f, -0.6f), new Vector3(1.8f, 0.3f, 2.4f), dark);
-                    Part(root.transform, "windshield", new Vector3(0f, 1.05f, 0.6f), new Vector3(1.6f, 0.5f, 0.12f), glass);
+                    // Streamlined Speedboat with Teak Trim
+                    Part(root.transform, "hullBase", new Vector3(0f, 0.25f, 0f), new Vector3(2.3f, 0.55f, 5.4f), paint);
+                    Part(root.transform, "bowTaper", new Vector3(0f, 0.40f, 2.2f), new Vector3(1.8f, 0.45f, 1.6f), paint, new Vector3(12f, 0f, 0f));
+                    Part(root.transform, "teakTrim", new Vector3(0f, 0.56f, 0f), new Vector3(2.35f, 0.08f, 5.45f), woodDeck);
+                    Part(root.transform, "cockpit", new Vector3(0f, 0.52f, -0.3f), new Vector3(1.75f, 0.30f, 2.6f), interior);
+                    Part(root.transform, "windshield", new Vector3(0f, 0.98f, 0.8f), new Vector3(1.70f, 0.48f, 0.10f), glass, new Vector3(32f, 0f, 0f));
+                    Part(root.transform, "outboardL", new Vector3(-0.6f, 0.35f, -2.85f), new Vector3(0.32f, 0.70f, 0.45f), dark);
+                    Part(root.transform, "outboardR", new Vector3(0.6f, 0.35f, -2.85f), new Vector3(0.32f, 0.70f, 0.45f), dark);
                     break;
+
                 case VehicleKind.Hover:
-                    Part(root.transform, "pod", new Vector3(0f, 0.9f, 0f), new Vector3(1.8f, 0.5f, 3f), paint);
-                    Part(root.transform, "canopy", new Vector3(0f, 1.35f, -0.2f), new Vector3(1.4f, 0.45f, 1.6f), glass);
-                    Part(root.transform, "thrusterL", new Vector3(-1.2f, 0.5f, -0.8f), new Vector3(0.6f, 0.25f, 0.6f), dark);
-                    Part(root.transform, "thrusterR", new Vector3(1.2f, 0.5f, -0.8f), new Vector3(0.6f, 0.25f, 0.6f), dark);
-                    Part(root.transform, "glow", new Vector3(0f, 0.25f, 0f), new Vector3(2.4f, 0.12f, 3.4f), MaterialLibrary.Emissive(new Color(0.3f, 0.9f, 1f), 1.8f));
+                    // Sleek Sci-fi Hover Speeder
+                    Part(root.transform, "pod", new Vector3(0f, 0.85f, 0f), new Vector3(1.9f, 0.48f, 3.2f), paint);
+                    Part(root.transform, "canopy", new Vector3(0f, 1.25f, -0.2f), new Vector3(1.4f, 0.42f, 1.7f), glass);
+                    Part(root.transform, "headlight", new Vector3(0f, 0.85f, 1.58f), new Vector3(0.6f, 0.15f, 0.10f), headlight);
+                    Part(root.transform, "thrusterL", new Vector3(-1.25f, 0.55f, -0.8f), new Vector3(0.55f, 0.30f, 0.85f), dark);
+                    Part(root.transform, "thrusterR", new Vector3(1.25f, 0.55f, -0.8f), new Vector3(0.55f, 0.30f, 0.85f), dark);
+                    Part(root.transform, "glowRing", new Vector3(0f, 0.28f, 0f), new Vector3(2.5f, 0.10f, 3.6f), MaterialLibrary.Emissive(new Color(0.2f, 0.9f, 1f), 2.2f));
                     break;
             }
             var box = root.AddComponent<BoxCollider>();
             box.size = kind switch
             {
-                VehicleKind.Car => new Vector3(2f, 1.6f, 4.3f),
-                VehicleKind.Motorcycle => new Vector3(0.7f, 1.2f, 2.1f),
-                VehicleKind.Boat => new Vector3(2.3f, 1.2f, 5.3f),
-                _ => new Vector3(2.4f, 1.6f, 3.2f)
+                VehicleKind.Car => new Vector3(2.1f, 1.5f, 4.4f),
+                VehicleKind.Motorcycle => new Vector3(0.8f, 1.3f, 2.2f),
+                VehicleKind.Boat => new Vector3(2.4f, 1.2f, 5.5f),
+                _ => new Vector3(2.5f, 1.5f, 3.4f)
             };
-            box.center = new Vector3(0f, box.size.y * 0.4f, 0f);
+            box.center = new Vector3(0f, box.size.y * 0.45f, 0f);
             return root;
         }
 
-        static void Part(Transform parent, string name, Vector3 pos, Vector3 scale, Material mat)
+        static void Part(Transform parent, string name, Vector3 pos, Vector3 scale, Material mat, Vector3? rot = null)
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
             UnityEngine.Object.Destroy(go.GetComponent<Collider>());
             go.name = name;
-            go.transform.SetParent(parent, false);
-            go.transform.localPosition = pos;
-            go.transform.localScale = scale;
+            var t = go.transform;
+            t.SetParent(parent, false);
+            t.localPosition = pos;
+            t.localScale = scale;
+            if (rot.HasValue) t.localEulerAngles = rot.Value;
             go.GetComponent<MeshRenderer>().sharedMaterial = mat;
         }
 
-        static void AddWheel(Transform parent, Vector3 pos)
+        static void AddWheel(Transform parent, Vector3 pos, Material rimMat = null)
         {
-            var wheel = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-            UnityEngine.Object.Destroy(wheel.GetComponent<Collider>());
-            wheel.name = "wheel";
-            wheel.transform.SetParent(parent, false);
-            wheel.transform.localPosition = pos;
-            wheel.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
-            wheel.transform.localScale = new Vector3(0.7f, 0.18f, 0.7f);
-            wheel.GetComponent<MeshRenderer>().sharedMaterial = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.1f, 0.1f, 0.11f), "wheel");
+            var wheelGo = new GameObject("wheel");
+            var t = wheelGo.transform;
+            t.SetParent(parent, false);
+            t.localPosition = pos;
+
+            // Black rubber tire
+            var tire = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            UnityEngine.Object.Destroy(tire.GetComponent<Collider>());
+            tire.name = "tire";
+            tire.transform.SetParent(t, false);
+            tire.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            tire.transform.localScale = new Vector3(0.72f, 0.22f, 0.72f);
+            tire.GetComponent<MeshRenderer>().sharedMaterial = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.12f, 0.12f, 0.14f), "wheeltire");
+
+            // Metallic alloy rim
+            var rim = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            UnityEngine.Object.Destroy(rim.GetComponent<Collider>());
+            rim.name = "rim";
+            rim.transform.SetParent(t, false);
+            rim.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            rim.transform.localScale = new Vector3(0.48f, 0.23f, 0.48f);
+            rim.GetComponent<MeshRenderer>().sharedMaterial = rimMat ?? MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.85f, 0.88f, 0.92f), "wheelrim");
         }
 
         void TryEnter(VehicleBase vehicle)

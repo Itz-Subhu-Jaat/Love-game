@@ -47,6 +47,16 @@ namespace LoveGame.Player
         void Awake()
         {
             _cc = GetComponent<CharacterController>();
+            // The visual rig is built feet-up from the transform origin, so the capsule
+            // must be raised to cover the body - otherwise the character hovers at
+            // half its height above the ground it stands on.
+            _cc.height = 1.8f;
+            _cc.radius = 0.34f;
+            _cc.center = new Vector3(0f, 0.95f, 0f);
+            _cc.skinWidth = 0.08f;
+            _cc.slopeLimit = 55f;
+            _cc.stepOffset = 0.45f;
+            _cc.minMoveDistance = 0f;
         }
 
         public void Bind(IInputSource input, IWorldQuery world)
@@ -64,7 +74,7 @@ namespace LoveGame.Player
             // ---- water state
             var surface = _world.WaterSurfaceAt(pos.x, pos.z);
             bool inWaterVolume = !float.IsNaN(surface);
-            float bodyY = pos.y + _cc.height * 0.5f;
+            float bodyY = pos.y + _cc.center.y;
             IsUnderwater = inWaterVolume && bodyY < surface - 0.4f;
             bool wantSwim = inWaterVolume && pos.y < surface - 0.6f;
 
@@ -93,6 +103,12 @@ namespace LoveGame.Player
             else
             {
                 SimulateGrounded(dt, move);
+            }
+
+            // Safety recovery: prevent falling into void indefinitely
+            if (transform.position.y < -30f)
+            {
+                SnapToGround();
             }
 
             _lastPosition = transform.position;
@@ -195,17 +211,36 @@ namespace LoveGame.Player
 
         public void SnapToGround()
         {
-            if (_world == null) return;
-            var h = _world.SampleHeight(transform.position.x, transform.position.z);
-            Teleport(new Vector3(transform.position.x, h + _cc.height * 0.5f + 0.1f, transform.position.z));
+            Vector3 pos = transform.position;
+            float groundY = 0f;
+            bool foundGround = false;
+
+            // 1. Raycast downward from high above to hit terrain or geometry colliders
+            float rayStartY = Mathf.Max(pos.y + 50f, 250f);
+            int layerMask = ~((1 << GameLayers.Player) | (1 << 2)); // ignore Player and IgnoreRaycast
+            if (Physics.Raycast(new Vector3(pos.x, rayStartY, pos.z), Vector3.down, out var hit, 600f, layerMask, QueryTriggerInteraction.Ignore))
+            {
+                groundY = hit.point.y;
+                foundGround = true;
+            }
+            else if (_world != null)
+            {
+                groundY = _world.SampleHeight(pos.x, pos.z);
+                foundGround = true;
+            }
+
+            if (foundGround)
+            {
+                Teleport(new Vector3(pos.x, groundY + 0.08f, pos.z));
+            }
         }
 
         public event System.Action<Vector3> Landed;
         public event System.Action StartedSwimming;
         public event System.Action StoppedSwimming;
 
-        void OnLanded(Vector3 velocity) => Landed?.Invoke(velocity);
-        void OnStartedSwimming() => StartedSwimming?.Invoke();
-        void OnStoppedSwimming() => StoppedSwimming?.Invoke();
+        public void OnLanded(Vector3 velocity) => Landed?.Invoke(velocity);
+        public void OnStartedSwimming() => StartedSwimming?.Invoke();
+        public void OnStoppedSwimming() => StoppedSwimming?.Invoke();
     }
 }

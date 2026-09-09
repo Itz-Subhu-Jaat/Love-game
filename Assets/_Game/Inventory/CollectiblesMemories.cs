@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using LoveGame.Core;
+using LoveGame.World;
 using UnityEngine;
 
 namespace LoveGame.Inventory

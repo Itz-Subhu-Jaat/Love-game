@@ -37,8 +37,8 @@ namespace LoveGame.EditorTools.CI
                 Debug.LogWarning($"[CiBuilder][catalog] only {catalog.Count} regions loaded (expected 24+) - world will feel empty");
 
             // compile-blocking asset checks
-            if (AssetDatabase.FindAssets("t:Scene", new[] { "Assets/_Scenes" }).Length < 3)
-                Debug.LogWarning("[CiBuilder] fewer than 3 scenes in Assets/_Scenes");
+            if (AssetDatabase.FindAssets("t:Scene", new[] { "Assets/_Game/_Scenes" }).Length < 3)
+                Debug.LogWarning("[CiBuilder] fewer than 3 scenes in Assets/_Game/_Scenes");
 
             Debug.Log($"[CiBuilder] validation OK ({catalog.Count} regions, {AssetDatabase.FindAssets("t:Script").Length} scripts)");
         }
@@ -51,9 +51,9 @@ namespace LoveGame.EditorTools.CI
             {
                 scenes = new[]
                 {
-                    "Assets/_Scenes/00_Bootstrap.unity",
-                    "Assets/_Scenes/01_MainMenu.unity",
-                    "Assets/_Scenes/02_World.unity",
+                    "Assets/_Game/_Scenes/00_Bootstrap.unity",
+                    "Assets/_Game/_Scenes/01_MainMenu.unity",
+                    "Assets/_Game/_Scenes/02_World.unity",
                 },
                 locationPathName = ApkOutput,
                 target = BuildTarget.Android,
@@ -71,9 +71,9 @@ namespace LoveGame.EditorTools.CI
             {
                 scenes = new[]
                 {
-                    "Assets/_Scenes/00_Bootstrap.unity",
-                    "Assets/_Scenes/01_MainMenu.unity",
-                    "Assets/_Scenes/02_World.unity",
+                    "Assets/_Game/_Scenes/00_Bootstrap.unity",
+                    "Assets/_Game/_Scenes/01_MainMenu.unity",
+                    "Assets/_Game/_Scenes/02_World.unity",
                 },
                 locationPathName = AabOutput,
                 target = BuildTarget.Android,
@@ -101,7 +101,7 @@ namespace LoveGame.EditorTools.CI
             else
             {
                 Debug.LogError($"[CiBuilder] {label} build FAILED: {summary.result}, errors: {summary.totalErrors}, " +
-                               $"{summary.totalWarnings} warnings. Step results: {string.Join(", ", report.steps.Select(s => $"{s.name}:{s.stepResult}"))}");
+                               $"{summary.totalWarnings} warnings. Step results: {string.Join(", ", report.steps.Select(s => s.name))}");
                 EditorApplication.Exit(1);
             }
         }

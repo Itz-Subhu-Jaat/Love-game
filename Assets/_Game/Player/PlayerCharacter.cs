@@ -54,42 +54,165 @@ namespace LoveGame.Player
             _root = new GameObject("rig").transform;
             _root.SetParent(transform, false);
 
-            var outfit = MaterialLibrary.Tinted(MaterialLibrary.Lit, outfitColor, isPartner ? "partnerOutfit" : "playerOutfit");
-            var accent = MaterialLibrary.Tinted(MaterialLibrary.Lit, accentColor, isPartner ? "partnerAccent" : "playerAccent");
-            var skin = MaterialLibrary.Tinted(MaterialLibrary.Lit, skinColor, isPartner ? "partnerSkin" : "playerSkin");
+            // Palette setup
+            Color skinCol = isPartner ? new Color(1.0f, 0.89f, 0.82f) : new Color(0.98f, 0.85f, 0.75f);
+            Color hairCol = isPartner ? new Color(0.96f, 0.64f, 0.70f) : new Color(0.18f, 0.16f, 0.20f);
+            Color outfitMainCol = isPartner ? new Color(1.0f, 0.44f, 0.62f) : new Color(0.16f, 0.28f, 0.50f);
+            Color outfitAccentCol = isPartner ? new Color(0.98f, 0.98f, 1.0f) : new Color(0.95f, 0.95f, 0.98f);
+            Color pantsCol = isPartner ? new Color(0.18f, 0.16f, 0.22f) : new Color(0.13f, 0.16f, 0.24f);
+            Color shoesCol = isPartner ? new Color(0.92f, 0.35f, 0.50f) : new Color(0.85f, 0.22f, 0.26f);
+            Color soleCol = new Color(0.96f, 0.96f, 0.96f);
+            Color eyesCol = isPartner ? new Color(0.72f, 0.35f, 0.88f) : new Color(0.18f, 0.65f, 0.96f);
+            Color goldCol = new Color(0.96f, 0.78f, 0.24f);
+            Color blushCol = new Color(1.0f, 0.52f, 0.64f);
 
-            _torso = Part(_root, "torso", new Vector3(0f, 1.15f, 0f), new Vector3(0.44f, 0.62f, 0.26f), outfit);
-            _head = Part(_root, "head", new Vector3(0f, 1.72f, 0f), new Vector3(0.34f, 0.34f, 0.34f), skin);
-            Part(_head, "hairCap", new Vector3(0f, 0.08f, -0.02f), new Vector3(0.36f, 0.16f, 0.36f), accent);
+            string pfx = isPartner ? "ptn_" : "ply_";
+            var matSkin = MaterialLibrary.Tinted(MaterialLibrary.Lit, skinCol, pfx + "skin");
+            var matHair = MaterialLibrary.Tinted(MaterialLibrary.Lit, hairCol, pfx + "hair");
+            var matOutfit = MaterialLibrary.Tinted(MaterialLibrary.Lit, outfitMainCol, pfx + "outfit");
+            var matAccent = MaterialLibrary.Tinted(MaterialLibrary.Lit, outfitAccentCol, pfx + "accent");
+            var matPants = MaterialLibrary.Tinted(MaterialLibrary.Lit, pantsCol, pfx + "pants");
+            var matShoes = MaterialLibrary.Tinted(MaterialLibrary.Lit, shoesCol, pfx + "shoes");
+            var matSole = MaterialLibrary.Tinted(MaterialLibrary.Lit, soleCol, "chr_sole");
+            var matEyeWhite = MaterialLibrary.Tinted(MaterialLibrary.Lit, Color.white, "chr_eyewhite");
+            var matEyeIris = MaterialLibrary.Tinted(MaterialLibrary.Lit, eyesCol, pfx + "eyeIris");
+            var matEyePupil = MaterialLibrary.Tinted(MaterialLibrary.Lit, new Color(0.06f, 0.06f, 0.10f), "chr_pupil");
+            var matBlush = MaterialLibrary.Tinted(MaterialLibrary.Lit, blushCol, "chr_blush");
+            var matGold = MaterialLibrary.Tinted(MaterialLibrary.Lit, goldCol, "chr_gold");
 
-            _armL = Pivot(_root, "armL", new Vector3(-0.33f, 1.48f, 0f));
-            Part(_armL, "limb", new Vector3(0f, -0.26f, 0f), new Vector3(0.13f, 0.55f, 0.13f), outfit);
-            _armR = Pivot(_root, "armR", new Vector3(0.33f, 1.48f, 0f));
-            Part(_armR, "limb", new Vector3(0f, -0.26f, 0f), new Vector3(0.13f, 0.55f, 0.13f), outfit);
+            // --- Torso & Clothing ---
+            _torso = Pivot(_root, "torso", new Vector3(0f, 0.82f, 0f));
+            Prim(_torso, "pelvis", PrimitiveType.Capsule, new Vector3(0f, 0.05f, 0f), new Vector3(0.34f, 0.14f, 0.23f), matPants, new Vector3(0f, 0f, 90f));
+            Prim(_torso, "waist", PrimitiveType.Cube, new Vector3(0f, 0.15f, 0f), new Vector3(0.36f, 0.08f, 0.24f), matOutfit);
+            Prim(_torso, "chest", PrimitiveType.Capsule, new Vector3(0f, 0.36f, 0f), new Vector3(0.40f, 0.22f, 0.25f), matOutfit);
+            Prim(_torso, "neck", PrimitiveType.Cylinder, new Vector3(0f, 0.58f, 0f), new Vector3(0.12f, 0.12f, 0.12f), matSkin);
 
-            _legL = Pivot(_root, "legL", new Vector3(-0.14f, 0.62f, 0f));
-            Part(_legL, "limb", new Vector3(0f, -0.3f, 0f), new Vector3(0.16f, 0.62f, 0.16f), accent);
-            _legR = Pivot(_root, "legR", new Vector3(0.14f, 0.62f, 0f));
-            Part(_legR, "limb", new Vector3(0f, -0.3f, 0f), new Vector3(0.16f, 0.62f, 0.16f), accent);
+            if (isPartner)
+            {
+                // Female outfit: cute flared skirt, frills, chest ribbon bow, and golden brooch
+                Prim(_torso, "skirtUpper", PrimitiveType.Cube, new Vector3(0f, 0.04f, 0f), new Vector3(0.44f, 0.16f, 0.36f), matOutfit);
+                Prim(_torso, "skirtFrill", PrimitiveType.Cube, new Vector3(0f, -0.04f, 0f), new Vector3(0.48f, 0.06f, 0.40f), matAccent);
+                Prim(_torso, "blouseCollar", PrimitiveType.Cube, new Vector3(0f, 0.51f, 0.02f), new Vector3(0.24f, 0.06f, 0.20f), matAccent);
+                Prim(_torso, "bowL", PrimitiveType.Cube, new Vector3(-0.05f, 0.42f, 0.14f), new Vector3(0.08f, 0.06f, 0.03f), matOutfit, new Vector3(0f, 0f, 25f));
+                Prim(_torso, "bowR", PrimitiveType.Cube, new Vector3(0.05f, 0.42f, 0.14f), new Vector3(0.08f, 0.06f, 0.03f), matOutfit, new Vector3(0f, 0f, -25f));
+                Prim(_torso, "brooch", PrimitiveType.Sphere, new Vector3(0f, 0.42f, 0.155f), new Vector3(0.045f, 0.045f, 0.03f), matGold);
+            }
+            else
+            {
+                // Male outfit: stylish casual jacket, inner graphic tee, upturned collar, and golden belt buckle
+                Prim(_torso, "innerShirt", PrimitiveType.Cube, new Vector3(0f, 0.36f, 0.128f), new Vector3(0.16f, 0.30f, 0.02f), matAccent);
+                Prim(_torso, "collar", PrimitiveType.Cube, new Vector3(0f, 0.52f, -0.01f), new Vector3(0.26f, 0.08f, 0.22f), matOutfit);
+                Prim(_torso, "buckle", PrimitiveType.Cube, new Vector3(0f, 0.15f, 0.125f), new Vector3(0.08f, 0.06f, 0.02f), matGold);
+            }
+
+            // --- Head & Stylized Anime Face ---
+            _head = Pivot(_root, "head", new Vector3(0f, 1.48f, 0f));
+            Prim(_head, "face", PrimitiveType.Sphere, new Vector3(0f, 0.18f, 0f), new Vector3(0.36f, 0.38f, 0.35f), matSkin);
+
+            // Anime Eyes (Expressive, sparkling with highlights)
+            Prim(_head, "eyeWhiteL", PrimitiveType.Cube, new Vector3(-0.082f, 0.18f, 0.160f), new Vector3(0.065f, 0.075f, 0.015f), matEyeWhite, new Vector3(0f, -8f, 0f));
+            Prim(_head, "eyeWhiteR", PrimitiveType.Cube, new Vector3(0.082f, 0.18f, 0.160f), new Vector3(0.065f, 0.075f, 0.015f), matEyeWhite, new Vector3(0f, 8f, 0f));
+            Prim(_head, "eyeIrisL", PrimitiveType.Cube, new Vector3(-0.082f, 0.176f, 0.168f), new Vector3(0.048f, 0.055f, 0.012f), matEyeIris, new Vector3(0f, -8f, 0f));
+            Prim(_head, "eyeIrisR", PrimitiveType.Cube, new Vector3(0.082f, 0.176f, 0.168f), new Vector3(0.048f, 0.055f, 0.012f), matEyeIris, new Vector3(0f, 8f, 0f));
+            Prim(_head, "pupilL", PrimitiveType.Cube, new Vector3(-0.082f, 0.176f, 0.173f), new Vector3(0.025f, 0.032f, 0.008f), matEyePupil);
+            Prim(_head, "pupilR", PrimitiveType.Cube, new Vector3(0.082f, 0.176f, 0.173f), new Vector3(0.025f, 0.032f, 0.008f), matEyePupil);
+            Prim(_head, "sparkleL1", PrimitiveType.Sphere, new Vector3(-0.072f, 0.193f, 0.176f), new Vector3(0.018f, 0.018f, 0.01f), matEyeWhite);
+            Prim(_head, "sparkleR1", PrimitiveType.Sphere, new Vector3(0.092f, 0.193f, 0.176f), new Vector3(0.018f, 0.018f, 0.01f), matEyeWhite);
+            Prim(_head, "sparkleL2", PrimitiveType.Sphere, new Vector3(-0.088f, 0.163f, 0.175f), new Vector3(0.011f, 0.011f, 0.008f), matEyeWhite);
+            Prim(_head, "sparkleR2", PrimitiveType.Sphere, new Vector3(0.076f, 0.163f, 0.175f), new Vector3(0.011f, 0.011f, 0.008f), matEyeWhite);
+            Prim(_head, "browL", PrimitiveType.Cube, new Vector3(-0.082f, 0.235f, 0.155f), new Vector3(0.065f, 0.015f, 0.015f), matHair, new Vector3(0f, -8f, -6f));
+            Prim(_head, "browR", PrimitiveType.Cube, new Vector3(0.082f, 0.235f, 0.155f), new Vector3(0.065f, 0.015f, 0.015f), matHair, new Vector3(0f, 8f, 6f));
+
+            // Cheeks blush & smile
+            Prim(_head, "blushL", PrimitiveType.Sphere, new Vector3(-0.125f, 0.128f, 0.148f), new Vector3(0.055f, 0.025f, 0.02f), matBlush);
+            Prim(_head, "blushR", PrimitiveType.Sphere, new Vector3(0.125f, 0.128f, 0.148f), new Vector3(0.055f, 0.025f, 0.02f), matBlush);
+            Prim(_head, "smile", PrimitiveType.Cube, new Vector3(0f, 0.108f, 0.168f), new Vector3(0.045f, 0.012f, 0.012f), matBlush);
+
+            // Hair Volume & Styling
+            var hairCap = Prim(_head, "hairCap", PrimitiveType.Sphere, new Vector3(0f, 0.22f, -0.02f), new Vector3(0.39f, 0.35f, 0.39f), matHair);
+            Prim(_head, "hairBack", PrimitiveType.Sphere, new Vector3(0f, 0.14f, -0.10f), new Vector3(0.37f, 0.32f, 0.30f), matHair);
+            // Fringe bangs
+            Prim(_head, "bangMid", PrimitiveType.Capsule, new Vector3(0f, 0.27f, 0.145f), new Vector3(0.08f, 0.10f, 0.06f), matHair, new Vector3(25f, 0f, 0f));
+            Prim(_head, "bangL", PrimitiveType.Capsule, new Vector3(-0.09f, 0.25f, 0.135f), new Vector3(0.07f, 0.11f, 0.06f), matHair, new Vector3(22f, -15f, 15f));
+            Prim(_head, "bangR", PrimitiveType.Capsule, new Vector3(0.09f, 0.25f, 0.135f), new Vector3(0.07f, 0.11f, 0.06f), matHair, new Vector3(22f, 15f, -15f));
+            // Side locks
+            Prim(_head, "sideLockL", PrimitiveType.Capsule, new Vector3(-0.18f, 0.13f, 0.06f), new Vector3(0.06f, 0.18f, 0.06f), matHair, new Vector3(5f, 0f, -8f));
+            Prim(_head, "sideLockR", PrimitiveType.Capsule, new Vector3(0.18f, 0.13f, 0.06f), new Vector3(0.06f, 0.18f, 0.06f), matHair, new Vector3(5f, 0f, 8f));
+
+            if (isPartner)
+            {
+                // Partner Twin-tails with cute hair ribbon ties
+                Prim(_head, "ribbonL", PrimitiveType.Sphere, new Vector3(-0.21f, 0.26f, -0.09f), new Vector3(0.07f, 0.07f, 0.07f), matOutfit);
+                Prim(_head, "tailL", PrimitiveType.Capsule, new Vector3(-0.26f, 0.09f, -0.12f), new Vector3(0.11f, 0.26f, 0.11f), matHair, new Vector3(15f, -15f, 25f));
+                Prim(_head, "ribbonR", PrimitiveType.Sphere, new Vector3(0.21f, 0.26f, -0.09f), new Vector3(0.07f, 0.07f, 0.07f), matOutfit);
+                Prim(_head, "tailR", PrimitiveType.Capsule, new Vector3(0.26f, 0.09f, -0.12f), new Vector3(0.11f, 0.26f, 0.11f), matHair, new Vector3(15f, 15f, -25f));
+                Prim(_head, "hairClip", PrimitiveType.Sphere, new Vector3(-0.14f, 0.32f, 0.11f), new Vector3(0.06f, 0.06f, 0.03f), matGold);
+            }
+            else
+            {
+                // Player stylish anime hair tufts & swept locks
+                Prim(_head, "tuft", PrimitiveType.Capsule, new Vector3(0.02f, 0.39f, 0.02f), new Vector3(0.06f, 0.11f, 0.06f), matHair, new Vector3(-15f, 10f, 18f));
+                Prim(_head, "sweptBack", PrimitiveType.Capsule, new Vector3(0f, 0.26f, -0.16f), new Vector3(0.10f, 0.15f, 0.08f), matHair, new Vector3(-38f, 0f, 0f));
+            }
+
+            // --- Arms & Hands ---
+            _armL = Pivot(_root, "armL", new Vector3(-0.28f, 1.34f, 0f));
+            BuildArm(_armL, true, matOutfit, isPartner ? matSkin : matOutfit, matAccent, matSkin);
+
+            _armR = Pivot(_root, "armR", new Vector3(0.28f, 1.34f, 0f));
+            BuildArm(_armR, false, matOutfit, isPartner ? matSkin : matOutfit, matAccent, matSkin);
+
+            // --- Legs & Stylized Sneakers ---
+            _legL = Pivot(_root, "legL", new Vector3(-0.13f, 0.82f, 0f));
+            BuildLeg(_legL, matPants, matAccent, matShoes, matSole);
+
+            _legR = Pivot(_root, "legR", new Vector3(0.13f, 0.82f, 0f));
+            BuildLeg(_legR, matPants, matAccent, matShoes, matSole);
 
             BodySlot = _torso;
             HeadSlot = _head;
-            HairSlot = _head.Find("hairCap");
+            HairSlot = hairCap;
             LeftHandSlot = _armL;
             RightHandSlot = _armR;
             AccessorySlot = _root;
         }
 
-        static Transform Part(Transform parent, string name, Vector3 localPos, Vector3 scale, Material mat)
+        static void BuildArm(Transform parent, bool isLeft, Material matShoulder, Material matArm, Material matCuff, Material matSkin)
         {
-            var go = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            UnityEngine.Object.Destroy(go.GetComponent<Collider>());
+            Prim(parent, "shoulder", PrimitiveType.Sphere, Vector3.zero, new Vector3(0.14f, 0.14f, 0.14f), matShoulder);
+            Prim(parent, "upperArm", PrimitiveType.Capsule, new Vector3(0f, -0.15f, 0f), new Vector3(0.12f, 0.15f, 0.12f), matShoulder);
+            Prim(parent, "elbow", PrimitiveType.Sphere, new Vector3(0f, -0.29f, 0f), new Vector3(0.11f, 0.11f, 0.11f), matShoulder);
+            Prim(parent, "forearm", PrimitiveType.Capsule, new Vector3(0f, -0.42f, 0f), new Vector3(0.10f, 0.14f, 0.10f), matArm);
+            Prim(parent, "cuff", PrimitiveType.Cylinder, new Vector3(0f, -0.49f, 0f), new Vector3(0.115f, 0.04f, 0.115f), matCuff);
+            Prim(parent, "hand", PrimitiveType.Sphere, new Vector3(0f, -0.56f, 0.01f), new Vector3(0.09f, 0.11f, 0.08f), matSkin);
+            Prim(parent, "thumb", PrimitiveType.Capsule, new Vector3(isLeft ? 0.04f : -0.04f, -0.54f, 0.025f), new Vector3(0.035f, 0.045f, 0.035f), matSkin, new Vector3(0f, 0f, isLeft ? -25f : 25f));
+        }
+
+        static void BuildLeg(Transform parent, Material matPants, Material matSock, Material matShoe, Material matSole)
+        {
+            Prim(parent, "thigh", PrimitiveType.Capsule, new Vector3(0f, -0.19f, 0f), new Vector3(0.15f, 0.20f, 0.15f), matPants);
+            Prim(parent, "knee", PrimitiveType.Sphere, new Vector3(0f, -0.38f, 0f), new Vector3(0.14f, 0.14f, 0.14f), matPants);
+            Prim(parent, "calf", PrimitiveType.Capsule, new Vector3(0f, -0.56f, 0f), new Vector3(0.13f, 0.18f, 0.13f), matPants);
+            Prim(parent, "sock", PrimitiveType.Cylinder, new Vector3(0f, -0.71f, 0.01f), new Vector3(0.13f, 0.06f, 0.13f), matSock);
+            // Sneakers with stylish white rubber soles and toe caps
+            Prim(parent, "shoe", PrimitiveType.Cube, new Vector3(0f, -0.75f, 0.04f), new Vector3(0.15f, 0.10f, 0.24f), matShoe);
+            Prim(parent, "sole", PrimitiveType.Cube, new Vector3(0f, -0.785f, 0.04f), new Vector3(0.16f, 0.035f, 0.25f), matSole);
+            Prim(parent, "toeCap", PrimitiveType.Sphere, new Vector3(0f, -0.75f, 0.12f), new Vector3(0.14f, 0.08f, 0.09f), matSock);
+        }
+
+        static Transform Prim(Transform parent, string name, PrimitiveType prim, Vector3 pos, Vector3 scale, Material mat, Vector3? rot = null)
+        {
+            var go = GameObject.CreatePrimitive(prim);
+            var col = go.GetComponent<Collider>();
+            if (col != null) UnityEngine.Object.Destroy(col);
             go.name = name;
-            go.transform.SetParent(parent, false);
-            go.transform.localPosition = localPos;
-            go.transform.localScale = scale;
+            var t = go.transform;
+            t.SetParent(parent, false);
+            t.localPosition = pos;
+            t.localScale = scale;
+            if (rot.HasValue) t.localEulerAngles = rot.Value;
             go.GetComponent<MeshRenderer>().sharedMaterial = mat;
-            return go.transform;
+            return t;
         }
 
         static Transform Pivot(Transform parent, string name, Vector3 localPos)
@@ -161,7 +284,8 @@ namespace LoveGame.Player
         void Update()
         {
             float dt = Time.deltaTime;
-            bool inPose = _currentPose != null && _poses.TryGetValue(_currentPose, out var pose);
+            Pose pose = default;
+            bool inPose = _currentPose != null && _poses.TryGetValue(_currentPose, out pose);
 
             if (inPose)
             {
@@ -212,6 +336,7 @@ namespace LoveGame.Player
                 _armL.localRotation = Quaternion.Euler(-swing * 0.8f, 0f, 4f);
                 _armR.localRotation = Quaternion.Euler(swing * 0.8f, 0f, -4f);
                 _torso.localRotation = Quaternion.Euler(amp * 4f, counter * 0.12f, 0f);
+                if (_head != null) _head.localRotation = Quaternion.Euler(-amp * 2f, 0f, 0f);
             }
             else
             {
@@ -221,6 +346,7 @@ namespace LoveGame.Player
                 _armL.localRotation = Quaternion.Euler(2f + idle, 0f, 5f);
                 _armR.localRotation = Quaternion.Euler(2f - idle, 0f, -5f);
                 _torso.localRotation = Quaternion.Euler(0f, 0f, idle * 0.2f);
+                if (_head != null) _head.localRotation = Quaternion.Euler(0f, 0f, -idle * 0.15f);
             }
         }
 

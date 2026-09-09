@@ -78,7 +78,7 @@ namespace LoveGame.World
             inter.prompt = $"Talk to {agent.DisplayName}";
             inter.range = 3f;
             inter.context = "Npc";
-            inter.InteractEvent += interactor => SayLine();
+            inter.InteractEvent += interactor => agent.SayLine();
             return agent;
         }
 
@@ -173,9 +173,9 @@ namespace LoveGame.World
             UnityEngine.Object.DontDestroyOnLoad(_root.gameObject);
             _npcBudget = GameConfig.Quality switch
             {
-                QualityLevel.Low => 10,
-                QualityLevel.Medium => 18,
-                QualityLevel.High => 26,
+                Core.QualityLevel.Low => 10,
+                Core.QualityLevel.Medium => 18,
+                Core.QualityLevel.High => 26,
                 _ => 34
             };
             _streamer.RegionBuilt += OnRegionBuilt;

@@ -130,6 +130,7 @@ namespace LoveGame.UI
         {
             var go = new GameObject(GetType().Name);
             Root = go.AddComponent<RectTransform>();
+            go.AddComponent<CanvasGroup>();
             Root.SetParent(parent, false);
             Root.anchorMin = Vector2.zero;
             Root.anchorMax = Vector2.one;
@@ -145,15 +146,19 @@ namespace LoveGame.UI
 
         public IEnumerator EnterRoutine()
         {
-            var group = Root.GetComponent<CanvasGroup>() ?? Root.gameObject.AddComponent<CanvasGroup>();
-            group.blocksRaycasts = false;
-            for (float t = 0f; t < 1f; t += Time.unscaledDeltaTime / 0.22f)
+            var group = Root != null ? Root.GetComponent<CanvasGroup>() : null;
+            if (group == null && Root != null) group = Root.gameObject.AddComponent<CanvasGroup>();
+            if (group != null)
             {
-                group.alpha = t;
-                yield return null;
+                group.blocksRaycasts = false;
+                for (float t = 0f; t < 1f; t += Time.unscaledDeltaTime / 0.22f)
+                {
+                    group.alpha = t;
+                    yield return null;
+                }
+                group.alpha = 1f;
+                group.blocksRaycasts = true;
             }
-            group.alpha = 1f;
-            group.blocksRaycasts = true;
         }
     }
 
@@ -203,6 +208,22 @@ namespace LoveGame.UI
         public static Sprite TrackSprite => _track ?? (_track = Load("ui_slider_track"));
         public static Sprite FillSprite => _fill ?? (_fill = Load("ui_slider_fill"));
         public static Sprite PinSprite => _pin ?? (_pin = Load("map_pin"));
+
+        /// <summary>Inset a rect so touch HUD elements clear notches/cutouts (Android safe area).</summary>
+        public static void ApplySafeArea(RectTransform rt)
+        {
+            var canvas = rt.GetComponentInParent<Canvas>();
+            if (canvas == null) return;
+            var area = Screen.safeArea;
+            if (area.width >= Screen.width - 1 && area.height >= Screen.height - 1) return; // no cutout
+            var root = canvas.rootCanvas.GetComponent<RectTransform>().rect;
+            float sx = root.width / Screen.width;
+            float sy = root.height / Screen.height;
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.offsetMin = new Vector2(area.xMin * sx, area.yMin * sy);
+            rt.offsetMax = new Vector2((area.xMax - Screen.width) * sx, (area.yMax - Screen.height) * sy);
+        }
 
         static Sprite Load(string name)
         {
@@ -254,6 +275,10 @@ namespace LoveGame.UI
             label.alignment = TextAnchor.MiddleCenter;
             label.horizontalOverflow = HorizontalWrapMode.Wrap;
             label.verticalOverflow = VerticalWrapMode.Overflow;
+            // soft drop shadow keeps text readable over bright world colors
+            var shadow = go.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0f, 0f, 0f, 0.6f);
+            shadow.effectDistance = new Vector2(1f, -1.5f);
             return rt;
         }
 
@@ -283,13 +308,16 @@ namespace LoveGame.UI
             return button;
         }
 
-        public static Button RoundIconButton(RectTransform parent, string text, Font font, Vector2 anchoredPos, float size, System.Action onClick, Color? tint = null)
+        public static Button RoundIconButton(RectTransform parent, string text, Font font, Vector2 anchoredPos, float size, System.Action onClick, Color? tint = null, Vector2? anchor = null, Vector2? pivot = null)
         {
             var go = new GameObject($"round_{text}");
             var rt = go.AddComponent<RectTransform>();
             rt.SetParent(parent, false);
-            rt.anchorMin = new Vector2(0.5f, 0.5f);
-            rt.anchorMax = new Vector2(0.5f, 0.5f);
+            var a = anchor ?? new Vector2(0.5f, 0.5f);
+            var p = pivot ?? a;
+            rt.anchorMin = a;
+            rt.anchorMax = a;
+            rt.pivot = p;
             rt.anchoredPosition = anchoredPos;
             rt.sizeDelta = Vector2.one * size;
             var img = go.AddComponent<Image>();
@@ -361,7 +389,7 @@ namespace LoveGame.UI
             slider.minValue = min;
             slider.maxValue = max;
             slider.value = value;
-            slider.direction = Slider.Direction.LeftToRight;
+            slider.direction = UnityEngine.UI.Slider.Direction.LeftToRight;
             slider.onValueChanged.AddListener(v => onChange?.Invoke(v));
             return slider;
         }

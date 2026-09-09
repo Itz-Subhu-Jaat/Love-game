@@ -25,10 +25,31 @@ namespace LoveGame.Interaction
             _input = input;
         }
 
+        bool HasValidInteractor()
+        {
+            if (_interactor == null) return false;
+            if (_interactor is UnityEngine.Object obj && obj == null)
+            {
+                _interactor = null;
+                return false;
+            }
+            return _interactor.Transform != null;
+        }
+
         public void Initialize() { }
 
         public void Tick(float delta)
         {
+            if (!HasValidInteractor())
+            {
+                if (_focused != null)
+                {
+                    _focused = null;
+                    GameEvents.Publish(new InteractionPromptEvent { Visible = false, Prompt = string.Empty });
+                }
+                return;
+            }
+
             _scanTimer -= delta;
             if (_scanTimer <= 0f)
             {
@@ -36,7 +57,7 @@ namespace LoveGame.Interaction
                 Scan();
             }
 
-            if (_input != null && _input.Active.InteractPressed && _focused != null && _interactor != null)
+            if (_input != null && _input.Active.InteractPressed && _focused != null)
             {
                 _focused.Interact(_interactor);
             }
@@ -44,7 +65,7 @@ namespace LoveGame.Interaction
 
         void Scan()
         {
-            if (_interactor == null) return;
+            if (!HasValidInteractor()) return;
             var pos = _interactor.Transform.position;
 
             _cache.Clear();
@@ -78,6 +99,12 @@ namespace LoveGame.Interaction
             }
         }
 
-        public void Shutdown() => _cache.Clear();
+        public void Shutdown()
+        {
+            _interactor = null;
+            _input = null;
+            _focused = null;
+            _cache.Clear();
+        }
     }
 }
