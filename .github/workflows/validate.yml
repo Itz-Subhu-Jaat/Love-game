@@ -57,7 +57,7 @@ jobs:
             echo "has=true" >> "$GITHUB_OUTPUT"
           else
             echo "has=false" >> "$GITHUB_OUTPUT"
-            echo "::warning title=Unity license not configured::One-time setup: activate a free Personal license in Unity Hub on your PC, then copy the .ulf file contents into the UNITY_LICENSE secret (plus UNITY_EMAIL / UNITY_PASSWORD). Full guide: Documentation/BUILD_GUIDE.md"
+            echo "::warning title=Unity license not configured::One-time setup (either way): (A) run the Unity License Auto-Activation workflow - just needs UNITY_EMAIL + UNITY_PASSWORD secrets, it fetches the license automatically; or (B) activate a Personal license in Unity Hub and copy the .ulf contents into the UNITY_LICENSE secret. Guide: Documentation/BUILD_GUIDE.md"
           fi
 
       - name: Run Unity tests

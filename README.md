@@ -16,17 +16,28 @@
 5. `Assets/_Scenes/02_World.unity` kholo aur **Play** dabao — world generate hoga, explore karo!
 
 ### 2. Android APK banane ke liye (GitHub Actions se — bina PC pe build kiye)
+
+**Option A — Automated (recommended, Unity Hub ki zaroorat nahi):**
+1. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**:
+   - `UNITY_EMAIL` = tumhara Unity account email
+   - `UNITY_PASSWORD` = Unity account password
+   - (agar account pe 2FA hai) `UNITY_TOTP_KEY` = authenticator app ka key
+   - `ACCESS_TOKEN` = fine-grained PAT (Secrets: write) — license auto-store ke liye (optional)
+2. Repo → **Actions** tab → **Unity License Auto-Activation** → **Run workflow** — ye khud Unity ki license site pe login karke Personal license le aayega aur `UNITY_LICENSE` secret me store kar dega (+ editmode tests se verify karega).
+3. Phir **Build Android APK** → **Run workflow**.
+
+**Option B — Manual (Unity Hub se, one-time 5 min):**
 1. Unity Hub me license activate karo (free Personal): Hub → Preferences → Licenses → Add → Sign in.
 2. License file (.ulf) nikalo:
    - Windows: `C:\ProgramData\Unity\Unity_lic.ulf`
    - Mac: `~/Library/Application Support/Unity/Unity_lic.ulf`
    - Linux: `~/.local/share/unity3d/Unity/Unity_lic.ulf`
-3. GitHub repo → **Settings → Secrets and variables → Actions → New repository secret**:
+3. Secrets me add karo:
    - `UNITY_LICENSE` = .ulf file ka **pura content** paste karo
-   - `UNITY_EMAIL` = tumhara Unity account email
-   - `UNITY_PASSWORD` = Unity account password
+   - `UNITY_EMAIL` / `UNITY_PASSWORD` = Unity account credentials
 4. Repo → **Actions** tab → **Build Android APK** → **Run workflow** dabao.
-5. ~30–60 min me run complete → artifacts me **LoveGame-APK** milega → download → phone me install (Unknown sources allow karke).
+
+~30–60 min me run complete → artifacts me **LoveGame-APK** milega → download → phone me install (Unknown sources allow karke).
 
 Bina license ke bhi **Validate Project** workflow har push pe chalta hai (lint + tests) — license sirf Unity builds ke liye chahiye. Detail: [Documentation/BUILD_GUIDE.md](Documentation/BUILD_GUIDE.md)
 
@@ -60,9 +71,10 @@ Love-game/
 │   │   └── Materials/         (auto-generated on first open / CI)
 ├── Packages/manifest.json     URP 17.0.3 + Addressables + uGUI + TestFramework
 ├── ProjectSettings/           Unity 6000.0.83f1, quality levels, layers
-├── Documentation/             status, architecture, build, content, testing guides
+├── Documentation/             status, architecture, build, content, testing guides + MASTER_PROMPT.txt
 ├── Tools/validation/          zero-license static validator (runs in CI)
-└── .github/workflows/         validate.yml, android.yml, release.yml, addressables.yml
+├── Tools/ci/                  CI helper scripts (GitHub secret setter)
+└── .github/workflows/         validate, license (auto-activation), android, release, addressables
 ```
 
 **Naye assets (art/models/music) dalne ka tarika:** `Assets/` ke andar koi bhi folder banao (e.g. `Assets/Art/Models/`) — Unity import karega. Rules: scale `1 unit = 1 meter`, forward `+Z`, pivot neeche-center. Poora guide: [Documentation/ASSET_IMPORT_GUIDE.md](Documentation/ASSET_IMPORT_GUIDE.md). **Kabhi bhi** `Library/`, `Temp/`, `build/` folders commit mat karo (`.gitignore` already handle karta hai).
@@ -92,6 +104,7 @@ Fully synthesized (original — zero licensing risk): romantic chord pad, ocean/
 
 ## ✅ Quality & CI
 - **Every push**: `Validate Project` workflow — meta/GUID pairing, scene refs, asmdef graph, C#/shader syntax, JSON catalogs, secret scan (no Unity license needed, ~1 min)
+- **License automation**: `Unity License Auto-Activation` workflow — docker .alf → portal login → .ulf → UNITY_LICENSE secret (Unity Hub optional)
 - **EditMode + PlayMode tests**: save roundtrip/migration, determinism, region validation, controller physics, camera, vehicles, couple poses
 - **APK builds**: manual dispatch or version tags (IL2CPP/ARM64), 5-day artifact retention (free-tier storage friendly)
 

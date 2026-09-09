@@ -1,0 +1,198 @@
+name: Unity License Auto-Activation
+
+on:
+  workflow_dispatch:
+    inputs:
+      verify:
+        description: 'Run editmode tests with the newly acquired license'
+        type: boolean
+        default: true
+
+concurrency:
+  group: license
+  cancel-in-progress: false
+
+# Fully automated Personal-license acquisition for CI - no Unity Hub, no manual
+# web upload, no deprecated actions:
+#
+#   1. Unity (docker, batch-mode, no license needed)  ->  .alf activation request
+#   2. unity-license-activate (game-ci npm tool)      ->  puppeteer logs into
+#      license.unity3d.com, submits the .alf, selects the Personal license and
+#      downloads the .ulf
+#   3. GitHub REST API (sealed-box encryption)        ->  stores the .ulf as the
+#      UNITY_LICENSE secret so Build/Test workflows pass their license gate
+#
+# Why not game-ci/unity-request-activation-file@v2? Its dist is a tombstone that
+# always fails with "This action is no longer supported" - verified in its
+# dist/index.js. The docker call below reproduces exactly what that action used
+# to do (-createManualActivationFile).
+
+jobs:
+  activate:
+    name: Auto-acquire Personal license and store UNITY_LICENSE
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Check required secrets
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          missing=0
+          if [ -z "${UNITY_EMAIL}" ]; then
+            echo "::error title=Missing secret::UNITY_EMAIL is not set (Settings > Secrets and variables > Actions)."
+            missing=1
+          fi
+          if [ -z "${UNITY_PASSWORD}" ]; then
+            echo "::error title=Missing secret::UNITY_PASSWORD is not set (Settings > Secrets and variables > Actions)."
+            missing=1
+          fi
+          if [ "${missing}" = "1" ]; then exit 1; fi
+          echo "Required secrets present."
+
+      - name: Create manual activation file (.alf) via Unity batch-mode
+        id: alf
+        run: |
+          UNITY_VERSION="$(grep -m1 'm_EditorVersion:' ProjectSettings/ProjectVersion.txt | sed 's/.*: *//')"
+          if [ -z "${UNITY_VERSION}" ]; then
+            echo "::error title=Version detection::Could not read m_EditorVersion from ProjectSettings/ProjectVersion.txt"
+            exit 1
+          fi
+          echo "Unity version: ${UNITY_VERSION}"
+          BASE_TAG="ubuntu-${UNITY_VERSION}-base-3.2.2"
+          if ! curl -sf -o /dev/null "https://hub.docker.com/v2/repositories/unityci/editor/tags/${BASE_TAG}"; then
+            echo "Pinned tag ${BASE_TAG} not on Docker Hub - resolving newest matching tag..."
+            BASE_TAG="$(curl -s "https://hub.docker.com/v2/repositories/unityci/editor/tags/?page_size=25&name=ubuntu-${UNITY_VERSION}-base" | python3 -c 'import json,sys; r=json.load(sys.stdin).get("results",[]); print(r[0]["name"] if r else "")')"
+          fi
+          if [ -z "${BASE_TAG}" ]; then
+            echo "::error title=Image lookup::No unityci/editor ubuntu-${UNITY_VERSION}-base image tag found on Docker Hub"
+            exit 1
+          fi
+          echo "Image: unityci/editor:${BASE_TAG}"
+          docker run --rm -v "$PWD:/project" -w /project \
+            "unityci/editor:${BASE_TAG}" \
+            /opt/unity/Editor/Unity -batchmode -nographics \
+            -logFile /dev/stdout -createManualActivationFile -quit || true
+          ALF_PATH="$(ls -1 ./*.alf 2>/dev/null | head -n 1)"
+          if [ -z "${ALF_PATH}" ]; then
+            echo "::error title=No .alf produced::Unity batch-mode did not create an activation file in the workspace. Check the log above."
+            exit 1
+          fi
+          echo "path=${ALF_PATH}" >> "$GITHUB_OUTPUT"
+          echo "Created ${ALF_PATH} ($(wc -c < "${ALF_PATH}") bytes)"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+
+      - name: Acquire .ulf (automated licensing-portal login)
+        id: ulf
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_TOTP_KEY: ${{ secrets.UNITY_TOTP_KEY }}
+          ALF_PATH: ${{ steps.alf.outputs.path }}
+        run: |
+          npm install --global unity-license-activate
+          set -- "${UNITY_EMAIL}" "${UNITY_PASSWORD}" "${ALF_PATH}"
+          if [ -n "${UNITY_TOTP_KEY}" ]; then
+            set -- "$@" --authenticator-key "${UNITY_TOTP_KEY}"
+          fi
+          unity-license-activate "$@"
+          ULF_PATH="$(ls -1 ./*.ulf 2>/dev/null | head -n 1)"
+          if [ -z "${ULF_PATH}" ] || [ ! -s "${ULF_PATH}" ]; then
+            echo "::error title=No .ulf produced::unity-license-activate finished without leaving a .ulf file. Inspect the license-activation-diagnostics artifact (error.png / error.html). Accounts with 2FA need the UNITY_TOTP_KEY secret (authenticator-app key) - see Documentation/BUILD_GUIDE.md."
+            exit 1
+          fi
+          echo "path=${ULF_PATH}" >> "$GITHUB_OUTPUT"
+          echo "Acquired ${ULF_PATH} ($(wc -c < "${ULF_PATH}") bytes)"
+
+      - name: Store .ulf as UNITY_LICENSE secret (GitHub API)
+        id: store
+        env:
+          SET_SECRET_REPO: ${{ github.repository }}
+          SET_SECRET_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          SET_SECRET_NAME: UNITY_LICENSE
+          SET_SECRET_FILE: ${{ steps.ulf.outputs.path }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          if [ -z "${ACCESS_TOKEN}" ]; then
+            echo "stored=false" >> "$GITHUB_OUTPUT"
+            echo "::warning title=ACCESS_TOKEN secret not set::License acquired but not auto-stored. The .ulf is uploaded as a 1-day artifact - paste its contents into the UNITY_LICENSE secret manually, or add an ACCESS_TOKEN secret (fine-grained PAT with Secrets write permission) and re-run this workflow."
+            exit 0
+          fi
+          python3 -m pip install --quiet pynacl
+          python3 Tools/ci/set_secret.py
+          echo "stored=true" >> "$GITHUB_OUTPUT"
+
+      - name: Upload .ulf fallback artifact (1-day retention)
+        if: steps.store.outputs.stored == 'false'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unity-license-ulf
+          path: ${{ steps.ulf.outputs.path }}
+          retention-days: 1
+          if-no-files-found: error
+
+      - name: Upload diagnostics (activation failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-activation-diagnostics
+          path: |
+            error.png
+            error.html
+          retention-days: 1
+          if-no-files-found: ignore
+
+      - name: Load new license for verification
+        if: ${{ inputs.verify }}
+        env:
+          ULF_PATH: ${{ steps.ulf.outputs.path }}
+        run: |
+          {
+            echo "NEW_UNITY_LICENSE<<ULF_EOF"
+            cat "${ULF_PATH}"
+            echo "ULF_EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Verify license (editmode tests)
+        if: ${{ inputs.verify }}
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ env.NEW_UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          testMode: editmode
+          artifactsPath: test-results
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload verification test results
+        if: ${{ inputs.verify }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: license-verification-test-results
+          path: test-results
+          retention-days: 3
+          if-no-files-found: ignore
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "## Unity License Auto-Activation"
+            echo ""
+            echo "| Step | Result |"
+            echo "|---|---|"
+            echo "| .alf created (docker batch-mode) | ${{ steps.alf.outcome }} |"
+            echo "| .ulf acquired (portal automation) | ${{ steps.ulf.outcome }} |"
+            echo "| UNITY_LICENSE secret updated | ${{ steps.store.outputs.stored }} |"
+            echo "| Verified via editmode tests | ${{ inputs.verify }} |"
+            echo ""
+            echo "Next: run **Build Android APK** or **Validate Project** - the license gate now passes."
+          } >> "$GITHUB_STEP_SUMMARY"

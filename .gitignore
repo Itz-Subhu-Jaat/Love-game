@@ -37,3 +37,4 @@ Thumbs.db
 
 # CI build output (GameCI writes here)
 /build/
+__pycache__/
