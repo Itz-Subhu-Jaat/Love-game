@@ -56,7 +56,7 @@ namespace LoveGame.Core
                 _accum = 0f;
             }
             TotalAllocatedMb = UnityEngine.Profiling.Profiler.GetTotalAllocatedMemoryLong() >> 20;
-            ReservedMb = UnityEngine.Profiling.Profiler.GetReservedMemoryLong() >> 20;
+            ReservedMb = UnityEngine.Profiling.Profiler.GetTotalReservedMemoryLong() >> 20;
         }
 
         public float MinFps()

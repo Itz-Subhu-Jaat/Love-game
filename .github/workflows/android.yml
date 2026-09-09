@@ -24,23 +24,71 @@ jobs:
         with:
           lfs: true
 
-      - name: Check Unity license secret
+      - name: Set up Node.js for license activation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check or Auto-Acquire Unity License
         id: license-check
         env:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          UNITY_TOTP_KEY: ${{ secrets.UNITY_TOTP_KEY }}
         run: |
           if [ -n "$UNITY_LICENSE" ]; then
             echo "has=true" >> "$GITHUB_OUTPUT"
+            echo "Found existing UNITY_LICENSE secret."
+          elif [ -n "$UNITY_EMAIL" ] && [ -n "$UNITY_PASSWORD" ]; then
+            echo "UNITY_LICENSE not found in secrets, but UNITY_EMAIL and UNITY_PASSWORD are provided."
+            echo "Auto-acquiring free Personal license on runner..."
+            UNITY_VERSION="$(grep -m1 'm_EditorVersion:' ProjectSettings/ProjectVersion.txt | sed 's/.*: *//')"
+            echo "Unity version: ${UNITY_VERSION}"
+            BASE_TAG="ubuntu-${UNITY_VERSION}-base-3.2.2"
+            if ! curl -sf -o /dev/null "https://hub.docker.com/v2/repositories/unityci/editor/tags/${BASE_TAG}"; then
+              BASE_TAG="$(curl -s "https://hub.docker.com/v2/repositories/unityci/editor/tags/?page_size=25&name=ubuntu-${UNITY_VERSION}-base" | python3 -c 'import json,sys; r=json.load(sys.stdin).get("results",[]); print(r[0]["name"] if r else "")')"
+            fi
+            echo "Docker tag: unityci/editor:${BASE_TAG}"
+            docker run --rm -v "$PWD:/project" -w /project \
+              "unityci/editor:${BASE_TAG}" \
+              /opt/unity/Editor/Unity -batchmode -nographics \
+              -logFile /dev/stdout -createManualActivationFile -quit || true
+            ALF_PATH="$(ls -1 ./*.alf 2>/dev/null | head -n 1)"
+            if [ -n "${ALF_PATH}" ]; then
+              npm install --global unity-license-activate
+              set -- "${UNITY_EMAIL}" "${UNITY_PASSWORD}" "${ALF_PATH}"
+              if [ -n "${UNITY_TOTP_KEY}" ]; then
+                set -- "$@" --authenticator-key "${UNITY_TOTP_KEY}"
+              fi
+              unity-license-activate "$@" || true
+              ULF_PATH="$(ls -1 ./*.ulf 2>/dev/null | head -n 1)"
+              if [ -n "${ULF_PATH}" ] && [ -s "${ULF_PATH}" ]; then
+                echo "Personal license acquired successfully!"
+                {
+                  echo "UNITY_LICENSE<<EOF"
+                  cat "${ULF_PATH}"
+                  echo "EOF"
+                } >> "$GITHUB_ENV"
+                echo "has=true" >> "$GITHUB_OUTPUT"
+              else
+                echo "::error title=Auto-activation failed::unity-license-activate could not acquire license. Check UNITY_EMAIL and UNITY_PASSWORD secrets."
+                echo "has=false" >> "$GITHUB_OUTPUT"
+              fi
+            else
+              echo "::error title=ALF failed::Unity batch-mode did not generate .alf file."
+              echo "has=false" >> "$GITHUB_OUTPUT"
+            fi
           else
             echo "has=false" >> "$GITHUB_OUTPUT"
-            echo "::warning title=Unity license not configured::One-time setup (either way): (A) run the Unity License Auto-Activation workflow - just needs UNITY_EMAIL + UNITY_PASSWORD secrets, it fetches the license automatically; or (B) activate a Personal license in Unity Hub and copy the .ulf contents into the UNITY_LICENSE secret. Guide: Documentation/BUILD_GUIDE.md"
+            echo "::error title=Missing Unity Credentials::Please add UNITY_EMAIL and UNITY_PASSWORD (or UNITY_LICENSE) in repository Secrets."
           fi
 
       - name: Build APK
         if: steps.license-check.outputs.has == 'true'
         uses: game-ci/unity-builder@v4
         env:
-          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_LICENSE: ${{ env.UNITY_LICENSE || secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:

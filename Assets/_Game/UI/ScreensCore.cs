@@ -97,15 +97,16 @@ namespace LoveGame.UI
             var panel = UiFactory.Panel(root, "panel", new Color(0.08f, 0.07f, 0.12f, 0.95f));
             panel.anchorMin = new Vector2(0.5f, 0.5f);
             panel.anchorMax = new Vector2(0.5f, 0.5f);
-            panel.sizeDelta = new Vector2(640f, 860f);
+            panel.sizeDelta = new Vector2(640f, 980f);
 
-            UiFactory.Label(panel, "PAUSED", 56, font, new Color(1f, 0.6f, 0.7f), new Vector2(0f, 340f)).sizeDelta = new Vector2(500f, 80f);
-            UiFactory.TextButton(panel, "RESUME", 36, font, new Vector2(0f, 220f), new Vector2(480f, 96f), () => Service.Pop());
-            UiFactory.TextButton(panel, "WORLD MAP", 36, font, new Vector2(0f, 105f), new Vector2(480f, 96f), () => Service.Push(new WorldMapScreen()));
-            UiFactory.TextButton(panel, "INVENTORY", 36, font, new Vector2(0f, -10f), new Vector2(480f, 96f), () => Service.Push(new InventoryScreen()));
-            UiFactory.TextButton(panel, "MEMORIES", 36, font, new Vector2(0f, -125f), new Vector2(480f, 96f), () => Service.Push(new JournalScreen()));
-            UiFactory.TextButton(panel, "SETTINGS", 36, font, new Vector2(0f, -240f), new Vector2(480f, 96f), () => Service.Push(new SettingsScreen()));
-            UiFactory.TextButton(panel, "SAVE & EXIT", 36, font, new Vector2(0f, -355f), new Vector2(480f, 96f), () =>
+            UiFactory.Label(panel, "PAUSED", 56, font, new Color(1f, 0.6f, 0.7f), new Vector2(0f, 400f)).sizeDelta = new Vector2(500f, 80f);
+            UiFactory.TextButton(panel, "RESUME", 36, font, new Vector2(0f, 290f), new Vector2(480f, 90f), () => Service.Pop());
+            UiFactory.TextButton(panel, "WORLD MAP", 36, font, new Vector2(0f, 185f), new Vector2(480f, 90f), () => Service.Push(new WorldMapScreen()));
+            UiFactory.TextButton(panel, "INVENTORY", 36, font, new Vector2(0f, 80f), new Vector2(480f, 90f), () => Service.Push(new InventoryScreen()));
+            UiFactory.TextButton(panel, "MEMORIES", 36, font, new Vector2(0f, -25f), new Vector2(480f, 90f), () => Service.Push(new JournalScreen()));
+            UiFactory.TextButton(panel, "SETTINGS", 36, font, new Vector2(0f, -130f), new Vector2(480f, 90f), () => Service.Push(new SettingsScreen()));
+            UiFactory.TextButton(panel, "DEBUG & TELEPORT", 32, font, new Vector2(0f, -235f), new Vector2(480f, 85f), () => Service.Push(new DebugScreen()), new Color(0.25f, 0.5f, 0.75f, 0.95f));
+            UiFactory.TextButton(panel, "SAVE & EXIT", 36, font, new Vector2(0f, -345f), new Vector2(480f, 90f), () =>
             {
                 SaveSystem.Save();
                 Services.Host.Run(ExitRoutine());

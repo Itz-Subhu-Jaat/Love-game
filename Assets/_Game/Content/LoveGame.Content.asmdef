@@ -2,7 +2,9 @@
     "name": "LoveGame.Content",
     "rootNamespace": "LoveGame.Content",
     "references": [
-        "LoveGame.Core"
+        "LoveGame.Core",
+        "Unity.Addressables",
+        "Unity.ResourceManager"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

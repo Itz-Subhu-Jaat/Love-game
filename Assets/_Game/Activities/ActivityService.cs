@@ -102,13 +102,13 @@ namespace LoveGame.Activities
         public void Initialize()
         {
             _fishing = new FishingActivity(this, Services.Get<World.WorldStreamer>());
-            _racing = new RacingActivity(this);
-            _treasure = new TreasureHuntActivity(this);
+            _racing = new RacingActivity();
+            _treasure = new TreasureHuntActivity();
             _stargazing = new StargazingActivity(this, Services.Get<World.DayNightCycle>());
-            _picnic = new PicnicActivity(this);
-            _camping = new CampingActivity(this);
-            _puzzle = new PuzzleActivity(this);
-            _target = new TargetMiniGameActivity(this);
+            _picnic = new PicnicActivity();
+            _camping = new CampingActivity();
+            _puzzle = new PuzzleActivity();
+            _target = new TargetMiniGameActivity();
             foreach (var a in new ActivityBase[] { _fishing, _racing, _treasure, _stargazing, _picnic, _camping, _puzzle, _target })
             {
                 a.SetService(this);
@@ -121,14 +121,14 @@ namespace LoveGame.Activities
         {
             switch (evt.Kind)
             {
-                case World.PoiKind.Fishing: TryStart("fishing"); break;
-                case World.PoiKind.Race: TryStart("racing"); break;
-                case World.PoiKind.Treasure: TryStart("treasure_hunt"); break;
-                case World.PoiKind.Stargaze: TryStart("stargazing"); break;
-                case World.PoiKind.Picnic: TryStart("picnic"); break;
-                case World.PoiKind.Camp: TryStart("camping"); break;
-                case World.PoiKind.Cave: TryStart("puzzle"); break;
-                case World.PoiKind.Activity: TryStart("target_minigame"); break;
+                case nameof(World.PoiKind.Fishing): TryStart("fishing"); break;
+                case nameof(World.PoiKind.Race): TryStart("racing"); break;
+                case nameof(World.PoiKind.Treasure): TryStart("treasure_hunt"); break;
+                case nameof(World.PoiKind.Stargaze): TryStart("stargazing"); break;
+                case nameof(World.PoiKind.Picnic): TryStart("picnic"); break;
+                case nameof(World.PoiKind.Camp): TryStart("camping"); break;
+                case nameof(World.PoiKind.Cave): TryStart("puzzle"); break;
+                case nameof(World.PoiKind.Activity): TryStart("target_minigame"); break;
             }
         }
 

@@ -212,6 +212,24 @@ namespace LoveGame.World
             PumpQueue();
         }
 
+        /// <summary>
+        /// Teleport to an absolute world position (saved games store world coords - passing
+        /// them through TeleportTo would double-offset by the region center).
+        /// </summary>
+        public void TeleportToWorld(string regionId, Vector3 worldPos)
+        {
+            var data = _catalog.GetById(regionId);
+            if (data == null) { Log.Error("Streamer", $"teleport target '{regionId}' unknown"); return; }
+            UnloadAll();
+            PlayerPosition = new Vector3(worldPos.x, 0f, worldPos.z);
+            _lastPlayerPos = PlayerPosition;
+            PrimaryRegionId = null;
+            _loadQueue.Insert(0, regionId);
+            _queryTimer = 999f;
+            Tick(0f);
+            PumpQueue();
+        }
+
         // ------------------------------------------------------ IWorldQuery
 
         public float SampleHeight(float worldX, float worldZ)

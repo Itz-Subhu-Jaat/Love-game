@@ -127,10 +127,10 @@ namespace LoveGame.World
                     def.pois.Add(new PoiDefinition { id = p.id, name = p.name, kind = ParseEnum(p.kind, PoiKind.Landmark), x = p.x, z = p.z, radius = p.radius > 0 ? p.radius : 8f });
             if (dto.fastTravel != null)
                 foreach (var f in dto.fastTravel)
-                    def.FastTravel.Add(new FastTravelPoint { id = f.id, name = f.name, x = f.x, z = f.z });
+                    def.fastTravel.Add(new FastTravelPoint { id = f.id, name = f.name, x = f.x, z = f.z });
             if (dto.vehicleSpawns != null)
                 foreach (var v in dto.vehicleSpawns)
-                    def.VehicleSpawns.Add(new VehicleSpawnDef { kind = v.kind, x = v.x, z = v.z });
+                    def.vehicleSpawns.Add(new VehicleSpawnDef { kind = v.kind, x = v.x, z = v.z });
             var data = RegionData.From(def);
             UnityEngine.Object.Destroy(def);
             return data;

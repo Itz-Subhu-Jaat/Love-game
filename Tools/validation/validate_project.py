@@ -94,11 +94,19 @@ def check_meta_pairing(root):
 
 # ------------------------------------------------------------------- scenes
 
+def resolve_scenes_dir(root):
+    for rel in ("Assets/_Game/_Scenes", "Assets/_Scenes"):
+        path = os.path.join(root, rel)
+        if os.path.isdir(path):
+            return path
+    return None
+
+
 def check_scenes(root, script_guids):
-    scenes_dir = os.path.join(root, "Assets/_Scenes")
+    scenes_dir = resolve_scenes_dir(root)
     expected = ["00_Bootstrap.unity", "01_MainMenu.unity", "02_World.unity"]
-    if not os.path.isdir(scenes_dir):
-        error("Assets/_Scenes missing")
+    if scenes_dir is None:
+        error("scene folder missing (expected Assets/_Game/_Scenes or Assets/_Scenes)")
         return
     found = [f for f in expected if os.path.exists(os.path.join(scenes_dir, f))]
     if len(found) != len(expected):
@@ -126,8 +134,19 @@ def check_scenes(root, script_guids):
 
 # ------------------------------------------------------------------ asmdefs
 
-# Special Unity assemblies provided by the editor (not project asmdefs).
-BUILTIN_ASSEMBLIES = {"UnityEngine.TestRunner", "UnityEditor.TestRunner", "nunit.framework"}
+# Special Unity assemblies provided by the editor/packages (not project asmdefs).
+BUILTIN_ASSEMBLIES = {
+    "UnityEngine.TestRunner",
+    "UnityEditor.TestRunner",
+    "nunit.framework",
+    "Unity.Addressables",
+    "Unity.Addressables.Editor",
+    "Unity.ResourceManager",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Core.Editor",
+    "Unity.RenderPipelines.Universal.Runtime",
+    "Unity.RenderPipelines.Universal.Editor",
+}
 
 def check_asmdefs(root):
     asmdefs = {}

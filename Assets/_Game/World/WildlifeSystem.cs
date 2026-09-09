@@ -38,7 +38,7 @@ namespace LoveGame.World
             _catalog = Services.Get<RegionCatalogService>();
             _root = new GameObject("~Wildlife").transform;
             UnityEngine.Object.DontDestroyOnLoad(_root.gameObject);
-            _budget = GameConfig.Quality switch { QualityLevel.Low => 6, QualityLevel.Medium => 10, _ => 16 };
+            _budget = GameConfig.Quality switch { Core.QualityLevel.Low => 6, Core.QualityLevel.Medium => 10, _ => 16 };
             _streamer.RegionBuilt += OnRegionBuilt;
             _streamer.RegionUnloaded += OnRegionUnloaded;
         }

@@ -165,7 +165,7 @@ namespace LoveGame.Home
             {
                 case "Bed":
                     Box(root, new Vector3(0f, 0.25f, 0f), new Vector3(1.6f, 0.4f, 2.1f), fabric);
-                    Box(root, new Vector3(0f, 0.45f, -0.85f), new Vector3(1.4f, 0.2f, 0.4f), Color.white);
+                    Box(root, new Vector3(0f, 0.45f, -0.85f), new Vector3(1.4f, 0.2f, 0.4f), MaterialLibrary.Tinted(MaterialLibrary.Lit, Color.white, "pillow"));
                     break;
                 case "Sofa":
                     Box(root, new Vector3(0f, 0.3f, 0f), new Vector3(1.9f, 0.5f, 0.85f), fabric);

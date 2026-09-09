@@ -1,40 +1,32 @@
-# Unity generated folders
+﻿# Unity generated
 [Ll]ibrary/
 [Tt]emp/
 [Oo]bj/
 [Bb]uild/
 [Bb]uilds/
 [Ll]ogs/
-[Uu]serSettings/
-MemoryCaptures/
-Recordings/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
 
-# Unity generated files
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
-*.sysinfo.txt
-*.apk
-*.aab
-*.unitypackage
-*.app
-*.pack
-
-# IDE
+# Visual Studio / VS Code / Rider
 .vs/
 .idea/
 *.csproj
+*.unityproj
 *.sln
+*.suo
 *.user
 *.userprefs
+*.pidb
 *.booproj
-*.orig
-*.tmp
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
 
-# OS
+# OS generated
 .DS_Store
 Thumbs.db
-
-# CI build output (GameCI writes here)
-/build/
-__pycache__/
+desktop.ini

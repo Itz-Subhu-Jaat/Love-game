@@ -57,30 +57,48 @@ namespace LoveGame.Player
         public bool DiveHeld => Input.GetKey(KeyCode.LeftControl);
     }
 
-    /// <summary>Service facade: picks the active source, applies user sensitivity settings.</summary>
+    /// <summary>Hybrid source: combines touch (HUD joysticks/buttons) and keyboard/mouse so both work seamlessly.</summary>
+    public sealed class HybridInputSource : IInputSource
+    {
+        public string Name => "Hybrid";
+        readonly TouchInputSource _touch;
+        readonly KeyboardInputSource _keyboard;
+
+        public HybridInputSource(TouchInputSource touch, KeyboardInputSource keyboard)
+        {
+            _touch = touch;
+            _keyboard = keyboard;
+        }
+
+        public Vector2 Move => _touch.Move.sqrMagnitude > 0.01f ? _touch.Move : _keyboard.Move;
+        public Vector2 Look => _touch.Look.sqrMagnitude > 0.001f ? _touch.Look : _keyboard.Look;
+        public bool JumpPressed => _touch.JumpPressed || _keyboard.JumpPressed;
+        public bool SprintHeld => _touch.SprintHeld || _keyboard.SprintHeld;
+        public bool InteractPressed => _touch.InteractPressed || _keyboard.InteractPressed;
+        public bool ActionPressed => _touch.ActionPressed || _keyboard.ActionPressed;
+        public bool DiveHeld => _touch.DiveHeld || _keyboard.DiveHeld;
+    }
+
+    /// <summary>Service facade: provides hybrid source for desktop and mobile, applies user sensitivity settings.</summary>
     public sealed class InputService : IGameService
     {
         public string ServiceName => "Input";
 
         public TouchInputSource Touch { get; } = new TouchInputSource();
         public KeyboardInputSource Keyboard { get; } = new KeyboardInputSource();
-        IInputSource _active;
+        HybridInputSource _hybrid;
 
-        public IInputSource Active => _active ?? Keyboard;
+        public IInputSource Active => _hybrid ?? (_hybrid = new HybridInputSource(Touch, Keyboard));
 
         public void Initialize()
         {
-            bool hasTouch = Application.isMobilePlatform || Input.touchCount > 0;
-            _active = hasTouch ? (IInputSource)Touch : Keyboard;
+            _hybrid = new HybridInputSource(Touch, Keyboard);
             Touch.LookSensitivity = GameConfig.Settings.lookSensitivity;
             Log.Info("Input", $"source: {Active.Name}");
         }
 
         public void Tick(float delta)
         {
-            // hot-switch when a touch appears on a desktop build
-            if (_active == Keyboard && Input.touchCount > 0) _active = Touch;
-            else if (_active == Touch && Input.touchCount == 0 && !Application.isMobilePlatform && Input.anyKey) _active = Keyboard;
             Touch.LookSensitivity = GameConfig.Settings.lookSensitivity;
             Touch.EndFrame();
         }

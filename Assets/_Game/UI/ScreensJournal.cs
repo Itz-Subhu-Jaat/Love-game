@@ -11,7 +11,7 @@ namespace LoveGame.UI
         protected override void OnBuild(RectTransform root)
         {
             var font = Service.DefaultFont;
-            var dim = Dim(root);
+            var dim = UiFactory.Dim(root);
             var panel = UiFactory.Panel(root, "panel", new Color(0.08f, 0.07f, 0.12f, 0.95f));
             panel.anchorMin = panel.anchorMax = new Vector2(0.5f, 0.5f);
             panel.sizeDelta = new Vector2(1600f, 900f);

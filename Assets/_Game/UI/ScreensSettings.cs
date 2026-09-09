@@ -31,7 +31,7 @@ namespace LoveGame.UI
                 var qualityLevel = level;
                 UiFactory.TextButton(panel, level, 28, font, new Vector2(-450f + System.Array.IndexOf(new[] { "LOW", "MEDIUM", "HIGH", "ULTRA" }, level) * 300f, y), new Vector2(280f, 80f), () =>
                 {
-                    GameConfig.Quality = (QualityLevel)System.Array.IndexOf(new[] { "LOW", "MEDIUM", "HIGH", "ULTRA" }, qualityLevel);
+                    GameConfig.Quality = (LoveGame.Core.QualityLevel)System.Array.IndexOf(new[] { "LOW", "MEDIUM", "HIGH", "ULTRA" }, qualityLevel);
                     ApplyQuality();
                 }, s.qualityLevel == System.Array.IndexOf(new[] { "LOW", "MEDIUM", "HIGH", "ULTRA" }, level)
                     ? new Color(0.95f, 0.35f, 0.5f, 0.95f) : new Color(0.35f, 0.4f, 0.55f, 0.9f));
@@ -164,7 +164,7 @@ namespace LoveGame.UI
             }
         }
 
-        protected static RectTransform Dim(RectTransform root) => ScreensJournal.Dim(root);
+        protected static RectTransform Dim(RectTransform root) => UiFactory.Dim(root);
     }
 
     /// <summary>Download manager: pack list, sizes, progress bars, retry/cancel/delete, cache stats.</summary>

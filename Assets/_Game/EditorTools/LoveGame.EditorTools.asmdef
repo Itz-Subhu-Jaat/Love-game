@@ -13,7 +13,11 @@
         "LoveGame.Audio",
         "LoveGame.UI",
         "LoveGame.Content",
-        "LoveGame.Game"
+        "LoveGame.Game",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.RenderPipelines.Core.Editor",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Universal.Editor"
     ],
     "includePlatforms": [
         "Editor"

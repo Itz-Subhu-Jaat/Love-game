@@ -1,6 +1,7 @@
 using LoveGame.Core;
 using LoveGame.Player;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace LoveGame.UI
@@ -38,6 +39,7 @@ namespace LoveGame.UI
             Root.anchorMax = Vector2.one;
             Root.offsetMin = Vector2.zero;
             Root.offsetMax = Vector2.zero;
+            UiFactory.ApplySafeArea(Root);
 
             BuildJoysticks();
             BuildButtons();
@@ -53,10 +55,22 @@ namespace LoveGame.UI
         void BuildJoysticks()
         {
             float scale = GameConfig.Settings.joystickSize;
-            // left: movement
-            _moveJoy = BuildJoystick(new Vector2(260f, 240f), scale, false, "move");
-            // right: camera look
-            _lookJoy = BuildJoystick(new Vector2(-260f, 240f), scale, true, "look");
+            // Movement virtual joystick (bottom-left)
+            _moveJoy = BuildJoystick(new Vector2(190f, 190f), scale, false, "move");
+
+            // Look swipe zone covering right screen region (smooth Free Fire / shooter touch-aim)
+            var lookZoneGo = new GameObject("look_swipe_zone");
+            var lookRt = lookZoneGo.AddComponent<RectTransform>();
+            lookRt.SetParent(Root, false);
+            lookRt.anchorMin = new Vector2(0.35f, 0f);
+            lookRt.anchorMax = new Vector2(1f, 0.9f);
+            lookRt.offsetMin = Vector2.zero;
+            lookRt.offsetMax = Vector2.zero;
+            lookRt.SetAsFirstSibling();
+            var lookImg = lookZoneGo.AddComponent<Image>();
+            lookImg.color = Color.clear;
+            var lookSwipe = lookZoneGo.AddComponent<LookSwipeZone>();
+            lookSwipe.Bind(_touch);
         }
 
         VirtualJoystick BuildJoystick(Vector2 pos, float scale, bool isLook, string name)
@@ -64,28 +78,28 @@ namespace LoveGame.UI
             var ringGo = new GameObject($"joy_{name}");
             var ring = ringGo.AddComponent<RectTransform>();
             ring.SetParent(Root, false);
-            ring.anchorMin = new Vector2(isLook ? 1f : 0f, 0f);
-            ring.anchorMax = new Vector2(isLook ? 1f : 0f, 0f);
-            ring.pivot = new Vector2(isLook ? 1f : 0f, 0f);
+            ring.anchorMin = new Vector2(0f, 0f);
+            ring.anchorMax = new Vector2(0f, 0f);
+            ring.pivot = new Vector2(0.5f, 0.5f);
             ring.anchoredPosition = pos;
-            ring.sizeDelta = new Vector2(360f, 360f) * scale;
+            ring.sizeDelta = new Vector2(240f, 240f) * scale;
             var ringImg = ringGo.AddComponent<Image>();
             ringImg.sprite = UiFactory.JoyRingSprite;
-            ringImg.color = new Color(1f, 1f, 1f, 0.16f * GameConfig.Settings.uiOpacity);
+            ringImg.color = new Color(1f, 1f, 1f, 0.22f * GameConfig.Settings.uiOpacity);
 
             var thumbGo = new GameObject("thumb");
             var thumb = thumbGo.AddComponent<RectTransform>();
             thumb.SetParent(ring, false);
-            thumb.sizeDelta = new Vector2(150f, 150f) * scale;
+            thumb.sizeDelta = new Vector2(100f, 100f) * scale;
             var thumbImg = thumbGo.AddComponent<Image>();
             thumbImg.sprite = UiFactory.JoyThumbSprite;
-            thumbImg.color = new Color(1f, 1f, 1f, 0.45f * GameConfig.Settings.uiOpacity);
+            thumbImg.color = new Color(1f, 1f, 1f, 0.55f * GameConfig.Settings.uiOpacity);
 
             var joystick = ringGo.AddComponent<VirtualJoystick>();
             joystick.ring = ring;
             joystick.thumb = thumb;
             joystick.isLookJoystick = isLook;
-            joystick.maxRadius = 120f * scale;
+            joystick.maxRadius = 85f * scale;
             joystick.Bind(_touch);
             return joystick;
         }
@@ -93,56 +107,98 @@ namespace LoveGame.UI
         void BuildButtons()
         {
             var font = _ui.DefaultFont;
-            // jump (right side above look stick)
-            UiFactory.RoundIconButton(Root, "JUMP", font, new Vector2(-160f, 620f), 170f, () => _touch.PressJump(),
-                new Color(0.95f, 0.5f, 0.3f, 0.75f * GameConfig.Settings.uiOpacity));
-            // sprint (hold)
-            var sprint = UiFactory.RoundIconButton(Root, "RUN", font, new Vector2(-360f, 480f), 140f, () => { },
-                new Color(0.35f, 0.6f, 0.95f, 0.7f * GameConfig.Settings.uiOpacity));
+            float op = GameConfig.Settings.uiOpacity;
+            var brAnchor = new Vector2(1f, 0f);
+            var centerPivot = new Vector2(0.5f, 0.5f);
+            var trAnchor = new Vector2(1f, 1f);
+            var trPivot = new Vector2(1f, 1f);
+
+            // --- Bottom-Right Action Cluster (Free Fire style ergonomic thumb arc) ---
+            // Jump button (prominent circular button, bottom-right)
+            UiFactory.RoundIconButton(Root, "JUMP", font, new Vector2(-130f, 130f), 145f, () => _touch.PressJump(),
+                new Color(0.98f, 0.55f, 0.22f, 0.88f * op), brAnchor, centerPivot);
+
+            // Sprint hold button (left of Jump)
+            var sprint = UiFactory.RoundIconButton(Root, "RUN", font, new Vector2(-265f, 110f), 115f, () => { },
+                new Color(0.25f, 0.65f, 0.95f, 0.85f * op), brAnchor, centerPivot);
             var hold = sprint.gameObject.AddComponent<HoldButton>();
             hold.onPressed = () => _touch.SprintHeld = true;
             hold.onReleased = () => _touch.SprintHeld = false;
 
-            // interact (contextual, appears via prompt events)
-            UiFactory.RoundIconButton(Root, "USE", font, new Vector2(-160f, 460f), 150f, () => _touch.PressInteract(),
-                new Color(0.4f, 0.95f, 0.55f, 0.75f * GameConfig.Settings.uiOpacity));
-            // action (context-dependent: hook fish / pop target / exit vehicle)
-            UiFactory.RoundIconButton(Root, "ACT", font, new Vector2(-350f, 660f), 130f, () => _touch.PressAction(),
-                new Color(0.85f, 0.75f, 0.3f, 0.7f * GameConfig.Settings.uiOpacity));
+            // Interact button (above Jump)
+            UiFactory.RoundIconButton(Root, "USE", font, new Vector2(-120f, 285f), 125f, () => _touch.PressInteract(),
+                new Color(0.22f, 0.88f, 0.52f, 0.88f * op), brAnchor, centerPivot);
 
-            // top bar: map, pause, emote
-            UiFactory.RoundIconButton(Root, "MAP", font, new Vector2(-760f, -60f), 110f, () => WorldSystemsBridge.OpenMap?.Invoke(),
-                new Color(0.25f, 0.3f, 0.45f, 0.75f));
-            UiFactory.RoundIconButton(Root, "II", font, new Vector2(-620f, -60f), 110f, () => WorldSystemsBridge.Pause?.Invoke(),
-                new Color(0.25f, 0.3f, 0.45f, 0.75f));
-            UiFactory.RoundIconButton(Root, "<3", font, new Vector2(-480f, -60f), 110f, () => WorldSystemsBridge.OpenCoupleMenu?.Invoke(),
-                new Color(0.95f, 0.35f, 0.5f, 0.75f));
+            // Context Action button (hook fish / vehicle / activity)
+            UiFactory.RoundIconButton(Root, "ACT", font, new Vector2(-245f, 230f), 115f, () => _touch.PressAction(),
+                new Color(0.96f, 0.78f, 0.22f, 0.85f * op), brAnchor, centerPivot);
+
+            // Couple Menu button (<3)
+            UiFactory.RoundIconButton(Root, "<3", font, new Vector2(-120f, 425f), 105f, () => WorldSystemsBridge.OpenCoupleMenu?.Invoke(),
+                new Color(1.0f, 0.32f, 0.58f, 0.90f * op), brAnchor, centerPivot);
+
+            // --- Top-Right Utility Bar (Left of Minimap) ---
+            // World Map button
+            UiFactory.RoundIconButton(Root, "MAP", font, new Vector2(-265f, -40f), 76f, () => WorldSystemsBridge.OpenMap?.Invoke(),
+                new Color(0.22f, 0.28f, 0.44f, 0.88f), trAnchor, trPivot);
+
+            // Pause Menu button
+            UiFactory.RoundIconButton(Root, "II", font, new Vector2(-355f, -40f), 76f, () => WorldSystemsBridge.Pause?.Invoke(),
+                new Color(0.22f, 0.28f, 0.44f, 0.88f), trAnchor, trPivot);
         }
 
         void BuildStatus()
         {
             var font = _ui.DefaultFont;
-            // region + clock chip (top-left)
-            var chip = UiFactory.Panel(Root, "chip", new Color(0.05f, 0.06f, 0.1f, 0.55f * GameConfig.Settings.uiOpacity));
+            float op = GameConfig.Settings.uiOpacity;
+
+            // Sleek region & time/weather status chip (top-left)
+            var chip = UiFactory.Panel(Root, "statusChip", new Color(0.06f, 0.08f, 0.14f, 0.75f * op));
             chip.anchorMin = new Vector2(0f, 1f);
             chip.anchorMax = new Vector2(0f, 1f);
             chip.pivot = new Vector2(0f, 1f);
-            chip.anchoredPosition = new Vector2(40f, -40f);
-            chip.sizeDelta = new Vector2(460f, 120f);
-            _regionLabel = UiFactory.Label(chip, "Azure Haven", 30, font, new Color(0.95f, 0.85f, 0.6f), new Vector2(0f, 26f));
-            _regionLabel.sizeDelta = new Vector2(420f, 36f);
-            _clock = UiFactory.Label(chip, "10:00  Clear", 26, font, Color.white, new Vector2(0f, -14f));
-            _clock.sizeDelta = new Vector2(420f, 32f);
+            chip.anchoredPosition = new Vector2(25f, -25f);
+            chip.sizeDelta = new Vector2(360f, 84f);
 
-            // interaction prompt (bottom-center)
-            _prompt = UiFactory.Label(Root, "", 32, font, Color.white, new Vector2(0f, -420f));
-            _prompt.sizeDelta = new Vector2(800f, 50f);
-            var promptBg = _prompt.gameObject.AddComponent<Outline>();
-            promptBg.effectColor = new Color(0f, 0f, 0f, 0.8f);
+            _regionLabel = UiFactory.Label(chip, "Azure Haven", 22, font, new Color(1f, 0.88f, 0.65f), Vector2.zero).GetComponent<Text>();
+            _regionLabel.rectTransform.anchorMin = new Vector2(0f, 1f);
+            _regionLabel.rectTransform.anchorMax = new Vector2(0f, 1f);
+            _regionLabel.rectTransform.pivot = new Vector2(0f, 1f);
+            _regionLabel.rectTransform.anchoredPosition = new Vector2(18f, -12f);
+            _regionLabel.rectTransform.sizeDelta = new Vector2(330f, 32f);
+            _regionLabel.alignment = TextAnchor.MiddleLeft;
 
-            // activity objective (top-center)
-            _activityLabel = UiFactory.Label(Root, "", 28, font, new Color(1f, 0.9f, 0.7f), new Vector2(0f, -110f));
-            _activityLabel.sizeDelta = new Vector2(1100f, 44f);
+            _clock = UiFactory.Label(chip, "10:00  Morning  Clear", 17, font, new Color(0.85f, 0.92f, 1.0f), Vector2.zero).GetComponent<Text>();
+            _clock.rectTransform.anchorMin = new Vector2(0f, 0f);
+            _clock.rectTransform.anchorMax = new Vector2(0f, 0f);
+            _clock.rectTransform.pivot = new Vector2(0f, 0f);
+            _clock.rectTransform.anchoredPosition = new Vector2(18f, 10f);
+            _clock.rectTransform.sizeDelta = new Vector2(330f, 26f);
+            _clock.alignment = TextAnchor.MiddleLeft;
+
+            // Interaction prompt (bottom-center)
+            var promptBox = UiFactory.Panel(Root, "promptBox", new Color(0.06f, 0.08f, 0.14f, 0.85f));
+            promptBox.anchorMin = new Vector2(0.5f, 0f);
+            promptBox.anchorMax = new Vector2(0.5f, 0f);
+            promptBox.pivot = new Vector2(0.5f, 0f);
+            promptBox.anchoredPosition = new Vector2(0f, 140f);
+            promptBox.sizeDelta = new Vector2(560f, 52f);
+
+            _prompt = UiFactory.Label(promptBox, "", 24, font, new Color(1f, 0.92f, 0.55f), Vector2.zero).GetComponent<Text>();
+            _prompt.rectTransform.sizeDelta = new Vector2(540f, 44f);
+            var promptOutline = _prompt.gameObject.AddComponent<Outline>();
+            promptOutline.effectColor = new Color(0f, 0f, 0f, 0.85f);
+            promptBox.gameObject.SetActive(false);
+
+            // Activity objective banner (top-center)
+            _activityLabel = UiFactory.Label(Root, "", 22, font, new Color(1f, 0.92f, 0.72f), Vector2.zero).GetComponent<Text>();
+            _activityLabel.rectTransform.anchorMin = new Vector2(0.5f, 1f);
+            _activityLabel.rectTransform.anchorMax = new Vector2(0.5f, 1f);
+            _activityLabel.rectTransform.pivot = new Vector2(0.5f, 1f);
+            _activityLabel.rectTransform.anchoredPosition = new Vector2(0f, -25f);
+            _activityLabel.rectTransform.sizeDelta = new Vector2(750f, 40f);
+            var actOutline = _activityLabel.gameObject.AddComponent<Outline>();
+            actOutline.effectColor = new Color(0f, 0f, 0f, 0.85f);
         }
 
         void BuildMinimap()
@@ -152,11 +208,11 @@ namespace LoveGame.UI
             _minimap.anchorMin = new Vector2(1f, 1f);
             _minimap.anchorMax = new Vector2(1f, 1f);
             _minimap.pivot = new Vector2(1f, 1f);
-            _minimap.anchoredPosition = new Vector2(-40f, -40f);
-            _minimap.sizeDelta = new Vector2(300f, 300f);
+            _minimap.anchoredPosition = new Vector2(-25f, -25f);
+            _minimap.sizeDelta = new Vector2(220f, 220f);
             var img = _minimap.gameObject.AddComponent<Image>();
             img.sprite = UiFactory.JoyRingSprite;
-            img.color = new Color(0.08f, 0.1f, 0.16f, 0.65f * GameConfig.Settings.uiOpacity);
+            img.color = new Color(0.08f, 0.1f, 0.16f, 0.75f * GameConfig.Settings.uiOpacity);
         }
 
         void BuildFade()
@@ -206,7 +262,14 @@ namespace LoveGame.UI
             UpdateMarkers(delta, streamer);
         }
 
-        void OnPrompt(InteractionPromptEvent evt) => _prompt.text = evt.Visible ? $"[USE]  {evt.Prompt}" : "";
+        void OnPrompt(InteractionPromptEvent evt)
+        {
+            if (_prompt == null) return;
+            bool show = evt.Visible && !string.IsNullOrEmpty(evt.Prompt);
+            _prompt.text = show ? $"[USE]  {evt.Prompt}" : "";
+            if (_prompt.transform.parent != null)
+                _prompt.transform.parent.gameObject.SetActive(show);
+        }
 
         void OnActivityStarted(ActivityStartedEvent evt) { }
         void OnActivityCompleted(ActivityCompletedEvent evt)
@@ -263,8 +326,8 @@ namespace LoveGame.UI
             if (normalized.magnitude > 1f) normalized = normalized.normalized * 0.96f;
             rt.anchorMin = new Vector2(0.5f, 0.5f);
             rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.anchoredPosition = normalized * 140f;
-            rt.sizeDelta = new Vector2(26f, 26f) * sizeScale * 2f;
+            rt.anchoredPosition = normalized * 95f;
+            rt.sizeDelta = new Vector2(20f, 20f) * sizeScale * 2f;
             var img = go.AddComponent<Image>();
             img.sprite = UiFactory.PinSprite;
             img.color = color;
@@ -274,6 +337,29 @@ namespace LoveGame.UI
         struct MinimapMarker
         {
             public RectTransform Dot;
+        }
+    }
+
+    /// <summary>Touch swipe surface across right half of screen for modern mobile camera aim.</summary>
+    public sealed class LookSwipeZone : MonoBehaviour, IPointerDownHandler, IDragHandler
+    {
+        TouchInputSource _touch;
+        Vector2 _lastPos;
+
+        public void Bind(TouchInputSource touch) => _touch = touch;
+
+        public void OnPointerDown(PointerEventData eventData) => _lastPos = eventData.position;
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            var delta = eventData.position - _lastPos;
+            _lastPos = eventData.position;
+            if (_touch != null)
+            {
+                float sens = GameConfig.Settings.lookSensitivity * 0.16f;
+                bool inv = GameConfig.Settings.invertLookY;
+                _touch.AddLook(new Vector2(delta.x * sens, (inv ? delta.y : -delta.y) * sens));
+            }
         }
     }
 

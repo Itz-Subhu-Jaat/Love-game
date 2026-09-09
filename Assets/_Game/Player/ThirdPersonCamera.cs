@@ -37,6 +37,7 @@ namespace LoveGame.Player
         float _yaw = 180f;
         float _pitch = 12f;
         float _currentDistance;
+        Vector3 _currentPivot;
         Vector3 _pivotVelocity;
         float _modeFov;
         bool _freeLook;
@@ -66,11 +67,15 @@ namespace LoveGame.Player
         public void SetTarget(Transform t, bool snap)
         {
             target = t;
-            if (snap && t != null)
+            if (t != null)
             {
                 var pivot = t.position + pivotOffset;
-                _pivotVelocity = Vector3.zero;
-                transform.position = pivot - transform.forward * _currentDistance;
+                if (snap)
+                {
+                    _currentPivot = pivot;
+                    _pivotVelocity = Vector3.zero;
+                    transform.position = pivot - transform.forward * _currentDistance;
+                }
             }
         }
 
@@ -121,18 +126,19 @@ namespace LoveGame.Player
             var rot = Quaternion.Euler(_pitch, _yaw, 0f);
             var side = rot * Vector3.right * (shoulderOffset * ShoulderSide);
             var desiredPivot = pivot + side;
-            var smoothedPivot = Vector3.SmoothDamp(transform.position, desiredPivot, ref _pivotVelocity, followSmoothing);
+            if (_currentPivot == Vector3.zero) _currentPivot = desiredPivot;
+            _currentPivot = Vector3.SmoothDamp(_currentPivot, desiredPivot, ref _pivotVelocity, followSmoothing);
 
             var desiredDir = rot * Vector3.back;
-            var desiredPos = smoothedPivot + desiredDir * modeDistance;
+            var desiredPos = _currentPivot + desiredDir * modeDistance;
 
             // collision: spherecast from pivot toward desired camera
-            var castDir = desiredPos - smoothedPivot;
+            var castDir = desiredPos - _currentPivot;
             float castLen = castDir.magnitude;
             if (castLen > 0.01f &&
-                Physics.SphereCast(smoothedPivot, 0.25f, castDir.normalized, out var hit, castLen, GameLayers.DefaultMask, QueryTriggerInteraction.Ignore))
+                Physics.SphereCast(_currentPivot, 0.25f, castDir.normalized, out var hit, castLen, GameLayers.DefaultMask, QueryTriggerInteraction.Ignore))
             {
-                desiredPos = smoothedPivot + castDir.normalized * Mathf.Max(minDistance, hit.distance - 0.3f);
+                desiredPos = _currentPivot + castDir.normalized * Mathf.Max(minDistance, hit.distance - 0.3f);
             }
 
             transform.position = desiredPos;

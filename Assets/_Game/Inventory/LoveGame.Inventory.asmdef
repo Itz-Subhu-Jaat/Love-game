@@ -2,7 +2,8 @@
     "name": "LoveGame.Inventory",
     "rootNamespace": "LoveGame.Inventory",
     "references": [
-        "LoveGame.Core"
+        "LoveGame.Core",
+        "LoveGame.World"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

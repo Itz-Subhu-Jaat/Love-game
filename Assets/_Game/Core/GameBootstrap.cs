@@ -36,6 +36,7 @@ namespace LoveGame.Core
             UnityEngine.Random.InitState(System.Environment.TickCount);
 
             GameConfig.Load();
+            Application.targetFrameRate = GameConfig.FpsTarget; // respect the saved setting
             GameLogRuntimeBridge.EnsureEventSystem();
             Services.InitializeAll();
             CoreReady = true;

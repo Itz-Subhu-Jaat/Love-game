@@ -24,7 +24,7 @@ namespace LoveGame.World
             var mesh = new Mesh { name = "LG_Cone" };
             const int seg = 10;
             var verts = new Vector3[seg * 2 + 2];
-            var tris = new int[seg * 6 + seg * 3];
+            var tris = new int[seg * 12];
             verts[0] = new Vector3(0, 0.5f, 0);
             verts[1] = new Vector3(0, -0.5f, 0);
             for (int i = 0; i < seg; i++)
@@ -86,17 +86,54 @@ namespace LoveGame.World
             {
                 case PropKind.Palm:
                 {
-                    var trunk = Lit(new Color(0.55f, 0.42f, 0.28f));
-                    var leaf = Lit(new Color(0.2f, 0.62f, 0.25f));
-                    float h = rng.Range(3.5f, 6f);
-                    float lean = rng.Range(-8f, 8f);
-                    for (int i = 0; i < 4; i++)
-                        Part(t, Cylinder, trunk, new Vector3(Mathf.Sin(lean * Mathf.Deg2Rad) * i * 0.12f, 0.45f + i * h / 4f, 0), new Vector3(0.22f, h / 4f, 0.22f), new Vector3(lean * 0.2f, rng.Range(0, 360), 0), "trunk");
-                    var top = new Vector3(Mathf.Sin(lean * Mathf.Deg2Rad) * h * 0.12f, h, 0);
-                    for (int i = 0; i < 6; i++)
-                        Part(t, Cube, leaf, top + new Vector3(0, 0.15f, 0), new Vector3(2.4f, 0.06f, 0.5f), new Vector3(rng.Range(-18, -4), i * 60f + rng.Range(-12, 12), 0), "leaf");
+                    var trunkMat = Lit(new Color(0.48f, 0.35f, 0.22f));
+                    var frondMat = Lit(new Color(0.18f, 0.65f, 0.28f));
+                    var frondTipMat = Lit(new Color(0.28f, 0.75f, 0.32f));
+                    var coconutMat = Lit(new Color(0.38f, 0.24f, 0.12f));
+
+                    float h = rng.Range(4.2f, 7.0f);
+                    float leanAngle = rng.Range(6f, 14f);
+                    float leanYaw = rng.Range(0f, 360f);
+                    Quaternion leanRot = Quaternion.Euler(0f, leanYaw, leanAngle);
+
+                    // Organic curved segmented trunk with natural taper
+                    int segs = 6;
+                    Vector3 curPos = Vector3.zero;
+                    for (int i = 0; i < segs; i++)
+                    {
+                        float frac = (float)i / segs;
+                        float segH = h / segs;
+                        float width = Mathf.Lerp(0.38f, 0.20f, frac);
+                        Vector3 offset = leanRot * new Vector3(0f, segH, Mathf.Sin(frac * Mathf.PI * 0.5f) * 0.12f);
+                        Part(t, Cylinder, trunkMat, curPos + offset * 0.5f, new Vector3(width, segH * 0.55f, width), new Vector3(leanAngle * frac, leanYaw, 0f), "trunkSeg");
+                        curPos += offset;
+                    }
+
+                    // Cluster of ripe coconuts at crown
+                    for (int c = 0; c < 4; c++)
+                    {
+                        float ang = c * 90f + rng.Range(-15f, 15f);
+                        Vector3 cPos = curPos + new Vector3(Mathf.Cos(ang * Mathf.Deg2Rad) * 0.25f, -0.15f, Mathf.Sin(ang * Mathf.Deg2Rad) * 0.25f);
+                        Part(t, Sphere, coconutMat, cPos, new Vector3(0.26f, 0.30f, 0.26f), Vector3.zero, "coconut");
+                    }
+
+                    // Cascading arching palm fronds
+                    int fronds = 8;
+                    for (int f = 0; f < fronds; f++)
+                    {
+                        float fAngle = f * (360f / fronds) + rng.Range(-10f, 10f);
+                        float archPitch = rng.Range(18f, 30f);
+                        Quaternion fRot = Quaternion.Euler(archPitch, fAngle, 0f);
+
+                        Vector3 midPt = curPos + fRot * new Vector3(0f, 0.25f, 1.2f);
+                        Vector3 tipPt = curPos + fRot * new Vector3(0f, -0.15f, 2.3f);
+
+                        Part(t, Cube, frondMat, midPt, new Vector3(0.65f, 0.05f, 1.6f), new Vector3(archPitch, fAngle, 0f), "frondBase");
+                        Part(t, Cube, frondTipMat, tipPt, new Vector3(0.48f, 0.04f, 1.3f), new Vector3(archPitch + 22f, fAngle, 0f), "frondTip");
+                    }
+
                     var cap = root.AddComponent<CapsuleCollider>();
-                    cap.center = new Vector3(0, h * 0.5f, 0); cap.height = h; cap.radius = 0.35f;
+                    cap.center = new Vector3(0, h * 0.45f, 0); cap.height = h; cap.radius = 0.45f;
                     break;
                 }
                 case PropKind.Pine:
@@ -114,15 +151,26 @@ namespace LoveGame.World
                 }
                 case PropKind.Broadleaf:
                 {
-                    var trunk = Lit(new Color(0.45f, 0.33f, 0.22f));
-                    var foliage = Lit(biome == BiomeKind.Meadows || biome == BiomeKind.FantasyIslands
-                        ? new Color(0.35f, 0.75f, 0.35f) : new Color(0.18f, 0.5f, 0.23f));
-                    float h = rng.Range(3.5f, 6f);
-                    Part(t, Cylinder, trunk, new Vector3(0, h * 0.3f, 0), new Vector3(0.35f, h * 0.6f, 0.35f), Vector3.zero, "trunk");
-                    Part(t, Sphere, foliage, new Vector3(0, h, 0), new Vector3(rng.Range(3f, 4.5f), rng.Range(2.5f, 3.5f), rng.Range(3f, 4.5f)), Vector3.zero, "crown");
-                    Part(t, Sphere, foliage, new Vector3(rng.Range(-0.8f, 0.8f), h * 0.85f, rng.Range(-0.8f, 0.8f)), new Vector3(2.2f, 1.8f, 2.2f), Vector3.zero, "crown2");
+                    var trunkMat = Lit(new Color(0.42f, 0.30f, 0.18f));
+                    var folMid = Lit(biome == BiomeKind.Meadows || biome == BiomeKind.FantasyIslands
+                        ? new Color(0.35f, 0.76f, 0.35f) : new Color(0.22f, 0.58f, 0.26f));
+                    var folShadow = Lit(new Color(0.14f, 0.42f, 0.18f));
+                    var folSun = Lit(new Color(0.48f, 0.84f, 0.38f));
+
+                    float h = rng.Range(4.5f, 7.5f);
+                    // Tapered trunk + root spurs
+                    Part(t, Cylinder, trunkMat, new Vector3(0, h * 0.35f, 0), new Vector3(0.45f, h * 0.7f, 0.45f), Vector3.zero, "trunk");
+                    Part(t, Cylinder, trunkMat, new Vector3(0.3f, 0.25f, 0f), new Vector3(0.25f, 0.6f, 0.25f), new Vector3(0, 0, -25f), "root1");
+                    Part(t, Cylinder, trunkMat, new Vector3(-0.25f, 0.25f, 0.2f), new Vector3(0.22f, 0.6f, 0.22f), new Vector3(20f, 0, 20f), "root2");
+
+                    // Multi-clustered fluffy stylized canopy (Genshin / Ghibli style)
+                    Part(t, Sphere, folShadow, new Vector3(0, h * 0.82f, 0), new Vector3(3.8f, 2.8f, 3.8f), Vector3.zero, "canopyBase");
+                    Part(t, Sphere, folMid, new Vector3(0.6f, h + 0.3f, 0.4f), new Vector3(3.2f, 2.6f, 3.2f), Vector3.zero, "canopyMid1");
+                    Part(t, Sphere, folMid, new Vector3(-0.7f, h + 0.1f, -0.5f), new Vector3(2.8f, 2.4f, 2.8f), Vector3.zero, "canopyMid2");
+                    Part(t, Sphere, folSun, new Vector3(0.1f, h + 1.1f, 0.1f), new Vector3(2.6f, 2.2f, 2.6f), Vector3.zero, "canopyTop");
+
                     var cap = root.AddComponent<CapsuleCollider>();
-                    cap.center = new Vector3(0, h * 0.5f, 0); cap.height = h; cap.radius = 0.45f;
+                    cap.center = new Vector3(0, h * 0.5f, 0); cap.height = h; cap.radius = 0.55f;
                     break;
                 }
                 case PropKind.SnowPine: goto case PropKind.Pine;
@@ -192,15 +240,32 @@ namespace LoveGame.World
                 case PropKind.Cabin:
                 {
                     bool cabin = kind == PropKind.Cabin;
-                    var wall = Lit(cabin ? new Color(0.5f, 0.35f, 0.24f) : new Color(0.92f, 0.89f, 0.82f));
-                    var roof = Lit(cabin ? new Color(0.3f, 0.2f, 0.14f) : (biome == BiomeKind.Snow ? new Color(0.88f, 0.9f, 0.95f) : new Color(0.75f, 0.32f, 0.28f)));
-                    float w = rng.Range(5f, 8f), d = rng.Range(4f, 6f), h = rng.Range(3f, 4f);
-                    Part(t, Cube, wall, new Vector3(0, h * 0.5f, 0), new Vector3(w, h, d), Vector3.zero, "walls");
-                    Part(t, Cube, roof, new Vector3(0, h + 0.9f, 0), new Vector3(w + 0.8f, 2.2f, d + 0.8f), new Vector3(0, 0, 45), "roof");
-                    var windowMat = MaterialLibrary.Emissive(new Color(1f, 0.9f, 0.55f), 1.5f);
-                    Part(t, Cube, windowMat, new Vector3(0, h * 0.55f, d * 0.51f), new Vector3(0.8f, 0.9f, 0.1f), Vector3.zero, "window");
+                    var wallMat = Lit(cabin ? new Color(0.52f, 0.38f, 0.26f) : new Color(0.96f, 0.94f, 0.90f));
+                    var trimMat = Lit(new Color(0.38f, 0.26f, 0.18f));
+                    var roofMat = Lit(cabin ? new Color(0.32f, 0.22f, 0.15f) : (biome == BiomeKind.Snow ? new Color(0.90f, 0.92f, 0.96f) : new Color(0.82f, 0.34f, 0.26f)));
+                    var deckMat = Lit(new Color(0.58f, 0.44f, 0.30f));
+                    var glassLit = MaterialLibrary.Emissive(new Color(1f, 0.88f, 0.60f), 1.8f);
+
+                    float w = rng.Range(6.5f, 9.0f), d = rng.Range(5.5f, 7.5f), h = 3.6f;
+                    // Porch / Stilt Deck base
+                    Part(t, Cube, deckMat, new Vector3(0, 0.25f, 0), new Vector3(w + 1.2f, 0.5f, d + 1.8f), Vector3.zero, "deck");
+                    // Main Villa Walls
+                    Part(t, Cube, wallMat, new Vector3(0, 0.5f + h * 0.5f, -0.4f), new Vector3(w, h, d), Vector3.zero, "walls");
+                    // Overhanging Roof with Eaves
+                    Part(t, Cube, roofMat, new Vector3(0, 0.5f + h + 0.9f, -0.4f), new Vector3(w + 1.4f, 1.8f, d + 1.4f), new Vector3(0, 0, 32f), "roof");
+                    // Front Porch Columns
+                    Part(t, Cylinder, trimMat, new Vector3(-w * 0.45f, 0.5f + h * 0.5f, d * 0.5f + 0.2f), new Vector3(0.18f, h, 0.18f), Vector3.zero, "postL");
+                    Part(t, Cylinder, trimMat, new Vector3(w * 0.45f, 0.5f + h * 0.5f, d * 0.5f + 0.2f), new Vector3(0.18f, h, 0.18f), Vector3.zero, "postR");
+                    // Warm Glowing Framed Windows
+                    Part(t, Cube, glassLit, new Vector3(-w * 0.26f, 0.5f + h * 0.55f, d * 0.5f - 0.38f), new Vector3(1.2f, 1.4f, 0.15f), Vector3.zero, "windowL");
+                    Part(t, Cube, glassLit, new Vector3(w * 0.26f, 0.5f + h * 0.55f, d * 0.5f - 0.38f), new Vector3(1.2f, 1.4f, 0.15f), Vector3.zero, "windowR");
+                    // Entrance Door
+                    Part(t, Cube, trimMat, new Vector3(0, 0.5f + h * 0.45f, d * 0.5f - 0.38f), new Vector3(1.1f, 2.2f, 0.12f), Vector3.zero, "door");
+                    // Entrance Lantern
+                    Part(t, Sphere, MaterialLibrary.Emissive(new Color(1f, 0.82f, 0.45f), 2.5f), new Vector3(0.7f, 0.5f + h * 0.65f, d * 0.5f - 0.32f), new Vector3(0.28f, 0.36f, 0.28f), Vector3.zero, "lantern");
+
                     var box = root.AddComponent<BoxCollider>();
-                    box.size = new Vector3(w, h, d); box.center = new Vector3(0, h * 0.5f, 0);
+                    box.size = new Vector3(w + 1.2f, h + 2.5f, d + 1.8f); box.center = new Vector3(0, (h + 2.5f) * 0.5f, 0);
                     break;
                 }
                 case PropKind.StreetLamp:
