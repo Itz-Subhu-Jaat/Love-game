@@ -1,0 +1,4063 @@
+============================================================
+MASTER AUTONOMOUS DEVELOPMENT PROMPT
+PRIVATE PREMIUM COUPLE OPEN-WORLD 3D ANDROID GAME
+============================================================
+
+IMPORTANT:
+This is the MASTER DEVELOPMENT INSTRUCTION for the entire project.
+
+Treat this as a long-running autonomous development mission.
+
+Do NOT reduce the scope into a small demo.
+Do NOT turn this into a generic Unity starter project.
+Do NOT turn this into Flutter.
+Do NOT turn this into a web game.
+Do NOT wait for final assets.
+Do NOT repeatedly ask the human what to do next.
+Do NOT stop after creating basic scaffolding.
+
+Build the maximum amount of the real project that can be built now.
+
+
+============================================================
+1. YOUR ROLE
+============================================================
+
+You are the primary autonomous technical/game-development agent.
+
+You may use multiple subagents/workers in parallel wherever useful.
+
+Use parallel workers for independent tasks when this can significantly increase progress.
+
+Possible parallel workstreams include:
+
+Worker A:
+World architecture, regions, world streaming and procedural/editor tools.
+
+Worker B:
+Player controller, movement and camera.
+
+Worker C:
+Interaction framework, couple interactions, emotes and animation architecture.
+
+Worker D:
+Vehicles and transportation.
+
+Worker E:
+Addressables, downloadable content, caching and streaming.
+
+Worker F:
+UI/UX and menus.
+
+Worker G:
+Testing, validation and bug detection.
+
+Worker H:
+GitHub Actions, GameCI and Android build pipeline.
+
+Worker I:
+NPC, wildlife, weather, day/night and environmental systems.
+
+Worker J:
+Home, inventory, gifts, activities and progression.
+
+However:
+
+YOU are responsible for integrating all parallel work.
+
+Never blindly merge subagent work.
+
+Before accepting/merging work:
+
+- inspect changed files
+- inspect diffs
+- check namespaces
+- check duplicate classes
+- check assembly definitions
+- check package references
+- check serialization
+- check scene references
+- check APIs
+- run validation
+- compile
+- run tests
+- fix conflicts
+- retest
+
+
+============================================================
+2. HUMAN OWNER PROFILE
+============================================================
+
+The human owner is NOT a programmer.
+
+The human does not write C#.
+
+The human is comfortable with:
+
+- GitHub
+- GitHub repositories
+- GitHub Actions
+- Cloudflare
+- Firebase
+- Supabase
+- API keys
+- secrets
+- dashboards
+- uploading/downloading files
+- downloading game assets
+- testing APKs
+- giving creative direction
+
+Do NOT ask the human to manually write code.
+
+Do NOT ask the human to manually debug C#.
+
+Do NOT ask the human to perform repetitive technical tasks that you can automate.
+
+The human can manually perform genuine external actions such as:
+
+- adding GitHub Secrets
+- Unity license activation
+- Cloudflare dashboard configuration
+- Firebase/Supabase dashboard configuration
+- downloading/choosing final assets
+- accepting third-party asset licenses
+- testing APK on Android
+- providing creative feedback
+
+
+============================================================
+3. CORE PROJECT VISION
+============================================================
+
+Build a large premium private Android 3D open-world couple game.
+
+This is NOT primarily a fighting game.
+
+The original fighting example was only intended to communicate that the desired quality level is high.
+
+The actual game should focus on:
+
+- exploration
+- romance
+- couple interaction
+- shared experiences
+- open-world discovery
+- beautiful environments
+- vehicles
+- home/lifestyle
+- activities
+- adventure
+- customization
+- photography
+- puzzles
+- collectibles
+- secrets
+- relaxing exploration
+- futuristic locations
+- fantasy locations
+- tropical locations
+- cities
+- mountains
+- underwater environments
+- dynamic world systems
+
+The experience should feel like a premium game rather than a technical prototype.
+
+The player should eventually be able to:
+
+- explore a huge world
+- travel by foot
+- travel by car
+- travel by bike
+- travel by boat
+- explore cities
+- explore forests
+- explore islands
+- explore caves
+- swim
+- explore underwater locations
+- visit a home
+- customize the home
+- interact with the partner
+- hug
+- kiss
+- hold hands
+- high-five
+- dance
+- use emotes
+- take photos together
+- give gifts
+- go fishing
+- race
+- solve puzzles
+- find treasure
+- camp
+- picnic
+- stargaze
+- discover hidden places
+- collect items
+- complete activities
+- create memories
+- explore different regions
+- eventually play together through multiplayer
+
+
+============================================================
+4. FINAL ASSETS ARE NOT REQUIRED NOW
+============================================================
+
+THIS IS A HARD REQUIREMENT.
+
+Do NOT wait for final art assets.
+
+The human will later provide preferred high-quality assets.
+
+Those may include:
+
+- characters
+- character clothing
+- environments
+- buildings
+- vehicles
+- trees
+- vegetation
+- rocks
+- props
+- animations
+- VFX
+- textures
+- materials
+- sounds
+- music
+- UI assets
+
+Until those assets arrive, use:
+
+- Unity primitives
+- procedural geometry
+- basic terrain
+- placeholder buildings
+- placeholder vegetation
+- simple materials
+- placeholder characters
+- placeholder vehicles
+- placeholder animations
+- procedural environment elements
+
+The goal is to build the GAME SYSTEMS now.
+
+Final assets must be replaceable without rewriting gameplay architecture.
+
+Do NOT create architecture that depends on a single placeholder character.
+
+Do NOT create architecture that depends on a single placeholder vehicle.
+
+Do NOT create architecture that depends on one specific environment asset pack.
+
+
+============================================================
+5. VISUAL REFERENCES
+============================================================
+
+The supplied visual references are STYLE/MOOD REFERENCES ONLY.
+
+They are NOT the final maps.
+
+They are NOT the final assets.
+
+They must NOT be copied directly.
+
+Do NOT copy copyrighted environments from existing commercial games.
+
+Use the references only to understand desired visual directions such as:
+
+- tropical paradise
+- turquoise ocean
+- beaches
+- cliffs
+- waterfalls
+- lush vegetation
+- futuristic tropical architecture
+- fantasy landscapes
+- colorful dreamy areas
+- cyberpunk megacities
+- futuristic resorts
+- romantic pastel environments
+- cinematic lighting
+- premium atmosphere
+
+Create an original world inspired by those broad visual themes.
+
+
+============================================================
+6. WORLD SCALE
+============================================================
+
+Five maps are NOT enough.
+
+The initial target is:
+
+24+ major regions.
+
+The architecture must support:
+
+50+
+100+
+and potentially even more regions
+
+in the future without rewriting the core world system.
+
+Do NOT hardcode the number of regions.
+
+Create a data-driven Region system.
+
+Each region should be represented through reusable metadata/configuration.
+
+Each region should support:
+
+- unique ID
+- display name
+- biome
+- environment profile
+- lighting profile
+- weather profile
+- audio/ambience profile
+- scene references
+- Addressables group
+- streaming priority
+- spawn points
+- fast travel points
+- POIs
+- activities
+- NPC zones
+- wildlife zones
+- vehicle spawn points
+- collectibles
+- secrets
+- landmarks
+- interiors
+- traversal routes
+- recommended quality settings
+- content download metadata
+
+
+============================================================
+7. INITIAL WORLD REGIONS
+============================================================
+
+Create meaningful blockouts for ALL initial regions below.
+
+Do NOT merely create empty scenes or names in a database.
+
+Every region should have:
+
+- recognizable terrain
+- basic geography
+- roads/paths
+- POIs
+- spawn points
+- activity locations
+- traversal routes
+- basic environment composition
+- lighting
+- placeholder props
+- region metadata
+
+Use procedural/basic geometry where final assets are unavailable.
+
+------------------------------------------------------------
+REGION 01 — AZURE HAVEN
+------------------------------------------------------------
+
+Main tropical home region.
+
+Include:
+
+- large sandy beaches
+- turquoise ocean
+- palm forests
+- cliffs
+- waterfalls
+- rivers
+- small town
+- marina
+- docks
+- roads
+- bridges
+- beach house
+- player home
+- shops
+- restaurants
+- scenic viewpoints
+- caves
+- hidden beach
+- picnic locations
+- fishing spots
+- vehicle areas
+- exploration routes
+
+
+------------------------------------------------------------
+REGION 02 — SUNSET BAY
+------------------------------------------------------------
+
+Romantic coastal region.
+
+Include:
+
+- large beach
+- sunset viewpoint
+- beach cafe
+- boardwalk
+- lighthouse
+- pier
+- boat dock
+- bonfire area
+- romantic seating
+- photo locations
+- coastal paths
+- hidden cave
+- scenic road
+
+
+------------------------------------------------------------
+REGION 03 — DREAMFALL ISLES
+------------------------------------------------------------
+
+Fantasy floating-island region.
+
+Include:
+
+- floating islands
+- giant trees
+- waterfalls
+- glowing vegetation
+- bridges
+- elevated traversal
+- fantasy ruins
+- hidden paths
+- sky viewpoints
+- fantasy village
+- caves
+- secret areas
+
+
+------------------------------------------------------------
+REGION 04 — NEON ABYSS CITY
+------------------------------------------------------------
+
+Large futuristic cyberpunk megacity.
+
+Include:
+
+- skyscrapers
+- neon streets
+- elevated roads
+- pedestrian bridges
+- underground district
+- metro tunnels
+- rooftops
+- entertainment district
+- residential district
+- industrial district
+- parking structures
+- hidden alleys
+- shops
+- restaurants
+- futuristic vehicle areas
+
+The city should be vertically explorable.
+
+Support:
+
+- street level
+- elevated level
+- rooftops
+- underground level
+
+
+------------------------------------------------------------
+REGION 05 — NOVA COAST
+------------------------------------------------------------
+
+Futuristic tropical resort.
+
+Include:
+
+- futuristic villas
+- landing pads
+- research facility
+- futuristic marina
+- ocean cliffs
+- resort district
+- observation tower
+- hidden facility
+- futuristic transportation
+- scenic roads
+- premium viewpoints
+
+
+------------------------------------------------------------
+REGION 06 — WILDHEART HIGHLANDS
+------------------------------------------------------------
+
+Large mountainous wilderness.
+
+Include:
+
+- mountains
+- valleys
+- rivers
+- waterfalls
+- dense forests
+- cliffs
+- hiking trails
+- caves
+- camping locations
+- lookout towers
+- wildlife zones
+- high-altitude areas
+- mountain roads
+
+
+------------------------------------------------------------
+REGION 07 — MOONLIGHT FOREST
+------------------------------------------------------------
+
+Magical night-focused forest.
+
+Include:
+
+- dense forest
+- glowing plants
+- fireflies
+- moonlit clearing
+- hidden lake
+- treehouse
+- ancient ruins
+- secret paths
+- romantic photo locations
+- small streams
+- forest trails
+
+
+------------------------------------------------------------
+REGION 08 — CRYSTAL CAVERNS
+------------------------------------------------------------
+
+Large underground cave network.
+
+Include:
+
+- crystal formations
+- underground lakes
+- waterfalls
+- tunnels
+- puzzle chambers
+- treasure rooms
+- hidden passages
+- underground wildlife
+- multiple levels
+- secret chambers
+
+
+------------------------------------------------------------
+REGION 09 — SKYLINE METROPOLIS
+------------------------------------------------------------
+
+Modern premium city.
+
+Include:
+
+- downtown
+- shopping streets
+- apartments
+- rooftop restaurants
+- parks
+- plazas
+- waterfront
+- metro
+- entertainment district
+- office district
+- parking
+- pedestrian areas
+
+
+------------------------------------------------------------
+REGION 10 — CORAL REEF ARCHIPELAGO
+------------------------------------------------------------
+
+Ocean/island exploration region.
+
+Include:
+
+- multiple islands
+- coral reefs
+- underwater areas
+- swimming
+- diving/snorkeling framework
+- shipwreck
+- underwater cave
+- fishing spots
+- hidden treasure
+- boat routes
+- small beaches
+
+
+------------------------------------------------------------
+REGION 11 — FROSTPEAK
+------------------------------------------------------------
+
+Snow mountain region.
+
+Include:
+
+- snowy mountains
+- frozen lake
+- cabins
+- ski area
+- ice caves
+- mountain roads
+- cable-car hooks
+- snow weather
+- scenic viewpoints
+- northern-lights-style atmosphere
+
+
+------------------------------------------------------------
+REGION 12 — GOLDEN DESERT
+------------------------------------------------------------
+
+Large desert biome.
+
+Include:
+
+- dunes
+- oasis
+- desert village
+- ancient ruins
+- canyon
+- underground temple
+- desert roads
+- abandoned structures
+- caves
+- night exploration
+- hidden treasure
+
+
+------------------------------------------------------------
+REGION 13 — VERDANT VALLEY
+------------------------------------------------------------
+
+Peaceful countryside.
+
+Include:
+
+- farms
+- rivers
+- windmills
+- village
+- fields
+- forests
+- bridges
+- barns
+- hiking paths
+- picnic areas
+- viewpoints
+- wildlife
+
+
+------------------------------------------------------------
+REGION 14 — STARLIGHT ISLAND
+------------------------------------------------------------
+
+Private luxury island.
+
+Include:
+
+- luxury villa
+- private beach
+- infinity pool
+- yacht dock
+- gardens
+- observation deck
+- night lighting
+- romantic locations
+- photo spots
+- private activities
+
+
+------------------------------------------------------------
+REGION 15 — SUNKEN CITY
+------------------------------------------------------------
+
+Underwater/submerged exploration.
+
+Include:
+
+- submerged structures
+- underwater streets
+- ruins
+- underwater tunnels
+- marine life
+- hidden rooms
+- treasure
+- underwater lighting
+- exploration routes
+
+
+------------------------------------------------------------
+REGION 16 — TECHNOVA DISTRICT
+------------------------------------------------------------
+
+Advanced technology zone.
+
+Include:
+
+- laboratories
+- robotics areas
+- futuristic factories
+- drone zones
+- research buildings
+- transport systems
+- elevated platforms
+- sci-fi interiors
+- hidden labs
+
+
+------------------------------------------------------------
+REGION 17 — RAINBOW MEADOWS
+------------------------------------------------------------
+
+Dreamy colorful landscape.
+
+Include:
+
+- pastel vegetation
+- flower fields
+- streams
+- giant trees
+- waterfalls
+- atmospheric lighting
+- picnic areas
+- romantic photo locations
+- fantasy structures
+- small paths
+
+
+------------------------------------------------------------
+REGION 18 — LOST KINGDOM
+------------------------------------------------------------
+
+Adventure/fantasy region.
+
+Include:
+
+- ancient castle
+- ruins
+- forests
+- bridges
+- underground chambers
+- towers
+- treasure
+- puzzles
+- secret paths
+- ancient landmarks
+
+
+------------------------------------------------------------
+REGION 19 — OCEAN DRIVE
+------------------------------------------------------------
+
+Large coastal highway system.
+
+Include:
+
+- highways
+- tunnels
+- bridges
+- scenic roads
+- service stations
+- rest stops
+- viewpoints
+- racing routes
+- coastal cliffs
+- vehicle shortcuts
+
+
+------------------------------------------------------------
+REGION 20 — LUMEN CITY
+------------------------------------------------------------
+
+Bright futuristic city.
+
+Include:
+
+- advanced skyscrapers
+- futuristic transportation
+- gardens
+- water features
+- residential districts
+- entertainment district
+- giant central plaza
+- premium buildings
+- elevated walkways
+
+
+------------------------------------------------------------
+REGION 21 — WILLOW LAKE
+------------------------------------------------------------
+
+Peaceful lake region.
+
+Include:
+
+- large lake
+- cabins
+- docks
+- forests
+- fishing
+- boats
+- waterfalls
+- camping
+- hidden island
+- hiking paths
+
+
+------------------------------------------------------------
+REGION 22 — VOLCANIC ISLE
+------------------------------------------------------------
+
+Volcanic adventure region.
+
+Include:
+
+- volcanic mountain
+- black-sand beach
+- caves
+- cliffs
+- abandoned research station
+- hot springs
+- exploration routes
+- viewpoints
+
+
+------------------------------------------------------------
+REGION 23 — CLOUD GARDENS
+------------------------------------------------------------
+
+High-altitude fantasy region.
+
+Include:
+
+- floating platforms
+- clouds
+- fog
+- gardens
+- waterfalls
+- temples
+- bridges
+- elevated traversal
+- sky viewpoints
+
+
+------------------------------------------------------------
+REGION 24 — OLD HARBOR
+------------------------------------------------------------
+
+Historic coastal town.
+
+Include:
+
+- old streets
+- harbor
+- boats
+- markets
+- restaurants
+- lighthouse
+- warehouses
+- waterfront promenade
+- narrow streets
+- hidden alleys
+- shops
+
+
+============================================================
+8. FUTURE WORLD EXPANSION
+============================================================
+
+Architecture must make it easy to add future regions such as:
+
+- giant aquarium
+- amusement park
+- luxury resort
+- island village
+- jungle ruins
+- underwater laboratory
+- botanical garden
+- snowy city
+- floating city
+- futuristic airport
+- giant racing circuit
+- shopping mall
+- concert venue
+- cinema
+- beach club
+- observatory
+- train station
+- secret sci-fi facility
+- abandoned city
+- giant canyon
+- rainforest
+- mysterious foggy forest
+- celestial fantasy zone
+- spaceport
+- futuristic theme park
+- giant marina
+- wildlife sanctuary
+- giant national park
+- underwater resort
+- orbital/futuristic travel hub
+
+Do not hardcode any maximum number of regions.
+
+
+============================================================
+9. WORLD CONNECTION
+============================================================
+
+The world must eventually feel like ONE WORLD.
+
+Create architecture for:
+
+- roads
+- highways
+- bridges
+- tunnels
+- boats
+- ferries
+- train/metro
+- fast travel
+- vehicle routes
+- walking trails
+- mountain paths
+- hidden routes
+- shortcuts
+- caves
+- underground passages
+
+Avoid a simple "select map from menu" architecture.
+
+Regions should be connected through actual world/travel concepts.
+
+
+============================================================
+10. WORLD STREAMING
+============================================================
+
+Implement scalable world streaming.
+
+Use:
+
+- additive scenes
+- async loading
+- region streaming manager
+- distance-based loading
+- priority-based loading
+- nearby-region preloading
+- safe unloading
+- memory-aware unloading
+- persistent player state
+- duplicate-load prevention
+- loading cancellation
+- transition management
+
+Do not load the entire world into memory at once.
+
+The architecture must support a huge world on mobile hardware.
+
+
+============================================================
+11. WORLD/REGION DATA SYSTEM
+============================================================
+
+Use data-driven definitions.
+
+Create appropriate ScriptableObjects/data structures for:
+
+- regions
+- POIs
+- activities
+- spawn points
+- fast travel points
+- NPC zones
+- wildlife zones
+- vehicle spawn points
+- collectibles
+- environmental profiles
+- weather profiles
+- lighting profiles
+- audio profiles
+
+Avoid hardcoding region-specific behavior inside core gameplay classes.
+
+
+============================================================
+12. WORLD EDITOR / PROCEDURAL TOOLS
+============================================================
+
+This is a high priority.
+
+Build internal Unity Editor tools that can help generate/setup:
+
+- region scenes
+- terrain
+- roads
+- paths
+- spawn points
+- POIs
+- lighting
+- weather volumes
+- water zones
+- vehicle spawn points
+- NPC zones
+- wildlife zones
+- collectible locations
+- landmarks
+- LOD setup
+- colliders
+- Addressables groups
+- region metadata
+- scene metadata
+
+The purpose is to make future content production fast.
+
+When the human later provides premium assets, the project should have tools to rapidly integrate them.
+
+
+============================================================
+13. ADDRESSABLES
+============================================================
+
+Use Unity Addressables.
+
+Separate content into:
+
+LOCAL CORE:
+- executable
+- bootstrap
+- core systems
+- essential shaders
+- essential UI
+- player framework
+- starter content
+- save system
+- networking foundation
+
+REMOTE:
+- large regions
+- high-resolution environments
+- optional interiors
+- vehicles
+- large audio packs
+- additional characters
+- cosmetics
+- seasonal content
+- future expansions
+- optional content
+
+Build:
+
+- Addressables profiles
+- local profile
+- development profile
+- staging profile
+- production profile
+- remote content configuration
+- content manifest
+- content versioning
+- labels
+- region grouping
+- download manager
+- download progress
+- retry
+- cache detection
+- cache reuse
+- storage checking
+- Wi-Fi-only option
+- cancellation
+- optional content deletion
+- update mechanism
+
+Do not unnecessarily redownload unchanged bundles.
+
+
+============================================================
+14. REMOTE CONTENT / CDN
+============================================================
+
+Prepare the project for Cloudflare R2/CDN or equivalent.
+
+Use configurable:
+
+RemoteContentBaseUrl
+
+Support:
+
+Development
+Staging
+Production
+
+Do not hardcode credentials.
+
+Prepare content upload/build architecture for future automation.
+
+The large world should eventually be downloadable in chunks/regions instead of forcing one enormous initial installation.
+
+
+============================================================
+15. APK SIZE STRATEGY
+============================================================
+
+Keep the initial installation reasonably small.
+
+The initial installation should contain:
+
+- bootstrap
+- core executable
+- essential systems
+- essential UI
+- starter content
+- enough content to enter the game
+
+Large optional content should be remotely downloadable.
+
+Create a polished download manager UI.
+
+Show:
+
+- region name
+- content description
+- download size
+- downloaded amount
+- total amount
+- progress
+- speed where available
+- retry
+- pause/cancel if supported
+- Wi-Fi warning
+- storage warning
+- cached status
+- already downloaded status
+
+Implement sensible cache management.
+
+Do not delete downloaded content unless the user explicitly chooses to remove it.
+
+
+============================================================
+16. PLAYER CONTROLLER
+============================================================
+
+Build a proper third-person player controller.
+
+Support:
+
+- idle
+- walk
+- jog
+- run
+- sprint
+- jump
+- fall
+- landing
+- crouch if useful
+- slopes
+- stairs
+- ledges
+- swimming
+- underwater movement
+- climbing
+- ladders
+- basic interaction
+- sitting
+- resting
+- sleeping
+- vehicle entry
+- vehicle exit
+- emotes
+
+Use an input abstraction.
+
+Do not tightly couple mobile controls to movement logic.
+
+
+============================================================
+17. MOBILE CONTROLS
+============================================================
+
+Create touch controls:
+
+- left virtual joystick
+- right camera joystick
+- action buttons
+- contextual interaction
+- jump
+- sprint
+- vehicle controls
+- swimming controls
+- interaction button
+- optional emote button
+
+Support configurable:
+
+- sensitivity
+- button size
+- button positions
+- opacity
+- camera sensitivity
+
+
+============================================================
+18. CAMERA
+============================================================
+
+Create a premium third-person camera system.
+
+Support:
+
+- smooth follow
+- camera collision
+- obstruction avoidance
+- shoulder switching
+- zoom
+- indoor camera
+- outdoor camera
+- vehicle camera
+- swimming camera
+- underwater camera
+- cinematic camera
+- photo mode
+- configurable FOV
+- sensitivity settings
+
+Camera should behave intelligently around walls, objects and narrow areas.
+
+
+============================================================
+19. CHARACTER ARCHITECTURE
+============================================================
+
+Create modular character architecture.
+
+The character model must be replaceable.
+
+Support separate systems for:
+
+- body
+- face
+- hair
+- clothing
+- shoes
+- accessories
+- materials
+- animations
+- cosmetics
+
+Do not make gameplay depend on one specific model.
+
+Prepare the system for two primary characters.
+
+
+============================================================
+20. ANIMATION SYSTEM
+============================================================
+
+Build a professional animation architecture.
+
+LOCOMOTION:
+
+- idle
+- walk
+- jog
+- run
+- sprint
+- strafe
+- backward
+- jump
+- fall
+- landing
+
+MOVEMENT:
+
+- swimming
+- underwater
+- climbing
+- ladder
+- slopes
+- stairs
+
+INTERACTION:
+
+- wave
+- point
+- sit
+- stand
+- open door
+- pickup
+- inspect
+- use object
+- phone interaction
+- enter vehicle
+- exit vehicle
+
+COUPLE:
+
+- wave together
+- high-five
+- handshake
+- hug
+- affectionate kiss
+- sit together
+- hold hands
+- dance
+- playful gestures
+- photo poses
+- celebrate
+- give gift
+- comforting
+- watching scenery together
+
+All couple interactions should remain tasteful and non-explicit.
+
+Animation clips must be data-driven.
+
+The system must allow final animation assets to be dropped in later without rewriting gameplay logic.
+
+
+============================================================
+21. COUPLE INTERACTION SYSTEM
+============================================================
+
+Create a dedicated couple/social interaction framework.
+
+Do NOT place couple logic directly inside PlayerController.
+
+Create suitable systems such as:
+
+- InteractionManager
+- CoupleInteractionManager
+- EmoteManager
+- PoseManager
+- SocialState
+- InteractionTarget
+- InteractionSequence
+- TwoCharacterInteraction
+
+Support:
+
+- proximity detection
+- interaction prompt
+- character alignment
+- two-character positioning
+- synchronized animation
+- camera adjustment
+- interruption
+- cancellation
+- cooldown
+- state cleanup
+- multiplayer-ready synchronization
+
+Interaction examples:
+
+Hug
+Kiss
+HighFive
+HoldHands
+Dance
+SitTogether
+TakePhotoTogether
+Wave
+GiveGift
+Celebrate
+WatchScenery
+Picnic
+Stargazing
+
+
+============================================================
+22. HOME / BASE SYSTEM
+============================================================
+
+Create a proper home/base system.
+
+Support:
+
+- enter/exit
+- rooms
+- bedroom
+- bed
+- sofa
+- kitchen
+- wardrobe
+- storage
+- decoration
+- lighting
+- photo displays
+- collectibles
+- gifts
+- memories
+- music player hook
+- customization
+- upgrades
+
+Architecture should support multiple homes in future.
+
+
+============================================================
+23. HOME CUSTOMIZATION
+============================================================
+
+Create modular furniture system.
+
+Categories:
+
+- beds
+- sofas
+- tables
+- chairs
+- lamps
+- lights
+- plants
+- paintings
+- shelves
+- electronics
+- rugs
+- decorations
+- outdoor furniture
+
+Support:
+
+- placement
+- rotation
+- movement
+- deletion
+- snapping
+- inventory
+- ownership
+- saving/loading
+
+Prepare for future home customization expansion.
+
+
+============================================================
+24. VEHICLE SYSTEM
+============================================================
+
+Create reusable vehicle framework.
+
+Initial types:
+
+- car
+- motorcycle
+- boat
+- futuristic vehicle
+
+Support:
+
+- enter
+- exit
+- driver
+- passenger
+- acceleration
+- braking
+- steering
+- collisions
+- camera
+- spawn
+- despawn
+- persistence
+- vehicle storage
+- customization hooks
+
+Two-character support:
+
+- driver + passenger
+- synchronized entry
+- synchronized exit
+- passenger seat
+- passenger camera
+- interaction hooks
+
+
+============================================================
+25. NPC SYSTEM
+============================================================
+
+Create scalable NPC framework.
+
+Support:
+
+- idle
+- wandering
+- simple schedules
+- interaction
+- dialogue hooks
+- shops
+- activity assignment
+- distance activation
+- simplified far-away simulation
+
+Use:
+
+- pooling
+- distance-based activation
+- simplified simulation
+
+Do NOT keep hundreds of expensive NPCs active at full simulation quality.
+
+
+============================================================
+26. WILDLIFE SYSTEM
+============================================================
+
+Prepare wildlife framework for:
+
+- birds
+- fish
+- butterflies
+- deer
+- small animals
+- biome-specific animals
+
+Use:
+
+- pooling
+- spawn zones
+- distance activation
+- simplified distant simulation
+- biome-specific rules
+
+
+============================================================
+27. DAY/NIGHT SYSTEM
+============================================================
+
+Create full day/night system.
+
+Support:
+
+- sunrise
+- daytime
+- sunset
+- night
+- moon
+- stars
+- lighting transitions
+- sky transitions
+- ambient lighting
+- environment ambience
+
+Time progression must be configurable.
+
+Some activities should be able to depend on time of day.
+
+
+============================================================
+28. WEATHER SYSTEM
+============================================================
+
+Support:
+
+- clear
+- cloudy
+- rain
+- heavy rain
+- storm
+- fog
+
+Weather should affect:
+
+- lighting
+- particles
+- ambience
+- water
+- environment
+- NPC behavior hooks
+- wildlife hooks
+- vehicle hooks
+
+Make weather data-driven and region-aware.
+
+
+============================================================
+29. WATER SYSTEM
+============================================================
+
+Create scalable water framework.
+
+Support:
+
+- ocean
+- lakes
+- rivers
+- waterfalls
+- shoreline
+- swimming
+- underwater
+- boats
+- underwater camera
+
+Use mobile-friendly rendering.
+
+Do not use unnecessarily expensive shaders.
+
+
+============================================================
+30. SWIMMING / UNDERWATER
+============================================================
+
+Implement:
+
+- water detection
+- swimming state
+- surface swimming
+- underwater state
+- underwater movement
+- buoyancy hooks
+- underwater camera
+- underwater ambience
+- underwater fog
+- underwater interaction hooks
+- underwater collectibles
+- underwater exploration
+
+
+============================================================
+31. ACTIVITIES FRAMEWORK
+============================================================
+
+Create a generic Activity framework.
+
+Every activity should have:
+
+- activity ID
+- start
+- active state
+- objective
+- completion
+- failure/cancel
+- reward
+- save state
+- UI hooks
+
+Initial activities:
+
+
+FISHING
+--------
+
+- fishing spots
+- casting
+- waiting
+- catch
+- inventory
+- collection
+- rewards
+
+
+RACING
+------
+
+- checkpoints
+- laps
+- timer
+- finish
+- route definition
+- rewards
+- leaderboard-ready architecture
+
+
+TREASURE HUNT
+-------------
+
+- clues
+- markers
+- hidden objects
+- exploration
+- rewards
+
+
+PHOTOGRAPHY
+-----------
+
+- photo locations
+- camera
+- photo objectives
+- poses
+- challenges
+- discovery
+
+
+TARGET MINI-GAME
+----------------
+
+- targets
+- score
+- accuracy
+- timer
+- combo hooks
+
+
+EXPLORATION
+-----------
+
+- landmarks
+- discoveries
+- region completion
+- rewards
+
+
+PUZZLES
+-------
+
+- switches
+- doors
+- pressure plates
+- sequence puzzles
+- environmental puzzles
+
+
+PICNIC
+------
+
+- setup
+- location
+- sitting
+- couple interactions
+- ambience
+
+
+CAMPING
+-------
+
+- camp setup
+- sitting
+- resting
+- ambience
+- night interactions
+
+
+STAR GAZING
+-----------
+
+- special locations
+- time requirements
+- sky interaction
+- couple interaction
+- photo hooks
+
+
+============================================================
+32. COLLECTIBLES
+============================================================
+
+Create collectible framework.
+
+Support:
+
+- shells
+- photographs
+- crystals
+- souvenirs
+- postcards
+- flowers
+- gifts
+- artifacts
+- hidden objects
+
+Track:
+
+- collected
+- undiscovered
+- region percentage
+- total percentage
+- reward state
+
+Create collectible journal.
+
+
+============================================================
+33. QUEST / OBJECTIVE SYSTEM
+============================================================
+
+Create flexible objective system.
+
+Objective types:
+
+- go to location
+- interact with object
+- collect item
+- talk to NPC
+- take photo
+- complete activity
+- discover region
+- travel together
+- solve puzzle
+- use vehicle
+- deliver gift
+- find hidden location
+
+Support:
+
+- main quests
+- side quests
+- couple activities
+- hidden quests
+- optional challenges
+
+Do not force the entire game into a linear story.
+
+
+============================================================
+34. INVENTORY
+============================================================
+
+Create generic inventory system.
+
+Support:
+
+- stackable items
+- unique items
+- categories
+- metadata
+- collectibles
+- gifts
+- fishing items
+- cosmetics
+- furniture
+- quest items
+
+Prepare inventory for future expansion.
+
+
+============================================================
+35. GIFT SYSTEM
+============================================================
+
+Create:
+
+- gift inventory
+- gift selection
+- gift giving
+- interaction animation hook
+- memory/event record
+- gift history
+
+Gifts should integrate with progression/memories without creating manipulative monetization mechanics.
+
+
+============================================================
+36. SHARED MEMORIES / COUPLE PROGRESSION
+============================================================
+
+Track:
+
+- shared memories
+- discovered locations
+- completed activities
+- gifts
+- photographs
+- couple achievements
+- favorite locations
+- home upgrades
+- special moments
+
+Keep progression optional and non-manipulative.
+
+
+============================================================
+37. PHOTO MODE
+============================================================
+
+Create polished photo mode.
+
+Support:
+
+- camera movement
+- camera rotation
+- zoom
+- FOV
+- focus hooks
+- hide UI
+- character poses
+- couple poses
+- environment shots
+- screenshot capture integration
+
+Prepare architecture for:
+
+- filters
+- frames
+- stickers
+- photo challenges
+
+
+============================================================
+38. WORLD MAP UI
+============================================================
+
+Create world map.
+
+Show:
+
+- regions
+- discovered regions
+- undiscovered regions
+- roads
+- POIs
+- activities
+- player
+- partner
+- vehicles
+- home
+- fast travel
+- collectibles
+- landmarks
+
+Support:
+
+- zoom
+- pan
+- filters
+- region selection
+- fast travel
+
+
+============================================================
+39. MINIMAP
+============================================================
+
+Support:
+
+- player marker
+- partner marker
+- nearby POIs
+- activity markers
+- vehicle marker
+- quest markers
+- orientation
+- configurable visibility
+
+
+============================================================
+40. FAST TRAVEL
+============================================================
+
+Create fast travel architecture.
+
+Support:
+
+- discovered fast travel points
+- region travel
+- travel validation
+- loading
+- progress
+- save state
+- optional travel animation
+
+
+============================================================
+41. AUDIO SYSTEM
+============================================================
+
+Create proper audio architecture.
+
+Support:
+
+- region music
+- exploration music
+- city music
+- home music
+- activity music
+- weather ambience
+- ocean
+- wind
+- footsteps
+- vehicle audio
+- UI sounds
+- environmental ambience
+- wildlife audio
+
+Create:
+
+MusicManager
+AudioManager
+AmbientAudioManager
+
+Create playlist support.
+
+IMPORTANT:
+
+Do NOT assume third-party music streaming services automatically grant rights to redistribute or stream their catalog inside the game.
+
+Do not implement unauthorized downloading or redistribution of commercial music.
+
+Support legally usable sources:
+
+- original music
+- properly licensed music
+- public-domain/appropriately licensed music
+- legally permitted user-provided audio
+
+Keep any future third-party music integration isolated behind an interface.
+
+
+============================================================
+42. SAVE SYSTEM
+============================================================
+
+Implement robust local save.
+
+Save:
+
+- player position
+- current region
+- inventory
+- discoveries
+- collectibles
+- vehicles
+- home
+- furniture
+- activities
+- progression
+- settings
+- graphics settings
+- audio settings
+- downloaded content metadata
+
+Use versioned save format.
+
+Support migrations.
+
+Use safe/atomic writes where appropriate.
+
+Prevent one invalid field from corrupting the entire save.
+
+
+============================================================
+43. CLOUD SAVE ARCHITECTURE
+============================================================
+
+Create:
+
+ISaveProvider
+
+Implement:
+
+LocalSaveProvider
+
+Prepare:
+
+FutureCloudSaveProvider
+
+Do not tightly couple gameplay to Firebase or Supabase.
+
+Cloud implementation may be added later.
+
+
+============================================================
+44. MULTIPLAYER-READY ARCHITECTURE
+============================================================
+
+Do NOT implement complete multiplayer before the single-player foundation is stable.
+
+Prepare architecture for:
+
+- player identity
+- network state
+- synchronized transforms
+- interaction events
+- couple interactions
+- vehicle state
+- passenger state
+- inventory synchronization
+- shared world state
+- session state
+
+For Unity 6:
+
+Evaluate the current Unity Multiplayer Services / Relay-compatible architecture before choosing the final networking transport.
+
+Do NOT blindly call relay-based networking "direct P2P".
+
+Keep networking abstractions separate from gameplay logic.
+
+The long-term goal is a two-player shared experience.
+
+
+============================================================
+45. MOBILE PERFORMANCE
+============================================================
+
+Target Android.
+
+Create scalable quality levels:
+
+LOW
+MEDIUM
+HIGH
+ULTRA
+
+Support:
+
+- 30 FPS target
+- 60 FPS target where hardware allows
+- dynamic resolution hooks
+- LOD
+- occlusion culling
+- object pooling
+- texture compression
+- mobile-friendly shaders
+- baked lighting where useful
+- light probes
+- reflection probes
+- shadow distance
+- particle quality
+- vegetation density
+- NPC density
+- wildlife density
+- draw distance
+- post-processing quality
+
+Avoid:
+
+- thousands of Update calls
+- unnecessary GameObjects
+- huge uncompressed textures
+- duplicate materials
+- permanently active distant NPCs
+- permanently active wildlife
+- loading the entire world simultaneously
+
+
+============================================================
+46. MOBILE GRAPHICS SETTINGS
+============================================================
+
+Create settings for:
+
+- quality
+- FPS target
+- shadows
+- texture quality
+- effects
+- vegetation density
+- NPC density
+- wildlife density
+- draw distance
+- resolution/dynamic resolution where supported
+- post-processing
+- anti-aliasing where appropriate
+
+Save graphics settings locally.
+
+
+============================================================
+47. MOBILE UI
+============================================================
+
+Create polished touch-first UI.
+
+Screens:
+
+- splash
+- bootstrap
+- main menu
+- loading
+- world map
+- minimap
+- inventory
+- character
+- wardrobe
+- home
+- furniture
+- activities
+- collectibles
+- photos
+- settings
+- graphics
+- audio
+- controls
+- downloads
+- storage manager
+- pause menu
+- interaction prompts
+- notifications
+
+Create reusable UI components.
+
+Support:
+
+- animations
+- transitions
+- loading states
+- empty states
+- error states
+- touch feedback
+
+
+============================================================
+48. DOWNLOAD MANAGER UI
+============================================================
+
+Create a dedicated content/download interface.
+
+Support:
+
+- available content
+- downloaded content
+- downloading content
+- update required
+- storage usage
+- content size
+- Wi-Fi-only option
+- retry
+- cancel
+- remove optional content
+- progress
+- errors
+
+Make this user-friendly.
+
+
+============================================================
+49. LOADING SYSTEM
+============================================================
+
+Create polished loading experience.
+
+Support:
+
+- bootstrap
+- content validation
+- Addressables validation
+- region loading
+- remote download
+- progress
+- error handling
+- retry
+- loading tips
+- background placeholders
+
+Never freeze the UI during long downloads/loads where avoidable.
+
+
+============================================================
+50. ERROR HANDLING
+============================================================
+
+Every major system must fail gracefully.
+
+Handle:
+
+- missing asset
+- failed download
+- corrupted content
+- scene loading failure
+- invalid save
+- missing animation
+- missing material
+- missing configuration
+- network unavailable
+- timeout
+- invalid Addressables reference
+- missing dependency
+
+Show useful errors.
+
+Do not silently fail.
+
+Do not swallow exceptions without understanding them.
+
+
+============================================================
+51. DEBUG TOOLS
+============================================================
+
+Create development-only debug menu.
+
+Include:
+
+- teleport region
+- teleport POI
+- spawn vehicle
+- spawn item
+- change time
+- change weather
+- FPS display
+- memory info
+- loaded scenes
+- Addressables status
+- network status
+- player state
+- save/load
+- clear cache
+- force content update
+- activity testing
+- couple interaction testing
+
+Never expose dangerous debug tools in production builds.
+
+
+============================================================
+52. ASSET IMPORT PIPELINE
+============================================================
+
+Prepare reusable asset import workflow.
+
+Support:
+
+- FBX
+- GLB/GLTF where appropriate
+- textures
+- materials
+- animation clips
+- environment assets
+- vehicles
+- characters
+- props
+
+Define conventions for:
+
+- scale
+- orientation
+- pivots
+- colliders
+- LOD
+- materials
+- texture compression
+- Addressables
+- labels
+- naming
+
+When final assets arrive:
+
+1. Inspect asset.
+2. Inspect source/license metadata where available.
+3. Validate format.
+4. Validate scale.
+5. Validate orientation.
+6. Import.
+7. Configure materials.
+8. Configure colliders.
+9. Configure LOD.
+10. Configure animations.
+11. Register with appropriate system.
+12. Assign Addressables labels/groups if appropriate.
+13. Test.
+14. Fix issues.
+15. Rebuild/retest where necessary.
+
+
+============================================================
+53. FINAL ASSET INTEGRATION PRINCIPLE
+============================================================
+
+Final art assets will be added later.
+
+When an asset is added, gameplay systems should not need to be rewritten.
+
+Example:
+
+Adding a new car should mean:
+
+Import asset
+→ configure vehicle profile
+→ assign required components
+→ register vehicle
+→ test
+
+NOT:
+
+Rewrite vehicle system.
+
+Similarly:
+
+New character
+→ import
+→ configure character profile
+→ assign animations
+→ register
+
+New building
+→ import
+→ configure colliders/LOD
+→ place in region
+→ Addressables if needed
+
+New region
+→ create region definition
+→ build scene/content
+→ assign metadata
+→ add streaming configuration
+→ Addressables
+→ test
+
+
+============================================================
+54. PROCEDURAL / PLACEHOLDER WORLD
+============================================================
+
+The initial world should be meaningful even without final assets.
+
+Use:
+
+- terrain
+- primitives
+- procedural roads
+- simple buildings
+- simple vegetation
+- placeholder water
+- basic lighting
+- basic environment props
+
+Do NOT spend the entire development time making beautiful temporary art.
+
+Prioritize:
+
+1. systems
+2. architecture
+3. gameplay
+4. world layout
+5. content pipeline
+6. performance
+7. final art integration later
+
+
+============================================================
+55. WORLD CONTENT DESIGN
+============================================================
+
+Each major region should have a mixture of:
+
+- landmarks
+- traversal routes
+- activity locations
+- secrets
+- collectibles
+- scenic viewpoints
+- social interaction areas
+- NPC areas
+- wildlife
+- vehicles
+- environmental storytelling
+
+Avoid huge empty terrain.
+
+Even blockout regions should communicate where meaningful gameplay/content will eventually exist.
+
+
+============================================================
+56. ENVIRONMENTAL STORYTELLING
+============================================================
+
+Prepare framework for:
+
+- signs
+- props
+- landmarks
+- abandoned structures
+- environmental clues
+- NPC dialogue hooks
+- collectibles
+- photographs
+- hidden areas
+
+The world should feel lived-in.
+
+
+============================================================
+57. INTERACTION SYSTEM
+============================================================
+
+Create generic interaction architecture that can support:
+
+- doors
+- chairs
+- beds
+- switches
+- collectibles
+- vehicles
+- shops
+- NPCs
+- signs
+- food
+- gifts
+- fishing spots
+- activity locations
+- photo spots
+- environmental objects
+
+Use reusable interaction components.
+
+Do not hardcode every interaction separately.
+
+
+============================================================
+58. NPC DISTANCE SIMULATION
+============================================================
+
+When NPCs are far away:
+
+Do not simulate expensive full behavior.
+
+Use tiers:
+
+NEAR:
+Full animation + interaction.
+
+MEDIUM:
+Reduced simulation.
+
+FAR:
+Very lightweight state simulation.
+
+OUT OF RANGE:
+Despawn/pool.
+
+Architecture should support large cities without destroying mobile performance.
+
+
+============================================================
+59. WILDLIFE DISTANCE SIMULATION
+============================================================
+
+Use similar simulation tiers.
+
+Near:
+Full behavior.
+
+Medium:
+Reduced behavior.
+
+Far:
+Simple movement.
+
+Out of range:
+Pool/despawn.
+
+
+============================================================
+60. OBJECT POOLING
+============================================================
+
+Create reusable pooling system where appropriate.
+
+Use for:
+
+- NPCs
+- wildlife
+- particles
+- projectiles if future combat exists
+- activity objects
+- collectibles
+- vehicle effects
+- environmental effects
+
+Do not pool everything blindly.
+
+Use pooling where repeated creation/destruction is expensive.
+
+
+============================================================
+61. OPTIONAL COMBAT ARCHITECTURE
+============================================================
+
+Combat is NOT the main focus.
+
+However, if useful, create optional extensible architecture for future:
+
+- basic health
+- damage
+- target
+- hit detection
+- simple melee
+- simple ranged hooks
+- AI combat hooks
+
+Do not allow combat architecture to dominate the project.
+
+The main game remains a couple/open-world experience.
+
+
+============================================================
+62. FUTURE COSMETICS
+============================================================
+
+Prepare architecture for:
+
+- clothing
+- hairstyles
+- accessories
+- shoes
+- character cosmetics
+- vehicle cosmetics
+- home decorations
+- photo frames
+- emotes
+
+Do not implement monetization unless explicitly requested later.
+
+
+============================================================
+63. NO MANIPULATIVE MONETIZATION
+============================================================
+
+This is a private couple game.
+
+Do NOT create:
+
+- gambling
+- loot-box systems
+- manipulative energy systems
+- artificial waiting mechanics
+- pay-to-progress systems
+
+Keep the architecture focused on the game experience.
+
+
+============================================================
+64. TESTING STRATEGY
+============================================================
+
+Create automated tests where practical.
+
+EDIT MODE TESTS:
+
+- region definitions
+- data validation
+- save serialization
+- save migration
+- inventory
+- item definitions
+- activity definitions
+- Addressables configuration
+- configuration validation
+- content manifest validation
+
+PLAY MODE TESTS:
+
+- player movement
+- camera
+- scene loading
+- scene unloading
+- interaction
+- save/load
+- vehicle lifecycle
+- activity lifecycle
+- couple interaction lifecycle
+- swimming
+- map
+- fast travel
+
+
+============================================================
+65. MANDATORY BUILD/TEST/FIX LOOP
+============================================================
+
+THIS SECTION IS A HARD RULE.
+
+For EVERY meaningful implementation:
+
+STEP 1:
+Implement.
+
+STEP 2:
+Inspect all changed files.
+
+STEP 3:
+Inspect the diff.
+
+STEP 4:
+Run static validation.
+
+STEP 5:
+Check namespaces.
+
+STEP 6:
+Check assembly definitions.
+
+STEP 7:
+Check package compatibility.
+
+STEP 8:
+Check Unity API compatibility.
+
+STEP 9:
+Compile where possible.
+
+STEP 10:
+Run automated tests.
+
+STEP 11:
+Build the project when possible.
+
+STEP 12:
+Inspect build logs.
+
+STEP 13:
+Run the relevant scene/test environment when possible.
+
+STEP 14:
+Actually test the implemented functionality.
+
+STEP 15:
+Look for:
+- errors
+- warnings
+- exceptions
+- broken references
+- missing assets
+- null references
+- incorrect state transitions
+- performance problems
+- UI issues
+- loading issues
+- save issues
+- Addressables issues
+
+STEP 16:
+Fix discovered problems.
+
+STEP 17:
+Build again.
+
+STEP 18:
+Test again.
+
+STEP 19:
+Run regression tests for systems affected by the change.
+
+STEP 20:
+Repeat until stable.
+
+The loop is:
+
+IMPLEMENT
+↓
+VALIDATE
+↓
+COMPILE
+↓
+TEST
+↓
+BUILD
+↓
+RUN
+↓
+INSPECT
+↓
+FIND BUGS
+↓
+FIX
+↓
+BUILD AGAIN
+↓
+TEST AGAIN
+↓
+REGRESSION TEST
+↓
+REPEAT
+
+
+============================================================
+66. DO NOT STOP AFTER COMPILATION
+============================================================
+
+A successful compilation is NOT enough.
+
+A successful build is NOT enough.
+
+Tests must be run.
+
+Relevant gameplay must be tested.
+
+Known bugs must be fixed.
+
+If the environment allows actual gameplay execution, use it.
+
+If the environment does NOT allow Unity runtime/device visual testing:
+
+Do NOT pretend that it was tested.
+
+Instead:
+
+- compile
+- run available automated tests
+- validate project files
+- validate scene/data structures
+- use CI
+- generate APK when possible
+- inspect logs
+
+Then clearly report:
+
+"Implemented but not visually/runtime verified because [specific limitation]."
+
+
+============================================================
+67. REGRESSION TESTING
+============================================================
+
+Whenever a system changes, retest dependent systems.
+
+Example:
+
+If PlayerController changes:
+
+Retest:
+- camera
+- interaction
+- animation
+- swimming
+- climbing
+- vehicles
+- save/load
+
+If Scene Streaming changes:
+
+Retest:
+- map
+- fast travel
+- player persistence
+- Addressables
+- loading
+- save
+
+If Addressables changes:
+
+Retest:
+- downloads
+- cache
+- content loading
+- region streaming
+- offline behavior
+
+If Interaction changes:
+
+Retest:
+- NPC interactions
+- couple interactions
+- activities
+- vehicles
+- doors
+- furniture
+
+
+============================================================
+68. CI/CD
+============================================================
+
+Use GitHub Actions.
+
+Use GameCI-compatible Unity build pipeline.
+
+Create separate workflows where appropriate.
+
+WORKFLOW 1:
+Validation
+
+Run:
+- project validation
+- static checks
+- tests
+- compile validation where possible
+
+WORKFLOW 2:
+Android Build
+
+Build:
+- APK
+
+Upload:
+- GitHub artifact
+
+WORKFLOW 3:
+Release
+
+Prepare future:
+- AAB
+- release build
+- versioning
+
+WORKFLOW 4:
+Addressables
+
+Prepare:
+- build remote content
+- package content
+- upload to CDN
+
+Do not trigger expensive Android builds on every tiny commit unless useful.
+
+Use:
+
+- pull request validation
+- manual workflow_dispatch
+- milestone builds
+- release builds
+
+
+============================================================
+69. UNITY VERSION
+============================================================
+
+Use a currently supported Unity 6 LTS version compatible with:
+
+- GameCI
+- Android build
+- Addressables
+- required Unity packages
+
+Before locking the version:
+
+1. Check current Unity compatibility.
+2. Check GameCI compatibility.
+3. Check Addressables compatibility.
+4. Check Android compatibility.
+5. Select a stable compatible patch.
+6. Pin the version.
+7. Document it.
+
+Do NOT blindly use a version from an old tutorial.
+
+
+============================================================
+70. GITHUB REPOSITORY
+============================================================
+
+Use a private GitHub repository.
+
+Suggested structure:
+
+Assets/
+Packages/
+ProjectSettings/
+Documentation/
+Build/
+Tools/
+.github/
+
+Do not create:
+
+- Next.js
+- Flutter
+- web-game architecture
+- unrelated backend boilerplate
+
+This is a Unity C# Android game.
+
+
+============================================================
+71. GIT WORKFLOW
+============================================================
+
+Use meaningful commits.
+
+Examples:
+
+chore: initialize Unity project
+feat: core architecture
+feat: region system
+feat: world streaming
+feat: world editor tools
+feat: player controller
+feat: camera system
+feat: interaction framework
+feat: couple interaction framework
+feat: animation architecture
+feat: vehicle framework
+feat: NPC framework
+feat: wildlife framework
+feat: day night system
+feat: weather system
+feat: water system
+feat: activities framework
+feat: home system
+feat: inventory system
+feat: save system
+feat: addressables infrastructure
+feat: region blockouts
+feat: mobile optimization
+ci: Android build pipeline
+test: gameplay validation suite
+
+Before every commit:
+
+- inspect diff
+- check secrets
+- validate
+- test
+- remove accidental files
+- ensure project remains stable
+
+
+============================================================
+72. SECURITY
+============================================================
+
+NEVER commit:
+
+- passwords
+- API keys
+- tokens
+- Unity credentials
+- Unity license
+- Android keystore
+- private signing keys
+- service-account credentials
+
+Use:
+
+- GitHub Secrets
+- environment variables
+- secure CI configuration
+
+Never print secrets in logs.
+
+Search for accidental secret exposure before commits.
+
+
+============================================================
+73. ASSET LICENSE SAFETY
+============================================================
+
+When external assets are later supplied:
+
+- inspect source
+- inspect license
+- document license/source where practical
+- do not use assets ripped from commercial games
+- do not use copyrighted game assets without permission
+- do not redistribute assets if their license forbids it
+
+If a license is unclear:
+
+Flag it for human review.
+
+Do not silently assume it is legal to use.
+
+
+============================================================
+74. ENVIRONMENT LIMITATIONS
+============================================================
+
+If the current environment does not have:
+
+- Unity Editor
+- GPU
+- Android emulator
+- Android device
+- Unity license
+
+DO NOT pretend those things exist.
+
+Continue with everything possible:
+
+- C# authoring
+- project configuration
+- Unity project files
+- Editor scripts
+- world data
+- scene architecture
+- CI workflows
+- tests
+- documentation
+- validation
+- Git operations
+
+Once Unity CI/device becomes available:
+
+- compile
+- build
+- run tests
+- inspect logs
+- generate APK
+- test relevant functionality
+- inspect artifact
+
+
+============================================================
+75. NO FAKE VISUAL VERIFICATION
+============================================================
+
+If you cannot actually render and inspect the game:
+
+Do not say:
+
+"Looks good."
+
+Do not say:
+
+"Visuals are polished."
+
+Do not say:
+
+"The game runs perfectly."
+
+Instead say exactly what was verified.
+
+
+============================================================
+76. PERFORMANCE VALIDATION
+============================================================
+
+When actual Unity runtime testing becomes available, measure where possible:
+
+- FPS
+- frame time
+- memory
+- loaded scenes
+- Addressables memory
+- texture memory
+- active NPC count
+- active wildlife count
+- draw calls where available
+- loading time
+- region transition behavior
+
+Find obvious bottlenecks.
+
+Fix high-impact problems.
+
+Do not optimize based only on guesses.
+
+
+============================================================
+77. CONTENT QUALITY
+============================================================
+
+Do not create huge empty regions just to claim 24 maps.
+
+Every region should have a reason to exist.
+
+Each should contain:
+
+- distinct visual identity
+- traversal
+- POIs
+- activities
+- landmarks
+- secrets
+- exploration
+- environmental storytelling
+- appropriate ambience
+
+The goal is a world that feels intentionally designed.
+
+
+============================================================
+78. WORLD ART DIRECTION
+============================================================
+
+Target:
+
+Premium stylized-realistic / cinematic mobile 3D.
+
+Broad visual language:
+
+- cinematic
+- beautiful
+- colorful where appropriate
+- atmospheric
+- romantic
+- futuristic
+- fantasy
+- tropical
+- modern
+- immersive
+
+Different regions can have very different visual identities while sharing a coherent overall art direction.
+
+
+============================================================
+79. PLAYER EXPERIENCE
+============================================================
+
+The player should always have something meaningful to do.
+
+Possible activities:
+
+- explore
+- drive
+- sail
+- swim
+- fish
+- photograph
+- collect
+- discover
+- solve puzzles
+- race
+- camp
+- picnic
+- stargaze
+- decorate home
+- interact with partner
+- discover secrets
+- visit landmarks
+- meet NPCs
+- complete optional quests
+
+
+============================================================
+80. FUTURE MULTIPLAYER EXPERIENCE
+============================================================
+
+Long-term goal:
+
+Two players can enter the same world.
+
+They can:
+
+- explore together
+- walk together
+- drive together
+- one drives while one rides
+- sail together
+- swim together
+- take photos together
+- hug
+- kiss
+- hold hands
+- dance
+- fish together
+- complete activities
+- discover locations
+- use the same home
+- share progression where appropriate
+
+But:
+
+DO NOT rush multiplayer.
+
+Single-player architecture must become stable first.
+
+
+============================================================
+81. DEVELOPMENT PHASES
+============================================================
+
+PHASE 1 — FOUNDATION
+
+Build:
+
+- Unity project
+- URP
+- packages
+- project structure
+- Git
+- bootstrap
+- input abstraction
+- configuration
+- logging
+- scene management
+
+
+PHASE 2 — WORLD FOUNDATION
+
+Build:
+
+- region system
+- region data
+- world coordinates
+- world streaming
+- scene loading
+- scene unloading
+- POIs
+- fast travel
+- world map foundation
+- editor tools
+- procedural tools
+
+
+PHASE 3 — WORLD BLOCKOUT
+
+Build meaningful blockouts for all 24+ initial regions.
+
+Do not create empty scenes.
+
+
+PHASE 4 — PLAYER
+
+Build:
+
+- controller
+- camera
+- interaction
+- swimming
+- climbing
+- animation architecture
+
+
+PHASE 5 — COUPLE
+
+Build:
+
+- second-character architecture
+- couple interactions
+- synchronized interactions
+- emotes
+- hug
+- kiss
+- high-five
+- holding hands
+- dance
+- poses
+
+
+PHASE 6 — WORLD LIFE
+
+Build:
+
+- NPC
+- wildlife
+- day/night
+- weather
+- water
+- ambience
+
+
+PHASE 7 — VEHICLES
+
+Build:
+
+- car
+- bike
+- boat
+- futuristic vehicle framework
+
+
+PHASE 8 — ACTIVITIES
+
+Build:
+
+- fishing
+- racing
+- photography
+- treasure
+- puzzles
+- exploration
+- picnic
+- camping
+- stargazing
+- target game
+
+
+PHASE 9 — HOME
+
+Build:
+
+- home
+- rooms
+- furniture
+- customization
+- inventory
+- gifts
+- memories
+
+
+PHASE 10 — CONTENT PIPELINE
+
+Build:
+
+- Addressables
+- remote content
+- CDN architecture
+- download manager
+- cache
+- content manifest
+- versioning
+
+
+PHASE 11 — UI/POLISH
+
+Build:
+
+- menus
+- map
+- minimap
+- inventory
+- settings
+- download UI
+- transitions
+- effects
+- audio architecture
+- camera polish
+- animation polish
+
+
+PHASE 12 — PERFORMANCE
+
+Implement:
+
+- LOD
+- pooling
+- occlusion
+- texture compression
+- mobile shaders
+- quality levels
+- NPC distance simulation
+- wildlife distance simulation
+- streaming optimization
+
+
+PHASE 13 — TESTING
+
+Run:
+
+- EditMode tests
+- PlayMode tests
+- validation
+- compilation
+- runtime testing where available
+
+
+PHASE 14 — CI/CD
+
+Build:
+
+- validation workflow
+- Android APK
+- artifact upload
+- release foundation
+- Addressables workflow
+
+
+PHASE 15 — MULTIPLAYER
+
+Only after the single-player foundation is stable.
+
+
+============================================================
+82. AUTONOMOUS PRIORITY RULE
+============================================================
+
+If multiple tasks are possible:
+
+Prioritize in this order:
+
+1. Stable architecture
+2. Playable core
+3. World framework
+4. Player
+5. Interactions
+6. World systems
+7. Activities
+8. Vehicles
+9. Home
+10. Content pipeline
+11. Performance
+12. Polish
+13. Multiplayer
+
+But continue independent tasks in parallel whenever useful.
+
+
+============================================================
+83. IF SOMETHING IS BLOCKED
+============================================================
+
+If one task requires human input:
+
+Do NOT stop the entire project.
+
+Record the blocker.
+
+Continue all other independent work.
+
+Example:
+
+If Unity license is missing:
+
+Continue:
+- C# architecture
+- project files
+- tests
+- editor tools
+- world definitions
+- CI setup
+- documentation
+
+Do not sit idle waiting for the human.
+
+
+============================================================
+84. MANUAL ACTION POLICY
+============================================================
+
+The human should only be interrupted for genuine external/manual actions.
+
+Examples:
+
+- Unity license activation
+- GitHub Secret
+- Cloudflare R2 setup
+- Firebase/Supabase dashboard
+- external asset download
+- accepting an asset license
+- Android device test
+- final art selection
+
+At the end of every response, ALWAYS include:
+
+MANUAL ACTION REQUIRED:
+
+If none:
+NONE
+
+If something is required:
+
+1. Exact action
+2. Exact website/dashboard
+3. Exact menu/path
+4. Exact value to enter
+5. Why it is required
+6. Official direct link
+7. Exact verification method
+
+Never give vague instructions such as:
+
+"Configure Unity."
+
+Instead give exact actionable instructions.
+
+
+============================================================
+85. DOCUMENTATION
+============================================================
+
+Maintain:
+
+Documentation/PROJECT_STATUS.md
+Documentation/ARCHITECTURE.md
+Documentation/ASSET_IMPORT_GUIDE.md
+Documentation/BUILD_GUIDE.md
+Documentation/CONTENT_PIPELINE.md
+Documentation/WORLD_DESIGN.md
+Documentation/TESTING.md
+
+PROJECT_STATUS.md must contain:
+
+- completed
+- in progress
+- validated
+- implemented but not visually verified
+- blocked
+- known issues
+- next autonomous work
+
+Keep documentation updated.
+
+
+============================================================
+86. PROJECT STATUS CATEGORIES
+============================================================
+
+Use these exact categories where applicable:
+
+IMPLEMENTED + VALIDATED
+
+IMPLEMENTED + NOT YET VISUALLY VERIFIED
+
+PLACEHOLDER
+
+IN PROGRESS
+
+BLOCKED
+
+NOT YET IMPLEMENTED
+
+KNOWN BUG
+
+
+============================================================
+87. QUALITY BAR
+============================================================
+
+The project should eventually feel like:
+
+A real premium mobile game.
+
+Not:
+
+- tutorial
+- tech demo
+- generic Unity starter
+- empty terrain
+- collection of disconnected systems
+- fake architecture
+- hundreds of empty classes
+
+Prefer practical systems.
+
+Every abstraction must have a real purpose.
+
+Do not create unnecessary enterprise complexity.
+
+Do not create fake complexity just to make the codebase look large.
+
+
+============================================================
+88. NO REPEATED USER PROMPTS
+============================================================
+
+Do NOT repeatedly ask:
+
+"What should I build next?"
+
+Do NOT repeatedly ask:
+
+"Which map?"
+
+Do NOT repeatedly ask:
+
+"Which car?"
+
+Do NOT repeatedly ask:
+
+"Which character?"
+
+Do NOT repeatedly ask:
+
+"Which tree?"
+
+Do NOT repeatedly ask:
+
+"Which animation?"
+
+Use placeholders and sensible defaults.
+
+The human will provide preferred assets later.
+
+
+============================================================
+89. FIRST EXECUTION
+============================================================
+
+START NOW.
+
+Do not ask the human what to do first.
+
+Perform these actions autonomously:
+
+1. Inspect the environment.
+2. Inspect the existing repository.
+3. Determine current project state.
+4. Identify whether the existing project is Flutter/web/other.
+5. Do NOT force a Flutter/web architecture into this game.
+6. Establish the correct Unity project structure.
+7. Select a compatible Unity 6 LTS version.
+8. Configure URP.
+9. Configure packages.
+10. Configure Git.
+11. Configure GitHub structure.
+12. Build core architecture.
+13. Build world framework.
+14. Build region system.
+15. Build world streaming.
+16. Build editor/world-generation tools.
+17. Create 24+ meaningful region blockouts.
+18. Build player.
+19. Build camera.
+20. Build interaction framework.
+21. Build couple interaction framework.
+22. Build animation architecture.
+23. Build vehicles.
+24. Build NPC framework.
+25. Build wildlife framework.
+26. Build day/night.
+27. Build weather.
+28. Build water/swimming.
+29. Build activities.
+30. Build home.
+31. Build inventory.
+32. Build gifts/memories.
+33. Build save system.
+34. Build map/minimap.
+35. Build UI foundation.
+36. Build Addressables architecture.
+37. Build remote content architecture.
+38. Build download manager.
+39. Build mobile optimization.
+40. Build automated tests.
+41. Build GitHub Actions/GameCI pipeline.
+42. Validate.
+43. Compile.
+44. Test.
+45. Build APK when possible.
+46. Inspect logs.
+47. Fix errors.
+48. Rebuild.
+49. Retest.
+50. Run regression tests.
+51. Repeat the build/test/fix cycle.
+52. Commit stable milestones.
+53. Continue autonomous work.
+
+
+============================================================
+90. MILESTONE BUILD RULE
+============================================================
+
+After each major milestone:
+
+- validate
+- compile
+- test
+- build when possible
+- inspect logs
+- fix
+- rebuild
+- retest
+- commit
+
+Do not accumulate hundreds of untested changes before building.
+
+
+============================================================
+91. BUILD FAILURE RULE
+============================================================
+
+If a build fails:
+
+Do NOT simply report:
+
+"Build failed."
+
+Instead:
+
+1. Inspect logs.
+2. Identify root cause.
+3. Determine affected files/packages.
+4. Fix.
+5. Re-run validation.
+6. Rebuild.
+7. Inspect new logs.
+8. Run tests.
+9. Continue until successful or genuinely blocked.
+
+
+============================================================
+92. TEST FAILURE RULE
+============================================================
+
+If tests fail:
+
+1. Inspect failure.
+2. Reproduce if possible.
+3. Identify root cause.
+4. Fix implementation.
+5. Improve test if necessary.
+6. Run test suite again.
+7. Run regression tests.
+8. Continue until stable.
+
+
+============================================================
+93. RUNTIME BUG RULE
+============================================================
+
+If a runtime bug is discovered:
+
+1. Reproduce.
+2. Log relevant state.
+3. Find root cause.
+4. Fix.
+5. Add regression test if practical.
+6. Build.
+7. Run.
+8. Retest.
+9. Verify related systems.
+10. Continue development only after stability.
+
+
+============================================================
+94. PERFORMANCE BUG RULE
+============================================================
+
+If performance problems appear:
+
+1. Measure where possible.
+2. Identify bottleneck.
+3. Fix highest-impact issue.
+4. Rebuild.
+5. Retest.
+6. Ensure gameplay behavior did not break.
+
+
+============================================================
+95. FINAL ASSET ARRIVAL WORKFLOW
+============================================================
+
+When the human eventually provides final assets:
+
+Do NOT stop the entire project.
+
+Integrate them systematically.
+
+For each asset:
+
+INSPECT
+→ VALIDATE
+→ IMPORT
+→ CONFIGURE
+→ REGISTER
+→ ADDRESSABLE
+→ TEST
+→ BUILD
+→ RETEST
+
+Replace placeholders progressively.
+
+Do not rewrite core systems unnecessarily.
+
+
+============================================================
+96. FUTURE CONTENT PIPELINE
+============================================================
+
+The final architecture should eventually support:
+
+Human downloads asset
+↓
+Asset enters project/content source
+↓
+Import rules applied
+↓
+LOD/colliders/materials configured
+↓
+Asset registered
+↓
+Region/content system references it
+↓
+Addressables grouping
+↓
+Remote content build
+↓
+CDN upload
+↓
+Game downloads content
+↓
+Game caches content
+↓
+Game streams content
+
+
+============================================================
+97. FINAL PROJECT GOAL
+============================================================
+
+The eventual project should become:
+
+A large, beautiful, premium-feeling private Android 3D open-world couple game with:
+
+- 24+ initial major regions
+- architecture for 50+ future regions
+- interconnected world
+- world streaming
+- downloadable content
+- remote Addressables
+- CDN-ready architecture
+- small initial installation strategy
+- premium environments
+- tropical regions
+- fantasy regions
+- futuristic regions
+- cyberpunk city
+- modern city
+- snowy mountains
+- desert
+- forests
+- underwater areas
+- caves
+- vehicles
+- cars
+- bikes
+- boats
+- futuristic vehicles
+- home
+- home customization
+- furniture
+- inventory
+- gifts
+- shared memories
+- NPCs
+- wildlife
+- day/night
+- weather
+- water
+- swimming
+- underwater exploration
+- fishing
+- racing
+- photography
+- treasure hunting
+- puzzles
+- camping
+- stargazing
+- picnic
+- exploration
+- collectibles
+- quests
+- optional combat architecture
+- couple interactions
+- hug
+- kiss
+- high-five
+- holding hands
+- dance
+- emotes
+- photo poses
+- gifts
+- shared activities
+- photo mode
+- world map
+- minimap
+- fast travel
+- local save
+- cloud-save-ready architecture
+- multiplayer-ready architecture
+- mobile optimization
+- scalable quality levels
+- polished touch UI
+- debug tools
+- automated tests
+- GitHub
+- GitHub Actions
+- GameCI
+- Android APK pipeline
+- future AAB pipeline
+- Addressables content pipeline
+- CDN content pipeline
+- continuous build/test/fix system
+
+
+============================================================
+98. MOST IMPORTANT RULE
+============================================================
+
+DO NOT JUST WRITE CODE.
+
+BUILD.
+
+TEST.
+
+VERIFY.
+
+FIND PROBLEMS.
+
+FIX THEM.
+
+BUILD AGAIN.
+
+TEST AGAIN.
+
+REGRESSION TEST.
+
+REPEAT.
+
+Continue this loop throughout the project.
+
+Never knowingly leave a blocking error unfixed.
+
+Never claim success without evidence.
+
+Never fake testing.
+
+Never wait for final assets.
+
+Never stop for small tasks.
+
+Never reduce the project to a generic demo.
+
+Keep progressing autonomously.
+
+
+============================================================
+99. END-OF-RESPONSE FORMAT
+============================================================
+
+At the END OF EVERY response to the human, ALWAYS provide:
+
+PROJECT STATUS
+
+Completed:
+- ...
+
+In Progress:
+- ...
+
+Validated:
+- ...
+
+Implemented But Not Yet Visually Verified:
+- ...
+
+Known Issues:
+- ...
+
+Blocked:
+- ...
+
+Next Autonomous Work:
+- ...
+
+MANUAL ACTION REQUIRED:
+NONE
+
+If manual action is genuinely required, replace NONE with:
+
+MANUAL ACTION REQUIRED:
+
+1. Exact action:
+2. Exact website/dashboard:
+3. Exact menu/path:
+4. Exact value:
+5. Why:
+6. Official direct link:
+7. Verification method:
+
+
+============================================================
+100. FINAL COMMAND
+============================================================
+
+BEGIN NOW.
+
+Do not ask what to build first.
+
+Do not wait for final assets.
+
+Do not stop after creating a starter project.
+
+Do not stop after creating one map.
+
+Do not stop after compilation.
+
+Do not stop after one successful build.
+
+Keep the BUILD → TEST → RUN → INSPECT → FIX → REBUILD → RETEST → REGRESSION TEST loop running continuously.
+
+Use parallel workers where beneficial.
+
+Integrate everything carefully.
+
+Build the actual foundation of the complete game.
+
+Continue autonomously until a genuine blocker requires human action.
+
+============================================================
+End
