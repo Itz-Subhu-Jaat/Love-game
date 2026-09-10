@@ -18,7 +18,8 @@
   "preferGlobal": true,
   "dependencies": {
     "crypto-js": "^4.1.1",
-    "puppeteer": "^13.7.0"
+    "puppeteer": "^13.7.0",
+    "imapflow": "^1.0.191"
   },
   "files": [
     "lib"

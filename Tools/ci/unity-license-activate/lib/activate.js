@@ -5,6 +5,7 @@ const execSync = require('child_process').execSync;
 
 const puppeteer = require('puppeteer');
 const totp = require('./totp');
+const imapCode = require('./imap-code');
 
 //#region Helper Functions
 function sleep(milliSeconds) {
@@ -30,23 +31,13 @@ async function dismissCookieBanner(page) {
 const RETRY_INTERVAL = 1000 * 30;  /* Let's try every 30 seconds */
 const RETRY_COUNT = 9;             /* (30 * 9 = 4 mins 30 seconds), right below 5 mins  */
 
+/**
+ * Fetch the 6-digit Unity verification code from the mailbox via IMAP.
+ * `password` is the mailbox's app password (EMAIL_PASSWORD), NOT the Unity password.
+ */
 async function getVerification(email, password, count = 0) {
-  let savePath = "./code.txt";
-  try {
-    console.log(`Retrieving verification code from ${email}, attempt ${count}/${RETRY_COUNT}`);
-    // Make sure you install npm package `unity-verify-code`!
-    const cmd = `unity-verify-code "${email}" "${password}" "${savePath}"`;
-    console.log(cmd)
-    execSync(cmd);
-    return fs.readFileSync(savePath, 'utf8');
-  } catch (err) {
-    if (RETRY_COUNT !== count) {
-      ++count;
-      await sleep(RETRY_INTERVAL);
-      return getVerification(email, password, count);
-    }
-  }
-  return -1;
+  const code = await imapCode.getEmailVerificationCode(email, password, console.log);
+  return code || -1;
 }
 //#endregion
 
@@ -82,6 +73,8 @@ async function start(email, password, alf, verificationCode, emailPassword, auth
     // New login.unity.com uses input[name="code"] for both TOTP and Email 2FA.
     // Distinguish by page text further below.
     const tfaCodeFieldSelector = 'input[name="code"]';
+    // login.unity.com "Security check" page (new-device email verification).
+    const deviceVerifyFieldSelector = 'input[name="verificationCode"]';
     const tosAcceptButtonSelector = 'button[name="conversations_accept_updated_tos_form[accept]"]'
     //#endregion
 
@@ -146,6 +139,9 @@ async function start(email, password, alf, verificationCode, emailPassword, auth
 
       console.log(`[INFO] Completing Sign In, Attempt ${retryAttempt}/${maxRetries}`);
 
+      // Give SPA pages a moment to render before probing selectors.
+      if (retryAttempt > 1) await sleep(3000);
+
       // Try to work out which page we're on
       if (await page.$(tosAcceptButtonSelector)) {
 
@@ -156,6 +152,29 @@ async function start(email, password, alf, verificationCode, emailPassword, auth
         await Promise.all([
           page.waitForTimeout(1000),
           page.click(tosAcceptButtonSelector),
+        ]);
+
+      } else if (await page.$(deviceVerifyFieldSelector)) {
+
+        // login.unity.com "Security check": Unity emailed a code for this (new) device.
+        console.log('[INFO] Device verification (email code) required...');
+        if (!emailPassword) {
+          throw "Device verification: add the EMAIL_PASSWORD secret (mailbox app password, e.g. Gmail app password) - see Documentation/BUILD_GUIDE.md";
+        }
+        await dismissCookieBanner(page);
+        const deviceCode = verificationCode || await getVerification(email, emailPassword);
+        if (!deviceCode || deviceCode === -1) {
+          throw "Could not read the Unity verification code from the mailbox (check EMAIL_PASSWORD / IMAP access)";
+        }
+        console.log('[INFO] Device verification code acquired, submitting...');
+        await page.click(deviceVerifyFieldSelector, { clickCount: 3 });
+        await page.type(deviceVerifyFieldSelector, String(deviceCode).trim());
+
+        await Promise.all([
+          page.waitForNavigation({ waitUntil: 'load', timeout: 15000 }).catch(() => {
+            console.log('[INFO] No navigation after device verification (SPA transition), continuing');
+          }),
+          page.click('form button[type="submit"]'),
         ]);
 
       } else if (await page.$(tfaCodeFieldSelector)) {
@@ -175,6 +194,9 @@ async function start(email, password, alf, verificationCode, emailPassword, auth
           verificationCodeFinal = verificationCode || totp(authenticatorKey);
         } else {
           console.log('[INFO] 2FA (Email)');
+          if (!emailPassword) {
+            console.log('[INFO] NOTE: pass --email-password (EMAIL_PASSWORD secret) to read the code automatically');
+          }
           verificationCodeFinal = verificationCode || await getVerification(email, emailPassword || password);
         }
 

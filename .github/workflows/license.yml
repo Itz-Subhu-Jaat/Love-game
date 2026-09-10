@@ -40,6 +40,7 @@ jobs:
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: |
           missing=0
           if [ -z "${UNITY_EMAIL}" ]; then
@@ -48,6 +49,10 @@ jobs:
           fi
           if [ -z "${UNITY_PASSWORD}" ]; then
             echo "::error title=Missing secret::UNITY_PASSWORD is not set (Settings > Secrets and variables > Actions)."
+            missing=1
+          fi
+          if [ -z "${EMAIL_PASSWORD}" ]; then
+            echo "::error title=Missing secret::EMAIL_PASSWORD is not set::Unity emails a 6-digit code to your inbox for every new CI device; this secret (mailbox app password, e.g. Gmail app password) lets the workflow read that code automatically. Setup: Documentation/BUILD_GUIDE.md"
             missing=1
           fi
           if [ "${missing}" = "1" ]; then exit 1; fi
@@ -99,12 +104,16 @@ jobs:
         env:
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           UNITY_TOTP_KEY: ${{ secrets.UNITY_TOTP_KEY }}
           ALF_PATH: ${{ steps.alf.outputs.path }}
         run: |
           set -- "${UNITY_EMAIL}" "${UNITY_PASSWORD}" "${ALF_PATH}"
           if [ -n "${UNITY_TOTP_KEY}" ]; then
             set -- "$@" --authenticator-key "${UNITY_TOTP_KEY}"
+          fi
+          if [ -n "${EMAIL_PASSWORD}" ]; then
+            set -- "$@" --email-password "${EMAIL_PASSWORD}"
           fi
           node Tools/ci/unity-license-activate/lib/cli.js "$@"
           ULF_PATH="$(ls -1 ./*.ulf 2>/dev/null | head -n 1)"
@@ -152,6 +161,14 @@ jobs:
             error.html
           retention-days: 1
           if-no-files-found: ignore
+
+      - name: Report timeout hint on failure
+        if: failure()
+        run: |
+          echo "If the log shows the portal automation failed at login/security-check/2FA:" >&2
+          echo " 1) Wrong credentials -> fix UNITY_EMAIL / UNITY_PASSWORD / EMAIL_PASSWORD secrets" >&2
+          echo " 2) Device-verification code not found -> check IMAP is enabled + the EMAIL_PASSWORD is an app password" >&2
+          echo " 3) Inspect the license-activation-diagnostics artifact (error.png screenshot)" >&2
 
       - name: Load new license for verification
         if: ${{ inputs.verify }}

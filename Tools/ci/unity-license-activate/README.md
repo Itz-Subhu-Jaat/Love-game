@@ -21,12 +21,24 @@ bounded to 5 minutes instead of looping forever.
 
 ```bash
 npm install --no-audit --no-fund          # installs puppeteer + chromium
-node lib/cli.js EMAIL PASSWORD FILE.alf [--authenticator-key TOTP_KEY]
+node lib/cli.js EMAIL PASSWORD FILE.alf \
+  [--email-password APP_PASSWORD]         # mailbox app password (device-verification code)
+  [--authenticator-key TOTP_KEY]          # if Unity 2FA is enabled
 ```
 
 The `.ulf` lands in the current working directory. On failure, `error.png` and
 `error.html` (portal screenshot + DOM) are written for diagnostics.
 
-2FA: `--authenticator-key` takes the authenticator-app secret (works with the
-`UNITY_TOTP_KEY` secret). Email-code 2FA requires the external
-`unity-verify-code` package and is not installed by default.
+## login.unity.com flow handled
+
+1. cookie banner (OneTrust) dismissal,
+2. 2-step login (email → Continue → password → sign in),
+3. **device verification** ("Security check"): Unity emails a 6-digit code —
+   read automatically from the mailbox via IMAP (`--email-password`, supports
+   Gmail / Outlook / Yahoo / QQ / 163, searches inbox + spam, polls ~4 min),
+4. TOTP 2FA via `--authenticator-key`, email 2FA via the same IMAP reader,
+5. `.alf` upload → Personal license → `.ulf` download (bounded 5-min wait).
+
+2FA by email code *and* device verification both need the mailbox's app
+password (e.g. Gmail app password), passed as `--email-password` — typically
+wired from the `EMAIL_PASSWORD` repository secret.

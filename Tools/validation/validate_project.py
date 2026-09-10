@@ -335,6 +335,9 @@ def check_secrets(root):
         if os.sep + ".git" in dirpath or os.sep + "Library" in dirpath:
             dirnames[:] = []
             continue
+        if os.sep + "node_modules" in dirpath:
+            dirnames[:] = []
+            continue
         for name in filenames:
             full = os.path.join(dirpath, name)
             _, ext = os.path.splitext(name)

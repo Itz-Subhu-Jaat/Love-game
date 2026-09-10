@@ -2,26 +2,76 @@
 
 ## CI (recommended: zero local setup)
 
-### Prerequisites (one-time, manual)
-1. **Unity license** (free Personal works):
-   - Install Unity Hub → sign in → activate a Personal license (Hub → Preferences → Licenses).
-   - Grab the license file:
-     - Windows: `C:\ProgramData\Unity\Unity_lic.ulf`
-     - macOS: `~/Library/Application Support/Unity/Unity_lic.ulf`
-     - Linux: `~/.local/share/unity3d/Unity/Unity_lic.ulf`
-   - GitHub → repo → **Settings → Secrets and variables → Actions** → add:
-     | Secret | Value |
-     |---|---|
-     | `UNITY_LICENSE` | full contents of the `.ulf` file |
-     | `UNITY_EMAIL` | Unity account email |
-     | `UNITY_PASSWORD` | Unity account password |
-2. Unity 6000.0.83f1 is pulled automatically by GameCI (`unityVersion: auto` reads ProjectVersion.txt).
+### Prerequisites — pick ONE of the two license paths
+
+#### Path A — automated, no Unity Hub (recommended)
+
+Everything runs inside GitHub Actions. Add these secrets
+(**Settings → Secrets and variables → Actions**):
+
+| Secret | Value | Required |
+|---|---|---|
+| `UNITY_EMAIL` | Unity account email | yes |
+| `UNITY_PASSWORD` | Unity account password | yes |
+| `EMAIL_PASSWORD` | mailbox **app password** for that email (see below) | yes |
+| `UNITY_TOTP_KEY` | authenticator-app key (only if Unity 2FA is enabled) | 2FA only |
+| `ACCESS_TOKEN` | fine-grained PAT with **Secrets: write** on this repo (auto-stores the license) | for auto-store |
+
+**Why `EMAIL_PASSWORD`?** Unity sends a 6-digit verification code to your inbox for every
+login from a new device — and every CI run is a new device. The workflow reads that code
+from your mailbox via IMAP, so it needs a mailbox app password (this is *not* your Unity
+password).
+
+Gmail setup (most common):
+1. Google Account → **Security** → turn on **2-Step Verification** (if not already on).
+2. Security → **App passwords** → create one (e.g. name it "love-game-ci") → copy the 16-character password.
+3. Gmail → Settings → **Forwarding and POP/IMAP** → **Enable IMAP** (usually on by default).
+4. Put that app password into the `EMAIL_PASSWORD` secret.
+
+Outlook/Hotmail, Yahoo, QQ/Foxmail and 163 mailboxes work too — enable IMAP and use an
+app password where the provider supports one.
+
+Then run the **Unity License Auto-Activation** workflow (Actions tab → select it →
+Run workflow). It:
+
+1. creates the `.alf` activation request with Unity in docker (batch-mode, no license needed),
+2. signs into `login.unity.com` automatically (puppeteer — 2-step email/password login,
+   cookie-banner dismissal, device-verification code via IMAP),
+3. submits the `.alf` at the licensing portal, picks the free Personal license and downloads the `.ulf`,
+4. stores the `.ulf` as the `UNITY_LICENSE` secret via the GitHub API, then (optionally)
+   verifies it by running the editmode test suite.
+
+No `ACCESS_TOKEN`? The run still works — it uploads the `.ulf` as a 1-day artifact; paste its
+contents into `UNITY_LICENSE` manually once, done. Re-run the workflow whenever the personal
+license expires.
+
+> 2FA notes: Unity-level 2FA is automated via `UNITY_TOTP_KEY` (get the key at
+> id.unity.com → settings → two-factor authentication → `Can't scan the barcode?`).
+> The email-code device verification is automated via `EMAIL_PASSWORD` (IMAP).
+
+#### Path B — manual, official GameCI method (one-time, 5 minutes)
+
+1. Install Unity Hub → sign in → activate a Personal license
+   (Hub → Preferences → Licenses → Add → *Get a free personal license*).
+2. Grab the license file:
+   - Windows: `C:\ProgramData\Unity\Unity_lic.ulf`
+   - macOS: `~/Library/Application Support/Unity/Unity_lic.ulf`
+   - Linux: `~/.local/share/unity3d/Unity/Unity_lic.ulf`
+3. Add the secrets:
+   | Secret | Value |
+   |---|---|
+   | `UNITY_LICENSE` | full contents of the `.ulf` file |
+   | `UNITY_EMAIL` | Unity account email |
+   | `UNITY_PASSWORD` | Unity account password |
+
+Unity 6000.0.83f1 is pulled automatically by GameCI (`unityVersion: auto` reads ProjectVersion.txt).
 
 ### Workflows
 | Workflow | Trigger | What it does | License needed |
 |---|---|---|---|
 | `Validate Project` | every push/PR | static validation (GUIDs, scenes, asmdefs, C#/shaders, catalogs, secret scan) + Unity tests | no (tests skip with a warning) |
-| `Build Android APK` | manual dispatch or `v*` tags | IL2CPP/ARM64 APK via `CiBuilder.BuildAndroid` | yes |
+| `Unity License Auto-Activation` | manual dispatch | docker `.alf` → automated portal login → `.ulf` → stores `UNITY_LICENSE` secret (+ verification tests) | no — it *acquires* the license |
+| `Build Android APK` | manual dispatch or `v*` tags | IL2CPP/ARM64 APK via `CiBuilder.BuildAndroid` | yes (auto-acquires if EMAIL/PASSWORD secrets present) |
 | `Release Build (AAB)` | manual dispatch | Play Store AAB via `CiBuilder.BuildAndroidAab` | yes |
 | `Content Packs` | manual dispatch | remote content pipeline (prepared) | yes |
 
@@ -37,8 +87,13 @@
 4. Expected first-boot: menu → Begin Journey → Azure Haven generates (~2–4 s) → walk with joysticks
 
 ### Reading build failures
-- **License step fails**: `UNITY_LICENSE` secret missing/invalid — re-copy the `.ulf` content
+- **License step fails**: `UNITY_LICENSE` secret missing/invalid — run the
+  **Unity License Auto-Activation** workflow (Path A above), or re-copy the `.ulf` content
   (it is XML; include everything, no truncation).
+- **Auto-activation fails**: download the `license-activation-diagnostics` artifact —
+  `error.png` is a full screenshot of the portal at the failure point. Common causes:
+  wrong `UNITY_PASSWORD`, device-verification code not found (check `EMAIL_PASSWORD` is an
+  app password and IMAP is enabled), 2FA prompt without `UNITY_TOTP_KEY`.
 - **Compile errors**: the run log lists `CS####` errors with file/line — fix, push, re-run.
   `CiBuilder` exits non-zero on errors so failed builds are never reported as success.
 - **Tests fail**: `Validate Project` → unity-tests job → artifact `test-results`.
