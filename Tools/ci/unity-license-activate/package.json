@@ -1,0 +1,33 @@
+{
+  "name": "unity-license-activate",
+  "version": "0.3.9",
+  "description": "",
+  "main": "./lib/activate.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/game-ci/unity-license-activate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/game-ci/unity-license-activate/issues"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MizoTake & Jen-Chieh Shen",
+  "license": "apache-2.0",
+  "preferGlobal": true,
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "puppeteer": "^13.7.0"
+  },
+  "files": [
+    "lib"
+  ],
+  "homepage": "https://github.com/game-ci/unity-license-activate#readme",
+  "directories": {
+    "lib": "lib"
+  },
+  "bin": {
+    "unity-license-activate": "./lib/cli.js"
+  }
+}

@@ -25,7 +25,7 @@ jobs:
           lfs: true
 
       - name: Set up Node.js for license activation
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
 
@@ -56,12 +56,12 @@ jobs:
               -logFile /dev/stdout -createManualActivationFile -quit || true
             ALF_PATH="$(ls -1 ./*.alf 2>/dev/null | head -n 1)"
             if [ -n "${ALF_PATH}" ]; then
-              npm install --global unity-license-activate
+              ( cd Tools/ci/unity-license-activate && npm install --no-audit --no-fund )
               set -- "${UNITY_EMAIL}" "${UNITY_PASSWORD}" "${ALF_PATH}"
               if [ -n "${UNITY_TOTP_KEY}" ]; then
                 set -- "$@" --authenticator-key "${UNITY_TOTP_KEY}"
               fi
-              unity-license-activate "$@" || true
+              node Tools/ci/unity-license-activate/lib/cli.js "$@" || true
               ULF_PATH="$(ls -1 ./*.ulf 2>/dev/null | head -n 1)"
               if [ -n "${ULF_PATH}" ] && [ -s "${ULF_PATH}" ]; then
                 echo "Personal license acquired successfully!"
@@ -72,7 +72,7 @@ jobs:
                 } >> "$GITHUB_ENV"
                 echo "has=true" >> "$GITHUB_OUTPUT"
               else
-                echo "::error title=Auto-activation failed::unity-license-activate could not acquire license. Check UNITY_EMAIL and UNITY_PASSWORD secrets."
+                echo "::error title=Auto-activation failed::The portal automation could not acquire the license (see error.png in logs). Check UNITY_EMAIL / UNITY_PASSWORD secrets; 2FA accounts need UNITY_TOTP_KEY. Guide: Documentation/BUILD_GUIDE.md"
                 echo "has=false" >> "$GITHUB_OUTPUT"
               fi
             else

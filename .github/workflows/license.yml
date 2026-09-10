@@ -89,6 +89,11 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Install vendored license-activation tool
+        run: |
+          cd Tools/ci/unity-license-activate
+          npm install --no-audit --no-fund
+
       - name: Acquire .ulf (automated licensing-portal login)
         id: ulf
         env:
@@ -97,15 +102,14 @@ jobs:
           UNITY_TOTP_KEY: ${{ secrets.UNITY_TOTP_KEY }}
           ALF_PATH: ${{ steps.alf.outputs.path }}
         run: |
-          npm install --global unity-license-activate
           set -- "${UNITY_EMAIL}" "${UNITY_PASSWORD}" "${ALF_PATH}"
           if [ -n "${UNITY_TOTP_KEY}" ]; then
             set -- "$@" --authenticator-key "${UNITY_TOTP_KEY}"
           fi
-          unity-license-activate "$@"
+          node Tools/ci/unity-license-activate/lib/cli.js "$@"
           ULF_PATH="$(ls -1 ./*.ulf 2>/dev/null | head -n 1)"
           if [ -z "${ULF_PATH}" ] || [ ! -s "${ULF_PATH}" ]; then
-            echo "::error title=No .ulf produced::unity-license-activate finished without leaving a .ulf file. Inspect the license-activation-diagnostics artifact (error.png / error.html). Accounts with 2FA need the UNITY_TOTP_KEY secret (authenticator-app key) - see Documentation/BUILD_GUIDE.md."
+            echo "::error title=No .ulf produced::The portal automation finished without leaving a .ulf file. Inspect the license-activation-diagnostics artifact (error.png / error.html). Accounts with 2FA need the UNITY_TOTP_KEY secret (authenticator-app key) - see Documentation/BUILD_GUIDE.md."
             exit 1
           fi
           echo "path=${ULF_PATH}" >> "$GITHUB_OUTPUT"
